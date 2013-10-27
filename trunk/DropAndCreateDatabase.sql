@@ -40,7 +40,7 @@ CREATE TABLE Student
                 );
 CREATE TABLE Role
                 (id mediumint NOT NuLL auto_increment,
-                RoleName nvarchar(255) NOT NULL
+                RoleName nvarchar(255) NOT NULL,
                 PRIMARY KEY (id)
                 );
 CREATE TABLE Teacher
