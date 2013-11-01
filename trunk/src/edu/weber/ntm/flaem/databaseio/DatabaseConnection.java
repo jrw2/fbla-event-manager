@@ -42,14 +42,14 @@ public class DatabaseConnection {
 		rs = this.executeQuery(Query);
 		while(rs.next())
 		{
-			Student student = new Student();
-			student.rs.getString("FirstName");
-			rs.getString("LastName");
+			Student student = new Student(rs.getInt("id"), rs.getInt("SchooldID"), 
+					rs.getString("FirstName"), rs.getString("LastName"), 
+					 rs.getString("MiddleName"), rs.getDate("CreateDate"));
+			students.add(student);
 		}
 		
-		return null;
-	}
-	
+		return students;
+	}]
 	public List<Event> getEvents(String Query)
 	{
 		return null;
