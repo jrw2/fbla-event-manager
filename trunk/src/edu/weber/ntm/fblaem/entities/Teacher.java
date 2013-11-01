@@ -1,5 +1,5 @@
 package edu.weber.ntm.fblaem.entities;
 
-public class Teacher extends Person{
+public class Teacher{
 
 }
