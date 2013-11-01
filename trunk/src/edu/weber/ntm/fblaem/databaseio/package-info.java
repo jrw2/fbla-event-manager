@@ -5,5 +5,5 @@
  * @author ptaylor
  *
  */
-package edu.weber.ntm.flaem.databaseio;
+package edu.weber.ntm.fblaem.databaseio;
 

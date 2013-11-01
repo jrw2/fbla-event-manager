@@ -1,4 +1,4 @@
-package edu.weber.ntm.flaem.databaseio;
+package edu.weber.ntm.fblaem.databaseio;
 
 import java.sql.Date;
 import java.sql.DriverManager;
