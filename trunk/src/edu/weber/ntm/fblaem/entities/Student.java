@@ -37,19 +37,53 @@ public class Student {
 		Calendar cal = Calendar.getInstance();
 		this.CreateDate = new Date(cal.getTimeInMillis());
 	}
-	public School School()
+	/*public School School()
 	{
 		
 	}
 	public EditName(String firstname, String lastname, String middlename)
 	{
 		
-	}
+	}*/
 	public void saveNew()
 	{
 		if(ID == -1)
 		{	
 			
 		}
+	}
+
+	public String getFirstName() {
+		return FirstName;
+	}
+	public void setFirstName(String firstName) {
+		FirstName = firstName;
+	}
+	public String getLastName() {
+		return LastName;
+	}
+	public void setLastName(String lastName) {
+		LastName = lastName;
+	}
+	public String getMiddleName() {
+		return MiddleName;
+	}
+	public void setMiddleName(String middleName) {
+		MiddleName = middleName;
+	}
+	public int getSchoolID() {
+		return SchoolID;
+	}
+	public void setSchoolID(int schoolID) {
+		SchoolID = schoolID;
+	}
+	public int getID() {
+		return ID;
+	}
+	public void setID(int iD) {
+		ID = iD;
+	}
+	public Date getCreateDate() {
+		return CreateDate;
 	}
 }
