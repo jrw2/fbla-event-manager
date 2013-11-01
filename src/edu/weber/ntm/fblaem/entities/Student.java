@@ -37,6 +37,14 @@ public class Student {
 		Calendar cal = Calendar.getInstance();
 		this.CreateDate = new Date(cal.getTimeInMillis());
 	}
+	public School School()
+	{
+		
+	}
+	public EditName(String firstname, String lastname, String middlename)
+	{
+		
+	}
 	public void saveNew()
 	{
 		if(ID == -1)
