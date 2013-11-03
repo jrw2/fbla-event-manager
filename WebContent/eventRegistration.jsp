@@ -9,14 +9,6 @@
 </script>
 
 <style>
-#login {
-	width: 300px;
-	height: 75px;
-	background-color: #ebdc96;
-	padding: 10px;
-	border: 1px solid;
-	border-radius: 5px;
-}
 </style>
 
 <%@ include file="/includes/shell/shell_body.jsp"%>
@@ -24,15 +16,13 @@
 
 <form action="" method="get">
 
-	<div id="main" style="width:100%; height: 100%;">
-		<div id="title" class="centerPage">
-			Welcome to the FBLA Event Manager
-		</div>
-		<div id="login" class="centerPage">
-			<table>
-				<tr><td>Username: </td><td><input type="text" id="username" style="width: 200px;" /></td></tr>
-				<tr><td>Password: </td><td><input type="password" id="password" style="width: 200px;" /></td></tr>
-			</table>	
+	<div id="title" class="titleDiv">
+			Event Registration - <span style="font-size: 20px;"> Teacher Name | School Representing <%System.out.println("Teacher Name | School Representing");</span> %>
+	</div>
+	
+	<div id="main" class="pageContainer 100PercentHeight">
+		<div>
+			test
 		</div>
 	</div>
 	
