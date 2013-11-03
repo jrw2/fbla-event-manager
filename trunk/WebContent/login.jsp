@@ -5,7 +5,10 @@
 
 <%@ include file="/includes/shell/shell_header.jsp"%>
 
-<script>
+<script type="text/javascript">
+
+
+
 </script>
 
 <style>
