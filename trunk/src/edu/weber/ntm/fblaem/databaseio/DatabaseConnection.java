@@ -22,6 +22,7 @@ public class DatabaseConnection {
 	ResultSet rs = null;
 	public DatabaseConnection() throws SQLException
 	{
+		
 	}
 	private ResultSet executeQuery(String Query) throws SQLException
 	{
