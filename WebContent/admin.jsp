@@ -1,9 +1,14 @@
 <%@ include file="/includes/shell/shell_top.jsp"%>
 <%@ include file="/includes/shell/shell_header.jsp"%>
-<script>
+
+<script type="text/javascript">
+
 </script>
+
 <style>
+
 </style>
+
 <%@ include file="/includes/shell/shell_body.jsp"%>
 <!-- Begin Page Content -->
 
