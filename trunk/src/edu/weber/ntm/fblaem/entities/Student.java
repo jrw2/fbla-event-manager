@@ -3,7 +3,7 @@ package edu.weber.ntm.fblaem.entities;
 import java.sql.Date;
 import java.util.Calendar;
 
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
+//import org.eclipse.persistence.jpa.jpql.parser.DateTime;
 
 public class Student {
 

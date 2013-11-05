@@ -3,11 +3,15 @@ package edu.weber.ntm.fblaem.databaseio;
 // Generated Nov 1, 2013 7:05:48 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.List;
+
 import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Example;
 
 /**
@@ -23,8 +27,12 @@ public class SchoolHome {
 
 	protected SessionFactory getSessionFactory() {
 		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
+			Configuration cfg = new Configuration();
+			cfg.configure();
+			SessionFactory sf = cfg.buildSessionFactory();
+			sf.openSession();
+			return sf;
+			//return (SessionFactory) new InitialContext().lookup("SessionFactory");*
 		} catch (Exception e) {
 			log.error("Could not locate SessionFactory in JNDI", e);
 			throw new IllegalStateException(
@@ -45,8 +53,10 @@ public class SchoolHome {
 
 	public void attachDirty(School instance) {
 		log.debug("attaching dirty School instance");
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
+			tx.commit();
 			log.debug("attach successful");
 		} catch (RuntimeException re) {
 			log.error("attach failed", re);

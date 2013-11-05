@@ -20,7 +20,6 @@ public class StudentHome {
 	private static final Log log = LogFactory.getLog(StudentHome.class);
 
 	private final SessionFactory sessionFactory = getSessionFactory();
-
 	protected SessionFactory getSessionFactory() {
 		try {
 			return (SessionFactory) new InitialContext()

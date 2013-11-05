@@ -20,6 +20,19 @@ public class DatabaseConnection {
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rs = null;
+	public static void main(String[] args)
+	{
+		School school = new School();
+		school.setName("Test School3");
+		school.setPhone("1111111111");
+		school.setState("UT");
+		school.setStreetAddress("123 fake st");
+		school.setZip("84015");
+		school.setCity("Blah");
+		SchoolHome sh = new SchoolHome();
+		sh.attachDirty(school);
+		
+	}
 	public DatabaseConnection() throws SQLException
 	{
 		
@@ -59,7 +72,7 @@ public class DatabaseConnection {
 			rs.close();
 		}
 	}
-	public List<Event> getEvents(String Query)
+	/*public List<Event> getEvents(String Query)
 	{
 		try{
 			
@@ -68,22 +81,22 @@ public class DatabaseConnection {
 			rs = this.executeQuery(Query);
 			while(rs.next())
 			{
-				Event event = new Event(rs.getInt("id"), rs.getString("Name"),rs.getInt("EventTypeID"), rs.get)
+				//Event event = new Event(rs.getInt("id"), rs.getString("Name"),rs.getInt("EventTypeID"), rs.get)
 			}
-			/*	private int ID = -1;
+				private int ID = -1;
 	private String Name;
 	private int EventTypeID;
 	private int MinTeamSize;
 	private int MaxTeamSize;
 	private int MaxEntriesPerScool;
 	private Date CreatedDate;
-	private String Details;*/
+	private String Details;
 			return null;
 		}
 		finally{
 			rs.close();
 		}
-	}
+	}*/
 	
 	
 }

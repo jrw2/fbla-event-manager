@@ -37,8 +37,8 @@ public class Event {
 		this.CreatedDate = createddate;
 		this.Details = details;
 	}
-	public EventType EventType()
+	/*public EventType EventType()
 	{
 		return null;
-	}
+	}*/
 }
