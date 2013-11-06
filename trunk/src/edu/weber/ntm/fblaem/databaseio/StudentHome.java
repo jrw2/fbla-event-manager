@@ -3,11 +3,15 @@ package edu.weber.ntm.fblaem.databaseio;
 // Generated Nov 1, 2013 7:05:48 PM by Hibernate Tools 3.4.0.CR1
 
 import java.util.List;
+
 import javax.naming.InitialContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.LockMode;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Example;
 
 /**
@@ -19,16 +23,10 @@ public class StudentHome {
 
 	private static final Log log = LogFactory.getLog(StudentHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private final SessionFactory sessionFactory;
+	public StudentHome(SessionFactory sessionFactory)
+	{
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void persist(Student transientInstance) {
@@ -44,13 +42,16 @@ public class StudentHome {
 
 	public void attachDirty(Student instance) {
 		log.debug("attaching dirty Student instance");
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
 		} catch (RuntimeException re) {
 			log.error("attach failed", re);
+			tx.rollback();
 			throw re;
 		}
+		tx.commit();
 	}
 
 	public void attachClean(Student instance) {
@@ -107,15 +108,18 @@ public class StudentHome {
 
 	public List findByExample(Student instance) {
 		log.debug("finding Student instance by example");
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		try {
 			List results = sessionFactory.getCurrentSession()
 					.createCriteria("edu.weber.ntm.fblaem.databaseio.Student")
 					.add(Example.create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());
+			tx.commit();
 			return results;
 		} catch (RuntimeException re) {
 			log.error("find by example failed", re);
+			tx.commit();
 			throw re;
 		}
 	}
