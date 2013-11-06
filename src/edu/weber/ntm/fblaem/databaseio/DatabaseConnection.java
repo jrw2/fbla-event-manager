@@ -33,6 +33,9 @@ public class DatabaseConnection {
 	private TeacherHome teacherHome = new TeacherHome(sessionFactory);
 	private TeamHome teamHome = new TeamHome(sessionFactory);
 	*/
+	public DatabaseConnection() throws SQLException
+	{
+	}
 	protected SessionFactory getSessionFactory() {
 		try {
 			Configuration cfg = new Configuration();
@@ -62,7 +65,7 @@ public class DatabaseConnection {
 		tx.commit();
 		return students;
 	}
-	public Object getByID(int id, Class<?> cls)
+	public Object getByID(Class<?> cls, int id)
 	{
 		Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
 		try
@@ -96,8 +99,18 @@ public class DatabaseConnection {
 		tx.commit();
 		return (Teacher) teacher.toArray()[0];
 	}
-	
-	
+	public Student getStudentWithEvents(int id)
+	{
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
+		List<Student> student = sessionFactory.getCurrentSession()
+				.createQuery("from Student s inner join s.studentEventTeams set inner join set.team t inner join set.").list();
+		tx.commit();
+		return (Student) student.toArray()[0];
+	}
+	public List<Team> getEventWithTeams(int id)
+	{
+		return null;
+	}
 	
 	/*public static void main(String[] args)
 	{
@@ -119,9 +132,7 @@ public class DatabaseConnection {
 		//Student student = (Student) sth.findByExample(instance)
 		
 	}*/
-	public DatabaseConnection() throws SQLException
-	{
-	}
+
 	/*
 	private ResultSet executeQuery(String Query) throws SQLException
 	{

@@ -10,7 +10,7 @@ import java.util.Date;
 public class StudentEventTeam implements java.io.Serializable {
 
 	private StudentEventTeamId id;
-	private Event event;
+	private EventInstance eventInstance;
 	private Teacher teacher;
 	private Team team;
 	private Student student;
@@ -19,18 +19,18 @@ public class StudentEventTeam implements java.io.Serializable {
 	public StudentEventTeam() {
 	}
 
-	public StudentEventTeam(StudentEventTeamId id, Event event, Team team,
+	public StudentEventTeam(StudentEventTeamId id, EventInstance eventInstance, Team team,
 			Student student) {
 		this.id = id;
-		this.event = event;
+		this.eventInstance = eventInstance;
 		this.team = team;
 		this.student = student;
 	}
 
-	public StudentEventTeam(StudentEventTeamId id, Event event,
+	public StudentEventTeam(StudentEventTeamId id, EventInstance eventInstance,
 			Teacher teacher, Team team, Student student, Date enrollmentDate) {
 		this.id = id;
-		this.event = event;
+		this.eventInstance = eventInstance;
 		this.teacher = teacher;
 		this.team = team;
 		this.student = student;
@@ -45,12 +45,12 @@ public class StudentEventTeam implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Event getEvent() {
-		return this.event;
+	public EventInstance getEventInstance() {
+		return this.eventInstance;
 	}
 
-	public void setEvent(Event event) {
-		this.event = event;
+	public void setEventInstance(EventInstance eventInstance) {
+		this.eventInstance = eventInstance;
 	}
 
 	public Teacher getTeacher() {
