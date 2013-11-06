@@ -23,22 +23,12 @@ public class SchoolHome {
 
 	private static final Log log = LogFactory.getLog(SchoolHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
-
-	protected SessionFactory getSessionFactory() {
-		try {
-			Configuration cfg = new Configuration();
-			cfg.configure();
-			SessionFactory sf = cfg.buildSessionFactory();
-			sf.openSession();
-			return sf;
-			//return (SessionFactory) new InitialContext().lookup("SessionFactory");*
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private final SessionFactory sessionFactory;
+	public SchoolHome(SessionFactory sessionFactory)
+	{
+		this.sessionFactory = sessionFactory;
 	}
+
 
 	public void persist(School transientInstance) {
 		log.debug("persisting School instance");
@@ -60,6 +50,7 @@ public class SchoolHome {
 			log.debug("attach successful");
 		} catch (RuntimeException re) {
 			log.error("attach failed", re);
+			tx.rollback();
 			throw re;
 		}
 	}
@@ -101,6 +92,7 @@ public class SchoolHome {
 
 	public School findById(java.lang.Integer id) {
 		log.debug("getting School instance with id: " + id);
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		try {
 			School instance = (School) sessionFactory.getCurrentSession().get(
 					"edu.weber.ntm.fblaem.databaseio.School", id);
@@ -109,9 +101,11 @@ public class SchoolHome {
 			} else {
 				log.debug("get successful, instance found");
 			}
+			tx.commit();
 			return instance;
 		} catch (RuntimeException re) {
 			log.error("get failed", re);
+			tx.commit();
 			throw re;
 		}
 	}

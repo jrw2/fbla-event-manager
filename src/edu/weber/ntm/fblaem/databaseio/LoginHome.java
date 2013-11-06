@@ -19,17 +19,10 @@ public class LoginHome {
 
 	private static final Log log = LogFactory.getLog(LoginHome.class);
 
-	private final SessionFactory sessionFactory = getSessionFactory();
-
-	protected SessionFactory getSessionFactory() {
-		try {
-			return (SessionFactory) new InitialContext()
-					.lookup("SessionFactory");
-		} catch (Exception e) {
-			log.error("Could not locate SessionFactory in JNDI", e);
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
+	private final SessionFactory sessionFactory;
+	public LoginHome(SessionFactory sessionFactory)
+	{
+		this.sessionFactory = sessionFactory;
 	}
 
 	public void persist(Login transientInstance) {
