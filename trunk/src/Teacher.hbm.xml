@@ -24,7 +24,7 @@
             <column name="Phone" length="20" not-null="true" />
         </property>
         <property name="altPhone" type="string">
-            <column name="AltPhone" length="20" not-null="true" />
+            <column name="AltPhone" length="20"/>
         </property>
         <property name="createDate" type="timestamp">
             <column name="CreateDate" length="0" />

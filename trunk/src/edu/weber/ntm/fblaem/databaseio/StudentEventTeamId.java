@@ -8,15 +8,15 @@ package edu.weber.ntm.fblaem.databaseio;
 public class StudentEventTeamId implements java.io.Serializable {
 
 	private int studentId;
-	private int eventId;
+	private int eventInstanceId;
 	private int teamId;
 
 	public StudentEventTeamId() {
 	}
 
-	public StudentEventTeamId(int studentId, int eventId, int teamId) {
+	public StudentEventTeamId(int studentId, int eventInstanceId, int teamId) {
 		this.studentId = studentId;
-		this.eventId = eventId;
+		this.eventInstanceId = eventInstanceId;
 		this.teamId = teamId;
 	}
 
@@ -28,12 +28,12 @@ public class StudentEventTeamId implements java.io.Serializable {
 		this.studentId = studentId;
 	}
 
-	public int getEventId() {
-		return this.eventId;
+	public int getEventInstanceId() {
+		return this.eventInstanceId;
 	}
 
-	public void setEventId(int eventId) {
-		this.eventId = eventId;
+	public void setEventInstanceId(int eventInstanceId) {
+		this.eventInstanceId = eventInstanceId;
 	}
 
 	public int getTeamId() {
@@ -54,7 +54,7 @@ public class StudentEventTeamId implements java.io.Serializable {
 		StudentEventTeamId castOther = (StudentEventTeamId) other;
 
 		return (this.getStudentId() == castOther.getStudentId())
-				&& (this.getEventId() == castOther.getEventId())
+				&& (this.getEventInstanceId() == castOther.getEventInstanceId())
 				&& (this.getTeamId() == castOther.getTeamId());
 	}
 
@@ -62,7 +62,7 @@ public class StudentEventTeamId implements java.io.Serializable {
 		int result = 17;
 
 		result = 37 * result + this.getStudentId();
-		result = 37 * result + this.getEventId();
+		result = 37 * result + this.getEventInstanceId();
 		result = 37 * result + this.getTeamId();
 		return result;
 	}

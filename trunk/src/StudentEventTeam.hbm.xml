@@ -8,15 +8,15 @@
             <key-property name="studentId" type="int">
                 <column name="StudentID" />
             </key-property>
-            <key-property name="eventId" type="int">
-                <column name="EventID" />
+            <key-property name="eventInstanceId" type="int">
+                <column name="EventInstanceID" />
             </key-property>
             <key-property name="teamId" type="int">
                 <column name="TeamID" />
             </key-property>
         </composite-id>
-        <many-to-one name="event" class="edu.weber.ntm.fblaem.databaseio.Event" update="false" insert="false" fetch="select">
-            <column name="EventID" not-null="true" />
+        <many-to-one name="eventInstance" class="edu.weber.ntm.fblaem.databaseio.EventInstance" update="false" insert="false" fetch="select">
+            <column name="EventInstanceID" not-null="true" />
         </many-to-one>
         <many-to-one name="teacher" class="edu.weber.ntm.fblaem.databaseio.Teacher" fetch="select">
             <column name="EnrolledByTeacherID" />

@@ -13,7 +13,7 @@ public class TestClass {
 /*
 			List<Student> s = db.getAllStudents();
 			s.contains(1);*/
-			Student s = (Student) db.getByID(1, Student.class);
+			Student s = (Student) db.getByID(Student.class,1);
 			System.out.println(s);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
