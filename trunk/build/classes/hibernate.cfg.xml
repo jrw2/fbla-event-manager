@@ -14,7 +14,7 @@
   <mapping resource="Student.hbm.xml"/>
   <mapping resource="Teacher.hbm.xml"/>
   <mapping resource="StudentEventTeam.hbm.xml"/>
-  <mapping resource="Team.hbm.xml"/>
+  <mapping resource="Team.hbm.xml"/> 
   <mapping resource="Role.hbm.xml"/>
   <mapping resource="Login.hbm.xml"/>
   <mapping resource="Event.hbm.xml"/>

@@ -174,3 +174,5 @@ INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSc
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Web Site Design","1","3","2","3",now());
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Word Processing I","1","1","2","1",now());
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Word Processing II","1","1","2","1",now());
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"Somewhere");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(2,now(),now(),"Somewhere else");

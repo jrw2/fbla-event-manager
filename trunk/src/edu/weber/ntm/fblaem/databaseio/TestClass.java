@@ -10,11 +10,21 @@ public class TestClass {
 		DatabaseConnection db;
 		try {
 			db = new DatabaseConnection();
-/*
+
 			List<Student> s = db.getAllStudents();
-			s.contains(1);*/
-			Student s = (Student) db.getByID(Student.class,1);
-			System.out.println(s);
+			s.contains(1);
+			Student s1 = (Student) db.getByID(Student.class,1);
+			s1.setFirstName("Preston");
+			db.saveOrUpdate(s1);
+			/*s = new Student();
+			s.setFirstName("asdf");
+			s.setLastName("asdf1");
+			s.setSchool((School) db.getByID(School.class, 1));
+			db.saveOrUpdate(s);*/
+			List<Student> students = db.getAllStudents();
+			Teacher t = db.getTeacherWithSchoolAndStudents(1);
+			Student firstStudentInSet = (Student) t.getSchool().getStudents().iterator().next();
+			System.out.println("");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -53,7 +53,7 @@ public class DatabaseConnection {
 	public List<Event> getAllEvents()
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
-		Query query = sessionFactory.getCurrentSession().createQuery("from Event e join e.eventInstances ei");
+		Query query = sessionFactory.getCurrentSession().createQuery("from Event e join fetch e.eventInstances ei");
 		List<Event> events = query.list();
 		tx.commit();
 		return events;
@@ -84,34 +84,41 @@ public class DatabaseConnection {
 		tx.commit();
 		return schools;
 	}
-	public School getSchoolWithStudents(int id)
+	public School getSchoolWithStudents(int schoolID)
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
-		List<School> school = sessionFactory.getCurrentSession().createQuery("from School s inner join s.students ss where s.id = " + id).list();
+		School school = (School) sessionFactory.getCurrentSession().createQuery("select s from School s inner join fetch s.students ss where s.id = " + schoolID).list();
 		tx.commit();
-		return (School) school.toArray()[0];
+		return school;
 	}
-	public Teacher getTeacherWithSchoolAndStudents(int id)
+	public Teacher getTeacherWithSchoolAndStudents(int teacherID)
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
-		List<Teacher> teacher = sessionFactory.getCurrentSession()
-				.createQuery("from Teacher t inner join t.school s inner join s.students ss where t.id = " + id).list();
+		Teacher t = (Teacher) sessionFactory.getCurrentSession()
+				.createQuery("select t from Teacher t inner join fetch t.school s inner join fetch s.students ss where t.id = " + teacherID).list().get(0);
 		tx.commit();
-		return (Teacher) teacher.toArray()[0];
+		
+		
+		return t ;
 	}
-	public Student getStudentWithEvents(int id)
+	public Student getStudentWithEvents(int studentID)
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
-		List<Student> student = sessionFactory.getCurrentSession()
-				.createQuery("from Student s inner join s.studentEventTeams set inner join set.team t inner join set.").list();
+		Student student = (Student) sessionFactory.getCurrentSession()
+				.createQuery("select s from Student s inner join fetch s.studentEventTeams set inner join fetch set.team t inner join set.eventInstace where s.id =" + studentID).list();
 		tx.commit();
-		return (Student) student.toArray()[0];
+		return student;
 	}
 	public List<Team> getEventWithTeams(int id)
 	{
 		return null;
+	}	
+	public void saveOrUpdate(Object object)
+	{//if ID exists it is updated, otherise a new one is saved
+		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
+		sessionFactory.getCurrentSession().saveOrUpdate(object);
+		tx.commit();
 	}
-	
 	/*public static void main(String[] args)
 	{
 		/*School school = new School();
