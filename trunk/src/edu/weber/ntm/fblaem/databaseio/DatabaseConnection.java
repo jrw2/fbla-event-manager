@@ -18,7 +18,7 @@ public class DatabaseConnection {
 	static final String DB_URL = "jdbc:mysql:orthanc.jrw.org";
 	static final String USER = "username";
 	static final String PASS = "password";
-	private final SessionFactory sessionFactory = getSessionFactory();
+	public final SessionFactory sessionFactory = getSessionFactory();
 	
 	private static final Log log = LogFactory.getLog(DatabaseConnection.class);
 	/*
@@ -119,6 +119,24 @@ public class DatabaseConnection {
 		sessionFactory.getCurrentSession().saveOrUpdate(object);
 		tx.commit();
 	}
+	public boolean isAdmin(int loginID)
+	{
+		Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+		Login login = (Login) sessionFactory.getCurrentSession()
+				.createQuery("select l from Login l inner join l.role where l.id =" + loginID).list();
+		if(login.getRole().getId() == 1)
+			return true;
+		return false;
+		
+	}
+	/*
+	public void enrollStudent(Student student, Login login, EventInstance eventInstance)
+	{
+		if(isAdmin(login.getId()) || student.getSchool())
+		{
+			
+		}
+	}*/
 	/*public static void main(String[] args)
 	{
 		/*School school = new School();
