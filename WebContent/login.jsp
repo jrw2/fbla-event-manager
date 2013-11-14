@@ -12,14 +12,26 @@
 </script>
 
 <style>
+
 #login {
+
 	width: 300px;
 	height: 75px;
 	background-color: #ebdc96;
 	padding: 10px;
 	border: 1px solid;
 	border-radius: 5px;
+	
 }
+
+#title{
+
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 10px;
+
+}
+
 </style>
 
 <%@ include file="/includes/shell/shell_body.jsp"%>
@@ -37,6 +49,9 @@
 				<tr><td>Password: </td><td><input type="password" id="password" style="width: 200px;" /></td></tr>
 			</table>	
 		</div>
+		<div class="centerPage" style="margin-top: 10px;">
+			<input type="submit" value="Sign in"/>
+		</div>		
 	</div>
 	
 </form>
