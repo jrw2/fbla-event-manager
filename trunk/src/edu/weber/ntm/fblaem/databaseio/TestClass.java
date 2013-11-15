@@ -5,16 +5,25 @@ import java.util.List;
 
 import javax.mail.Session;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+
+import edu.weber.ntm.fblaem.servlets.LoginManagement;
+
 public class TestClass {
 	@SuppressWarnings("unused")
+
+	public static final SessionFactory sessionFactory = getSessionFactory();
 	public static void main(String[] args)
 	{
 		DatabaseConnection db;
 		try {
-			db = new DatabaseConnection();
+			/*
 			Login l = (Login)db.getByID(Login.class, 1);
 			Teacher t = l.getTeacher();
 			School s = t.getSchool();
+			*/
 			/*
 			List<Student> s = db.getAllStudents();
 			s.contains(1);
@@ -32,13 +41,34 @@ public class TestClass {
 			s.setSchool((School) db.getByID(School.class, 1));
 			db.saveOrUpdate(s);*/
 			
+
+			
+			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+			Login l = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
+			l.setPassword(LoginManagement.hash("admin"));
+			tx.commit();
+		
+			
 			
 			
 			System.out.println("");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	protected static SessionFactory getSessionFactory() {
+		try {
+			Configuration cfg = new Configuration();
+			cfg.configure();
+			SessionFactory sf = cfg.buildSessionFactory();
+			sf.openSession();
+			return sf;
+			//return (SessionFactory) new InitialContext().lookup("SessionFactory");*
+		} catch (Exception e) {
+			throw new IllegalStateException(
+					"Could not locate SessionFactory in JNDI");
+		}
 	}
 }
