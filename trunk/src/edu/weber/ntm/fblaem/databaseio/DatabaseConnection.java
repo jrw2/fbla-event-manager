@@ -84,10 +84,10 @@ public class DatabaseConnection {
 		tx.commit();
 		return schools;
 	}
-	public School getSchoolWithStudents(int schoolID)
-	{
+	public List<School> getSchoolWithStudents(int schoolID)
+	{	System.out.println("schoolID: " +schoolID);
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
-		School school = (School) sessionFactory.getCurrentSession().createQuery("select s from School s inner join fetch s.students ss where s.id = " + schoolID).list();
+		List<School> school = (List<School>) sessionFactory.getCurrentSession().createQuery("select s from School s inner join fetch s.students ss where s.id = " + schoolID).list();
 		tx.commit();
 		return school;
 	}
@@ -195,7 +195,7 @@ public class DatabaseConnection {
 			rs.close();
 		}
 	}*/
-	/*public List<Event> getEvents(String Query)
+	/*public List<Event> getEvents(String Query)?
 	{
 		try{
 			

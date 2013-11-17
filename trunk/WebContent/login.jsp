@@ -1,9 +1,9 @@
-<%@ include file="/includes/shell/shell_top.jsp"%>
+<%@ include file="/includes/Shell/shell_top.jsp"%>
 <%-- <%@ page import = "edu.weber.ntm.fblaem.beans.beanNameHere"%> --%>
 <%-- <jsp:useBean id="" class="edu.weber.ntm.fblaem.beans.beanNameHere" scope="session"/> --%>
 <%-- <jsp:setProperty name="beanNameHere" property="*"/> --%>
 
-<%@ include file="/includes/shell/shell_header.jsp"%>
+<%@ include file="/includes/Shell/shell_header.jsp"%>
 
 <script type="text/javascript">
 
@@ -34,7 +34,7 @@
 
 </style>
 
-<%@ include file="/includes/shell/shell_body.jsp"%>
+<%@ include file="/includes/Shell/shell_body.jsp"%>
 <!-- Begin Page Content -->
 
 <form action="j_security_check" method="post">
@@ -57,4 +57,4 @@
 </form>
 
 <!-- End Page Content -->
-<%@ include file="/includes/shell/shell_footer.jsp"%>
+<%@ include file="/includes/Shell/shell_footer.jsp"%>

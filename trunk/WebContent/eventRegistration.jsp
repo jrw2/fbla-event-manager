@@ -1,9 +1,24 @@
-<%@ include file="/includes/shell/shell_top.jsp"%>
-<%-- <%@ page import = "edu.weber.ntm.fblaem.beans.beanNameHere"%> --%>
-<%-- <jsp:useBean id="" class="edu.weber.ntm.fblaem.beans.beanNameHere" scope="session"/> --%>
-<%-- <jsp:setProperty name="beanNameHere" property="*"/> --%>
+<%@page import="org.hibernate.Hibernate"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.StudentEventTeam"%>
+<%@ include file="/includes/Shell/shell_top.jsp"%>
 
-<%@ include file="/includes/shell/shell_header.jsp"%>
+<!-- IMPORTS ------------------------------------------------- -->
+<%@page import="edu.weber.ntm.fblaem.databaseio.Teacher"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.School"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.Event"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.StudentEventTeam"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
+<%@page import="org.hibernate.SessionFactory"%>
+<%@page import="org.hibernate.Transaction"%>
+
+<%@page import="java.util.Set"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Iterator"%>
+<!-- --------------------------------------------------------- -->
+
+<%@ include file="/includes/Shell/shell_header.jsp"%>
 
 <style>
 	.event {
@@ -41,18 +56,19 @@
 		float: left;
 	}
 </style>
-<script type="text/javascript">
 
+<script type="text/javascript">
 	function cancelEntry(type, eventId){
+		
 		if(type == "student"){
-			$('#firstName' + eventId).reset();
-			$('#lastName' + eventId).reset();
-			$('#team' + eventId).val("-1");
-		} else {
-			$('#teamName' + eventId).reset();
+			$("#firstName" + eventId).val("First Name");
+			$("#lastName" + eventId).val("Last Name");
+			showDiv("addStudent" + eventId);
+		} else{
+			$('#teamName' + eventId).val("Team Name");
+			showDiv("addTeam" + eventId);
 		}
 		
-		showDiv(type);
 	}
 	
 	function checkEntry(id, eventId){
@@ -66,18 +82,23 @@
 			} 
 		}
 	}
+	
 	function submitChanges(eventId, type){
-		
+		// set values needed in controller here.	
 	}
 </script>
 
-<%@ include file="/includes/shell/shell_body.jsp"%>
+<%@ include file="/includes/Shell/shell_body.jsp"%>
 
-<!--  SUBMISSION LOGIC -->
+<!-- GET PAGE DATA -->
 <%
+List<Event> events = (List<Event>)request.getAttribute("events");
 
+Teacher teacher = (Teacher)request.getAttribute("teacher");
+School school = (School)request.getAttribute("school");
 
 %>
+
 <!-- |BEGIN PAGE CONTENT| -->
 <!-- Submission Variables -->
 <input type="hidden" id="eventId" value="">
@@ -85,7 +106,7 @@
 
 <div id="pageHeader" class="titleDiv" style="display: block; border-bottom: 3px solid; margin-bottom: 4px;">
 		<div>
-			Event Registration - <span style="font-size: 20px;"> Teacher Name | School Representing <%System.out.println("Teacher Name | School Representing");%></span>
+			Event Registration - <span style="font-size: 20px;"> <%=teacher.getFirstName() + " " + teacher.getLastName()%> | <%=school.getName()%></span>
 		</div>
 		<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
 <%-- 		<%if(user.isAdmin()){ %> --%>
@@ -94,134 +115,177 @@
 			<a href="eventRegistration.jsp">Event Registration</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="">Profile</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="login.jsp">Logout</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a href="exportEvent?eventId=-1">Export All Events</a>
+			<a href="exportEvent?eventId=-1"><img src="<%=pdf%>"/> Export All Events</a>
 			
 		</div>
 </div>
 
-	<!-- 
-		loop through all of the different events.
-		Replace i with the eventTitle and then use that event title to access and submit the specific event.
-	 -->
-	<%for(int i=0; i < 5; i++){ 
-		
-		String maxTeams = "";
-		Boolean maxTeamsForEvent = true;
-		
-		if(maxTeamsForEvent){ // if max # of teams reached do not allow this to create new team.
-			maxTeams = "href";
-		}
-		
-	%>
+<%
+Set<Student> availableStudents = (Set<Student>)school.getStudents();
+
+DatabaseConnection db = new DatabaseConnection();
+SessionFactory sessionFactory = db.getSessionFactory();
+Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+
+for(int i=0; i < events.size(); i++){ 
 	
-		<form name="eventRegistration<%=i%>" action="" method="get">
+	Event event = events.get(i);
+	String maxTeams = Integer.toString(event.getMaxEntriesPerSchool());
+
+	Set<StudentEventTeam> studentEventTeams = (Set<StudentEventTeam>)event.getStudentEventTeams();
+	List<StudentEventTeam> schoolEventTeams = new ArrayList<StudentEventTeam>();
+	System.out.println("here3");
+	Iterator<StudentEventTeam> itr = (Iterator<StudentEventTeam>)studentEventTeams.iterator();
+
+    while(itr.hasNext()) {
+    	StudentEventTeam studentEventTeam = (StudentEventTeam)itr.next();
+    	if(studentEventTeam.getTeacher().getId() == teacher.getId()){
+    		schoolEventTeams.add(studentEventTeam);        	
+        }
+    }
+
+	if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){ 
+		maxTeams = "href";
+	}
+	
+%>
+<!-- C form to use method post for when it submits, get for when grabbing the page (forward in post to go to get). -->
+	<form name="eventRegistration<%=event.getId()%>" action="EventRegistration" method="post">
+	
+		<div id="availableEvents" class="pageContainer event">
 		
-			<div id="availableEvents" class="pageContainer event">
-			
-				<div id="header" style="border-bottom: 2px solid;">
-					<div id="title">
+			<div id="header" style="border-bottom: 2px solid;">
+				<div id="title">
+				
+					<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 					
-						Event Name - <a href="exportEvent?eventId=" style="font-weight: normal;">Export Event</a>
-						
-					</div>
-					
-					<div id="link" style="width: 90px;">
-					
-						<a <%=maxTeams%>="javascript:void(0)" onclick="showDiv('addTeam<%=i%>');">Add Team</a>
-						
-					</div>
-					
-					<div id="link">
-					
-						<a href="javascript:void(0)" onclick="showDiv('addStudent<%=i%>');">Register Student</a>
-						
-					</div>				
 				</div>
 				
-				<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
+				<div id="link" style="width: 90px;">
 				
-					This is the event description.This is the event description.This is the event description.This is the event description.
-					This is the event description.This is the event description.This is the event description.This is the event description.
-					This is the event description.This is the event description.This is the event description.This is the event description.
+					<a <%=maxTeams%>="javascript:void(0)" onclick="showDiv('addTeam<%=event.getId()%>');">Add Team</a>
+					
+				</div>
+				
+				<div id="link">
+				
+					<a href="javascript:void(0)" onclick="showDiv('addStudent<%=event.getId()%>');">Register Student</a>
 					
 				</div>				
-				
-				<div id="addStudent<%=i%>" class="addEntryDiv" style="display: none">
+			</div>
 			
-					<input type="text" id="firstName<%=i%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=i%>)"/>
-					<input type="text" id="lastName<%=i%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=i%>')"/>
-					
-					<select id="team<%=i%>">
+			<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
+			
+				<%=event.getDetails()%>
+				
+			</div>				
+			
+			<div id="addStudent<%=event.getId()%>" class="addEntryDiv" style="display: none">
+		
+				<input type="text" id="firstName<%=event.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=event.getId()%>)"/>
+				<input type="text" id="lastName<%=event.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=event.getId()%>')"/>
+				
+				<select id="team<%=event.getId()%>">
+					<% 
+					if(schoolEventTeams.size() > 0){
+						%>
 						<option value="-1">Select Team</option>
 						<optgroup label="-------------------------"></optgroup>
-						<% // Switch this to grab actual list of available teams, and only show option to add if available.
-						
-						for(int team = 0; team < 5; team++){
-							String eventMaxed = "";
+						<%
+						for(int team = 0; team < schoolEventTeams.size(); team++){
+							
+							// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
+// 							StudentEventTeam studentEventTeam = schoolEventTeams.get(team);
+// 							String eventMaxed = "";
+// // 							studentEventTeam.getTeam().getMaxIndividuals()
+// 							studentEventTeam.getEventInstance().getEvent().
 							Boolean maxStudentsForEvent = true;
 							
 							// if max # of teams reached do not allow this to create new team.
 							if(!maxStudentsForEvent){%> 
 								<option value="<%=i%>">Team <%=team%></option>
 							<%}
-						} %>
-					</select>
-										
-					<input type="submit" onclick="submitChanges(eventId, type)" value=" Register Student "/>
-					<input type="button" onclick="cancelEntry('student', <%=i%>)" value=" Cancel "/>
-				
-				</div>
-				
-				<div id="addTeam<%=i%>" class="addEntryDiv" style="display: none">
-			
-					<input type="text" id="teamName<%=i%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
+						} 
+					} else {%>
+						<option>No Teams</option>
+					<%}
 					
-					<input type="submit" onclick="submitChanges(eventId, type)" value=" Add Team "/>
-					<input type="submit" onclick="cancelEntry('team', <%=i%>)" value=" Cancel "/>
-				
-				</div>
-				
-				<div style="border-top: 2px solid;">
-					<%for(int teams=0; teams < 4; teams++){ %>
-						<div style="border-color:#848369">
-							<div id="title" style="width: 705px;">
-							
-								&nbsp;&nbsp;Team # <%=teams%> ( 3/5 )
-								
-							</div>
+					%>
+					
+				</select>
+									
+				<input type="submit" onclick="submitChanges(eventId, type)" value=" Register Student "/>
+				<input type="button" onclick="cancelEntry('student', <%=event.getId()%>)" value=" Cancel "/>
 			
-							<div id="link">
+			</div>
+			
+			<div id="addTeam<%=event.getId()%>" class="addEntryDiv" style="display: none">
+		
+				<input type="text" id="teamName<%=event.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
+				
+				<%					
+				String disableSubmit = "disable";
+				
+				if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
+					
+					disableSubmit = "";
+					
+				} %>
+				
+				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
+				<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
+			
+			</div>
+			
+			<div style="border-top: 2px solid;">
+				<%
+				Iterator<StudentEventTeam> schoolTeamsItr = (Iterator<StudentEventTeam>)schoolEventTeams.iterator();
+				
+			    while(schoolTeamsItr.hasNext()) {
+				
+					StudentEventTeam studentEventTeam = (StudentEventTeam)schoolTeamsItr.next();%>
+				
+					<div style="border-color:#848369">
+						<div id="title" style="width: 705px;">
+						
+							&nbsp;&nbsp;<%=studentEventTeam.getTeam().getName()%> ( <%="?/" + studentEventTeam.getTeam().getMaxIndividuals()%> )
 							
-								<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamId);">Remove Team</a>
-								
-							</div>
+						</div>
+		
+						<div id="link">
+						
+							<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamId);">Remove Team</a>
 							
 						</div>
 						
-						<%for(int teamMembers = 0; teamMembers < 5; teamMembers++){ %>
-							<div style="border-color:#848369; margin-left: 200px;">
+					</div>
+					
+					<%
+					// not sure how to get students registered for an event.  Need to not allow removal unless correct school
+					for(int teamMembers = 0; teamMembers < 5; teamMembers++){ %>
+						<div style="border-color:#848369; margin-left: 200px;">
+							
+							<div id="link">
+							
+								<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamMemberId);" style="font-size: 13px; color: red;">X&nbsp;&nbsp;</a>
 								
-								<div id="link">
-								
-									<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamMemberId);" style="font-size: 13px; color: red;">X&nbsp;&nbsp;</a>
-									
-								</div>
-								
-								<div id="teamMem">
-								
-									Norm Johnson <%=teamMembers%>
-									
-								</div>
-				
 							</div>
-						<%} %>
-					<%} %>
-				</div>
-			</div>			
+							
+							<div id="teamMem">
+							
+								Norm Johnson <%=teamMembers%>
+								
+							</div>
 			
-		</form>
+						</div>
+					<%} %>
+				<%} %>
+			</div>
+		</div>			
 		
-	<%} %>
+	</form>
+	
+<%} %>
 
 <!-- End Page Content -->
-<%@ include file="/includes/shell/shell_footer.jsp"%>
+<%@ include file="/includes/Shell/shell_footer.jsp"%>
