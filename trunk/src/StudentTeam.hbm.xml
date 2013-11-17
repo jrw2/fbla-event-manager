@@ -3,21 +3,15 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Nov 1, 2013 7:05:48 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="edu.weber.ntm.fblaem.databaseio.StudentEventTeam" table="StudentEventTeam" catalog="fblaem">
-        <composite-id name="id" class="edu.weber.ntm.fblaem.databaseio.StudentEventTeamId">
+    <class name="edu.weber.ntm.fblaem.databaseio.StudentTeam" table="StudentTeam" catalog="fblaem">
+        <composite-id name="id" class="edu.weber.ntm.fblaem.databaseio.StudentTeamId">
             <key-property name="studentId" type="int">
                 <column name="StudentID" />
-            </key-property>
-            <key-property name="eventInstanceId" type="int">
-                <column name="EventInstanceID" />
             </key-property>
             <key-property name="teamId" type="int">
                 <column name="TeamID" />
             </key-property>
         </composite-id>
-        <many-to-one name="eventInstance" class="edu.weber.ntm.fblaem.databaseio.EventInstance" update="false" lazy="false" insert="false" fetch="select">
-            <column name="EventInstanceID" not-null="true" />
-        </many-to-one>
         <many-to-one name="teacher" class="edu.weber.ntm.fblaem.databaseio.Teacher" lazy="false" fetch="select">
             <column name="EnrolledByTeacherID" />
         </many-to-one>

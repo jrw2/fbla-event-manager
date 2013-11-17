@@ -1,5 +1,8 @@
 USE fblaem;
+DROP VIEW IF EXISTS User_View;
+DROP VIEW IF EXISTS Group_View;
 DROP TABLE IF EXISTS StudentEventTeam;
+DROP TABLE IF EXISTS StudentTeam;
 DROP TABLE IF EXISTS EventInstance;
 DROP TABLE IF EXISTS Event;
 DROP TABLE IF EXISTS Team;
@@ -69,13 +72,6 @@ CREATE TABLE Login
 	FOREIGN KEY (RoleID)
 		REFERENCES Role(id)
 	);
-CREATE TABLE Team
-	(id mediumint NOT NULL auto_increment,
-	Name nvarchar(255),
-	MaxIndividuals nvarchar(255),
-	CreatedDate datetime,
-	PRIMARY KEY (id)
-	);
 CREATE TABLE Event
 	(id mediumint NOT NULL auto_increment,
 	Name nvarchar(255),
@@ -100,23 +96,43 @@ CREATE TABLE EventInstance
 	FOREIGN KEY (EventID)
 		REFERENCES Event(id)
 	);
-CREATE TABLE StudentEventTeam
+CREATE TABLE Team
+	(id mediumint NOT NULL auto_increment,
+	Name nvarchar(255),
+	MaxIndividuals nvarchar(255),
+	CreatedDate datetime,
+	EventInstanceID mediumint NOT NULL,
+	FOREIGN KEY (EventInstanceID)
+		REFERENCES EventInstance(id),
+	PRIMARY KEY (id)
+	);
+CREATE TABLE StudentTeam
 	(
 	StudentID mediumint,
-	EventInstanceID mediumint,
 	TeamID mediumint,
 	EnrollmentDate datetime,
 	EnrolledByTeacherID mediumint,
-	PRIMARY KEY (StudentID, EventInstanceID, TeamID),
+	PRIMARY KEY (StudentID, TeamID),
 	FOREIGN KEY (StudentID)
 		REFERENCES Student(id),
-	FOREIGN KEY (EventInstanceID)
-		REFERENCES EventInstance(id),
 	FOREIGN KEY (TeamID)
 		REFERENCES Team(id),
 	FOREIGN KEY (EnrolledByTeacherID)
 		REFERENCES Teacher(id)
 	);
+CREATE VIEW `fblaem`.`Group_View` AS
+    select 
+        `l`.`Username` AS `Username`, `r`.`RoleName` AS `RoleName`
+    from
+        (`fblaem`.`Login` `l`
+        join `fblaem`.`Role` `r` ON ((`l`.`RoleID` = `r`.`id`)));
+CREATE VIEW `fblaem`.`User_View` AS
+    select 
+        `fblaem`.`Login`.`Username` AS `Username`,
+        `fblaem`.`Login`.`Password` AS `Password`
+    from
+        `fblaem`.`Login`;
+
 INSERT INTO `fblaem`.`Role`(`RoleName`)VALUES("Administrator");
 INSERT INTO `fblaem`.`Role`(`RoleName`)VALUES("Teacher");
 INSERT INTO `fblaem`.`School`(`Name`,`StreetAddress`,`City`,`State`,`Zip`,`Phone`,`CreatedDate`)VALUES("Test School","123 fake st","Clearfield","UT","84015","1234567890",now());
@@ -124,6 +140,7 @@ INSERT INTO `fblaem`.`School`(`Name`,`StreetAddress`,`City`,`State`,`Zip`,`Phone
 INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`,`CreateDate`)VALUES("1","teacher@nowhere.com","AdminUser","AdminUser","1234567890",now());
 INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`,`CreateDate`)VALUES("2","teacher2@nowhere.com","TestTeacherfname","TestTeacherlname","1234567890",now());
 INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","testStudentfname","testStudentlname",now());
+INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","test2Studentfname","test2Studentlname",now());
 INSERT INTO `fblaem`.`Login`(`TeacherID`,`RoleID`,`Username`,`Password`,`Salt`)VALUES("1","1","admin","password","salt");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Individual");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Team");
@@ -174,5 +191,25 @@ INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSc
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Web Site Design","1","3","2","3",now());
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Word Processing I","1","1","2","1",now());
 INSERT INTO `fblaem`.`Event`(`Name`,`MinTeamSize`,`MaxTeamSize`,`MaxEntriesPerSchool`,`EventTypeID`,`CreatedDate`)VALUES("Word Processing II","1","1","2","1",now());
-INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"Somewhere");
-INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(2,now(),now(),"Somewhere else");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");
+INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(1,now(),now(),"");

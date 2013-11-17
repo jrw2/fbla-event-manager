@@ -8,12 +8,12 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="event" class="edu.weber.ntm.fblaem.databaseio.Event" fetch="select">
+        <many-to-one name="event" class="edu.weber.ntm.fblaem.databaseio.Event"  fetch="select">
             <column name="EventID" not-null="true" />
         </many-to-one>
         <property name="createdDate" type="timestamp">
             <column name="CreatedDate" length="0" />
-        </property>
+        </property>	
         <property name="startTime" type="timestamp">
             <column name="StartTime" length="0" />
         </property>
