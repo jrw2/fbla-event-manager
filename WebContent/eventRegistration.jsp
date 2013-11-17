@@ -1,12 +1,12 @@
 <%@page import="org.hibernate.Hibernate"%>
-<%@page import="edu.weber.ntm.fblaem.databaseio.StudentEventTeam"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.StudentTeam"%>
 <%@ include file="/includes/Shell/shell_top.jsp"%>
 
 <!-- IMPORTS ------------------------------------------------- -->
 <%@page import="edu.weber.ntm.fblaem.databaseio.Teacher"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.School"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Event"%>
-<%@page import="edu.weber.ntm.fblaem.databaseio.StudentEventTeam"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.StudentTeam"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
 <%@page import="org.hibernate.SessionFactory"%>
@@ -92,11 +92,10 @@
 
 <!-- GET PAGE DATA -->
 <%
-List<Event> events = (List<Event>)request.getAttribute("events");
+	List<Event> events = (List<Event>)request.getAttribute("events");
 
 Teacher teacher = (Teacher)request.getAttribute("teacher");
 School school = (School)request.getAttribute("school");
-
 %>
 
 <!-- |BEGIN PAGE CONTENT| -->
@@ -121,20 +120,20 @@ School school = (School)request.getAttribute("school");
 </div>
 
 <%
-Set<Student> availableStudents = (Set<Student>)school.getStudents();
+	Set<Student> availableStudents = (Set<Student>)school.getStudents();
 
 for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);
 	String maxTeams = Integer.toString(event.getMaxEntriesPerSchool());
 
-	Set<StudentEventTeam> studentEventTeams = (Set<StudentEventTeam>)event.getStudentEventTeams();
-	List<StudentEventTeam> schoolEventTeams = new ArrayList<StudentEventTeam>();
+	Set<StudentTeam> studentEventTeams = (Set<StudentTeam>)event.getStudentEventTeams();
+	List<StudentTeam> schoolEventTeams = new ArrayList<StudentTeam>();
 	System.out.println("here3");
-	Iterator<StudentEventTeam> itr = (Iterator<StudentEventTeam>)studentEventTeams.iterator();
+	Iterator<StudentTeam> itr = (Iterator<StudentTeam>)studentEventTeams.iterator();
 
     while(itr.hasNext()) {
-    	StudentEventTeam studentEventTeam = (StudentEventTeam)itr.next();
+    	StudentTeam studentEventTeam = (StudentTeam)itr.next();
     	if(studentEventTeam.getTeacher().getId() == teacher.getId()){
     		schoolEventTeams.add(studentEventTeam);        	
         }
@@ -143,7 +142,6 @@ for(int i=0; i < events.size(); i++){
 	if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){ 
 		maxTeams = "href";
 	}
-	
 %>
 <!-- C form to use method post for when it submits, get for when grabbing the page (forward in post to go to get). -->
 	<form name="eventRegistration<%=event.getId()%>" action="EventRegistration" method="post">
@@ -153,7 +151,7 @@ for(int i=0; i < events.size(); i++){
 			<div id="header" style="border-bottom: 2px solid;">
 				<div id="title">
 				
-					<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+					<%=event.getName()%> | <%=event.getEventType()%> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 					
 				</div>
 				
@@ -182,30 +180,33 @@ for(int i=0; i < events.size(); i++){
 				<input type="text" id="lastName<%=event.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=event.getId()%>')"/>
 				
 				<select id="team<%=event.getId()%>">
-					<% 
-					if(schoolEventTeams.size() > 0){
-						%>
+					<%
+						if(schoolEventTeams.size() > 0){
+					%>
 						<option value="-1">Select Team</option>
 						<optgroup label="-------------------------"></optgroup>
 						<%
-						for(int team = 0; team < schoolEventTeams.size(); team++){
-							
-							// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
-// 							StudentEventTeam studentEventTeam = schoolEventTeams.get(team);
-// 							String eventMaxed = "";
-// // 							studentEventTeam.getTeam().getMaxIndividuals()
-// 							studentEventTeam.getEventInstance().getEvent().
-							Boolean maxStudentsForEvent = true;
-							
-							// if max # of teams reached do not allow this to create new team.
-							if(!maxStudentsForEvent){%> 
+							for(int team = 0; team < schoolEventTeams.size(); team++){
+											
+											// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
+						// 							StudentEventTeam studentEventTeam = schoolEventTeams.get(team);
+						// 							String eventMaxed = "";
+						// // 							studentEventTeam.getTeam().getMaxIndividuals()
+						// 							studentEventTeam.getEventInstance().getEvent().
+											Boolean maxStudentsForEvent = true;
+											
+											// if max # of teams reached do not allow this to create new team.
+											if(!maxStudentsForEvent){
+						%> 
 								<option value="<%=i%>">Team <%=team%></option>
-							<%}
-						} 
-					} else {%>
+							<%
+								}
+											} 
+										} else {
+							%>
 						<option>No Teams</option>
-					<%}
-					
+					<%
+						}
 					%>
 					
 				</select>
@@ -219,27 +220,29 @@ for(int i=0; i < events.size(); i++){
 		
 				<input type="text" id="teamName<%=event.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
 				
-				<%					
-				String disableSubmit = "disable";
+				<%
+									String disableSubmit = "disable";
+										
+										if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
+											
+											disableSubmit = "";
+											
+										}
+								%>
 				
-				if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
-					
-					disableSubmit = "";
-					
-				} %>
-				
-				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
+				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit%>value=" Add Team "/>
 				<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
 			
 			</div>
 			
 			<div style="border-top: 2px solid;">
 				<%
-				Iterator<StudentEventTeam> schoolTeamsItr = (Iterator<StudentEventTeam>)schoolEventTeams.iterator();
-				
-			    while(schoolTeamsItr.hasNext()) {
-				
-					StudentEventTeam studentEventTeam = (StudentEventTeam)schoolTeamsItr.next();%>
+					Iterator<StudentTeam> schoolTeamsItr = (Iterator<StudentTeam>)schoolEventTeams.iterator();
+						
+					    while(schoolTeamsItr.hasNext()) {
+						
+							StudentTeam studentEventTeam = (StudentTeam)schoolTeamsItr.next();
+				%>
 				
 					<div style="border-color:#848369">
 						<div id="title" style="width: 705px;">
