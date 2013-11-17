@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 1, 2013 7:05:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.weber.ntm.fblaem.databaseio.StudentEventTeam" table="StudentEventTeam" catalog="fblaem">
+        <composite-id name="id" class="edu.weber.ntm.fblaem.databaseio.StudentEventTeamId">
+            <key-property name="studentId" type="int">
+                <column name="StudentID" />
+            </key-property>
+            <key-property name="eventInstanceId" type="int">
+                <column name="EventInstanceID" />
+            </key-property>
+            <key-property name="teamId" type="int">
+                <column name="TeamID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="eventInstance" class="edu.weber.ntm.fblaem.databaseio.EventInstance" update="false" lazy="false" insert="false" fetch="select">
+            <column name="EventInstanceID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="teacher" class="edu.weber.ntm.fblaem.databaseio.Teacher" lazy="false" fetch="select">
+            <column name="EnrolledByTeacherID" />
+        </many-to-one>
+        <many-to-one name="team" class="edu.weber.ntm.fblaem.databaseio.Team" update="false" lazy="false" insert="false" fetch="select">
+            <column name="TeamID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="student" class="edu.weber.ntm.fblaem.databaseio.Student" update="false" lazy="false" insert="false" fetch="select">
+            <column name="StudentID" not-null="true" />
+        </many-to-one>
+        <property name="enrollmentDate" type="timestamp">
+            <column name="EnrollmentDate" length="0" />
+        </property>
+    </class>
+</hibernate-mapping>
