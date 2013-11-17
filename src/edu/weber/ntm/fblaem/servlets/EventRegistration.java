@@ -11,15 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
 import edu.weber.ntm.fblaem.databaseio.*;
 
 @WebServlet(name="EventRegistration", 
 urlPatterns={"/EventRegistration"})
 public class EventRegistration extends HttpServlet{
+	private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 	
 	private static final long serialVersionUID = 3743123062179776667L;
 	
@@ -35,7 +36,6 @@ public class EventRegistration extends HttpServlet{
 		try {
 			
 			DatabaseConnection db = new DatabaseConnection();
-			SessionFactory sessionFactory = db.getSessionFactory();
 			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
 			
 			// LOGIC HERE FOR SUBMISSION OF NEW DATA
