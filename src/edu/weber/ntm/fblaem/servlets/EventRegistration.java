@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
@@ -21,9 +22,8 @@ import edu.weber.ntm.fblaem.databaseio.*;
 urlPatterns={"/EventRegistration"})
 public class EventRegistration extends HttpServlet{
 	
-	private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-	
 	private static final long serialVersionUID = 3743123062179776667L;
+	private static SessionFactory factory; 
 	
 	public EventRegistration()
 	{
@@ -34,18 +34,27 @@ public class EventRegistration extends HttpServlet{
 		
 		response.setContentType("text/html");
 		
+		Transaction tx = null;
+		
+		try{
+			factory = new Configuration().configure().buildSessionFactory();
+			
+		}catch (Throwable ex) { 
+			  System.err.println("Failed to create sessionFactory object." + ex);
+		     throw new ExceptionInInitializerError(ex); 
+		}
+		
+		Session session = factory.openSession();
+		
 		try {
 			
-			DatabaseConnection db = new DatabaseConnection();
-			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+	        tx = session.beginTransaction();
 			
-			// LOGIC HERE FOR SUBMISSION OF NEW DATA
-				
 			//	GET DATA TO PASS TO PAGE
-			Login login = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
+			Login login = (Login) factory.getCurrentSession().get(Login.class, 1);
 			Teacher teacher = login.getTeacher();
-			List<School> school = db.getSchoolWithStudents(teacher.getSchool().getId());		
-			List<Event> events = db.getAllEvents();
+			List<School> school = DatabaseConnection.getSchoolWithStudents(teacher.getSchool().getId());		
+			List<Event> events = DatabaseConnection.getAllEvents();
 			
 			// SET DATA FOR PAGE
 			request.setAttribute("school", school.get(0));
@@ -72,6 +81,7 @@ public class EventRegistration extends HttpServlet{
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// process updates and forward to servlet for display using doGet()
+		// LOGIC HERE FOR SUBMISSION OF NEW DATA
 		response.setContentType("text/html");
 		RequestDispatcher rd = request.getRequestDispatcher("EventRegistration");
 	

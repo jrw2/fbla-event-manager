@@ -18,7 +18,7 @@ public class DatabaseConnection {
 	static final String DB_URL = "jdbc:mysql:orthanc.jrw.org";
 	static final String USER = "username";
 	static final String PASS = "password";
-	public final SessionFactory sessionFactory = getSessionFactory();
+	public static final SessionFactory sessionFactory = getSessionFactory();
 	
 	private static final Log log = LogFactory.getLog(DatabaseConnection.class);
 	/*
@@ -36,7 +36,7 @@ public class DatabaseConnection {
 	public DatabaseConnection() throws SQLException
 	{
 	}
-	protected SessionFactory getSessionFactory() {
+	protected static SessionFactory getSessionFactory() {
 		try {
 			Configuration cfg = new Configuration();
 			cfg.configure();
@@ -50,7 +50,7 @@ public class DatabaseConnection {
 					"Could not locate SessionFactory in JNDI");
 		}
 	}
-	public List<Event> getAllEvents()
+	public static List<Event> getAllEvents()
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		Query query = sessionFactory.getCurrentSession().createQuery("from Event e join fetch e.eventInstances ei");
@@ -58,15 +58,14 @@ public class DatabaseConnection {
 		tx.commit();
 		return events;
 	}
-	
-	public List<Student> getAllStudents()
+	public static List<Student> getAllStudents()
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		List<Student> students = sessionFactory.getCurrentSession().createQuery("from Student s inner join s.school ss").list();
 		tx.commit();
 		return students;
 	}
-	public Object getByID(Class<?> cls, int id)
+	public static Object getByID(Class<?> cls, int id)
 	{
 		Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
 		try
@@ -78,21 +77,21 @@ public class DatabaseConnection {
 			tx.commit();
 		}		
 	}
-	public List<School> getAllSchools()
+	public static List<School> getAllSchools()
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		List<School> schools = sessionFactory.getCurrentSession().createQuery("from School").list();
 		tx.commit();
 		return schools;
 	}
-	public List<School> getSchoolWithStudents(int schoolID)
+	public static List<School> getSchoolWithStudents(int schoolID)
 	{	System.out.println("schoolID: " +schoolID);
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		List<School> school = (List<School>) sessionFactory.getCurrentSession().createQuery("select s from School s inner join fetch s.students ss where s.id = " + schoolID).list();
 		tx.commit();
 		return school;
 	}
-	public Teacher getTeacherWithSchoolAndStudents(int teacherID)
+	public static Teacher getTeacherWithSchoolAndStudents(int teacherID)
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		Teacher t = (Teacher) sessionFactory.getCurrentSession()
@@ -102,7 +101,7 @@ public class DatabaseConnection {
 		
 		return t ;
 	}
-	public Student getStudentWithEvents(int studentID)
+	public static Student getStudentWithEvents(int studentID)
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		Student student = (Student) sessionFactory.getCurrentSession()
@@ -110,17 +109,17 @@ public class DatabaseConnection {
 		tx.commit();
 		return student;
 	}
-	public List<Team> getEventWithTeams(int id)
+	public static List<Team> getEventWithTeams(int id)
 	{
 		return null;
 	}	
-	public void saveOrUpdate(Object object)
+	public static void saveOrUpdate(Object object)
 	{//if ID exists it is updated, otherise a new one is saved
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		sessionFactory.getCurrentSession().saveOrUpdate(object);
 		tx.commit();
 	}
-	public boolean isAdmin(int loginID)
+	public static boolean isAdmin(int loginID)
 	{
 		Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
 		Login login = (Login) sessionFactory.getCurrentSession()
@@ -131,14 +130,14 @@ public class DatabaseConnection {
 		
 	}
 	/*
-	public void enrollStudent(Student student, Login login, EventInstance eventInstance)
+	public static void enrollStudent(Student student, Login login, EventInstance eventInstance)
 	{
 		if(isAdmin(login.getId()) || student.getSchool())
 		{
 			
 		}
 	}*/
-	/*public static void main(String[] args)
+	/*public static static void main(String[] args)
 	{
 		/*School school = new School();
 		school.setName("Test School3");
@@ -176,7 +175,7 @@ public class DatabaseConnection {
 		}
 	}*/
 	/*
-	public List<Student> getStudents(String Query) throws SQLException
+	public static List<Student> getStudents(String Query) throws SQLException
 	{
 		try{
 			List<Student> students = new ArrayList<Student>();
@@ -196,7 +195,7 @@ public class DatabaseConnection {
 			rs.close();
 		}
 	}*/
-	/*public List<Event> getEvents(String Query)?
+	/*public static List<Event> getEvents(String Query)?
 	{
 		try{
 			

@@ -92,7 +92,7 @@
 
 <!-- GET PAGE DATA -->
 <%
-	List<Event> events = (List<Event>)request.getAttribute("events");
+List<Event> events = (List<Event>)request.getAttribute("events");
 
 Teacher teacher = (Teacher)request.getAttribute("teacher");
 School school = (School)request.getAttribute("school");
@@ -120,7 +120,7 @@ School school = (School)request.getAttribute("school");
 </div>
 
 <%
-	Set<Student> availableStudents = (Set<Student>)school.getStudents();
+Set<Student> availableStudents = (Set<Student>)school.getStudents();
 
 for(int i=0; i < events.size(); i++){ 
 	
@@ -133,15 +133,16 @@ for(int i=0; i < events.size(); i++){
 	Iterator<StudentTeam> itr = (Iterator<StudentTeam>)studentEventTeams.iterator();
 
     while(itr.hasNext()) {
-    	StudentTeam studentEventTeam = (StudentTeam)itr.next();
-    	if(studentEventTeam.getTeacher().getId() == teacher.getId()){
-    		schoolEventTeams.add(studentEventTeam);        	
+    	StudentTeam StudentTeam = (StudentTeam)itr.next();
+    	if(StudentTeam.getTeacher().getId() == teacher.getId()){
+    		schoolEventTeams.add(StudentTeam);        	
         }
     }
 
 	if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){ 
 		maxTeams = "href";
 	}
+	
 %>
 <!-- C form to use method post for when it submits, get for when grabbing the page (forward in post to go to get). -->
 	<form name="eventRegistration<%=event.getId()%>" action="EventRegistration" method="post">
@@ -151,7 +152,7 @@ for(int i=0; i < events.size(); i++){
 			<div id="header" style="border-bottom: 2px solid;">
 				<div id="title">
 				
-					<%=event.getName()%> | <%=event.getEventType()%> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+					<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 					
 				</div>
 				
@@ -180,33 +181,30 @@ for(int i=0; i < events.size(); i++){
 				<input type="text" id="lastName<%=event.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=event.getId()%>')"/>
 				
 				<select id="team<%=event.getId()%>">
-					<%
-						if(schoolEventTeams.size() > 0){
-					%>
+					<% 
+					if(schoolEventTeams.size() > 0){
+						%>
 						<option value="-1">Select Team</option>
 						<optgroup label="-------------------------"></optgroup>
 						<%
-							for(int team = 0; team < schoolEventTeams.size(); team++){
-											
-											// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
-						// 							StudentEventTeam studentEventTeam = schoolEventTeams.get(team);
-						// 							String eventMaxed = "";
-						// // 							studentEventTeam.getTeam().getMaxIndividuals()
-						// 							studentEventTeam.getEventInstance().getEvent().
-											Boolean maxStudentsForEvent = true;
-											
-											// if max # of teams reached do not allow this to create new team.
-											if(!maxStudentsForEvent){
-						%> 
+						for(int team = 0; team < schoolEventTeams.size(); team++){
+							
+							// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
+// 							StudentTeam StudentTeam = schoolEventTeams.get(team);
+// 							String eventMaxed = "";
+// // 							StudentTeam.getTeam().getMaxIndividuals()
+// 							StudentTeam.getEventInstance().getEvent().
+							Boolean maxStudentsForEvent = true;
+							
+							// if max # of teams reached do not allow this to create new team.
+							if(!maxStudentsForEvent){%> 
 								<option value="<%=i%>">Team <%=team%></option>
-							<%
-								}
-											} 
-										} else {
-							%>
+							<%}
+						} 
+					} else {%>
 						<option>No Teams</option>
-					<%
-						}
+					<%}
+					
 					%>
 					
 				</select>
@@ -220,34 +218,32 @@ for(int i=0; i < events.size(); i++){
 		
 				<input type="text" id="teamName<%=event.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
 				
-				<%
-									String disableSubmit = "disable";
-										
-										if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
-											
-											disableSubmit = "";
-											
-										}
-								%>
+				<%					
+				String disableSubmit = "disable";
 				
-				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit%>value=" Add Team "/>
+				if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
+					
+					disableSubmit = "";
+					
+				} %>
+				
+				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
 				<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
 			
 			</div>
 			
 			<div style="border-top: 2px solid;">
 				<%
-					Iterator<StudentTeam> schoolTeamsItr = (Iterator<StudentTeam>)schoolEventTeams.iterator();
-						
-					    while(schoolTeamsItr.hasNext()) {
-						
-							StudentTeam studentEventTeam = (StudentTeam)schoolTeamsItr.next();
-				%>
+				Iterator<StudentTeam> schoolTeamsItr = (Iterator<StudentTeam>)schoolEventTeams.iterator();
+				
+			    while(schoolTeamsItr.hasNext()) {
+				
+					StudentTeam StudentTeam = (StudentTeam)schoolTeamsItr.next();%>
 				
 					<div style="border-color:#848369">
 						<div id="title" style="width: 705px;">
 						
-							&nbsp;&nbsp;<%=studentEventTeam.getTeam().getName()%> ( <%="?/" + studentEventTeam.getTeam().getMaxIndividuals()%> )
+							&nbsp;&nbsp;<%=StudentTeam.getTeam().getName()%> ( <%="?/" + StudentTeam.getTeam().getMaxIndividuals()%> )
 							
 						</div>
 		
