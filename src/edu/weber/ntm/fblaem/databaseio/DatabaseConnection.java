@@ -58,6 +58,7 @@ public class DatabaseConnection {
 		tx.commit();
 		return events;
 	}
+	
 	public List<Student> getAllStudents()
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
