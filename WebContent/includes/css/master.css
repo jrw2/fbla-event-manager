@@ -1,4 +1,4 @@
-@CHARSET "ISO-8859-1";
+@charset "UTF-8";
 
 .100PercentHeight, html, body {
     height : auto !important; /* Ignored by Internet Explorer, applied everywhere else. */
@@ -70,7 +70,8 @@ input[type=password]:focus {
     color: #000000;
 }
 
-input[type=submit] {
+input[type=submit],
+input[type=button] {
     padding:5px 15px; 
     background:#B0AE80; 
     border:0 none;
