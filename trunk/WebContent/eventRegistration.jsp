@@ -123,10 +123,6 @@ School school = (School)request.getAttribute("school");
 <%
 Set<Student> availableStudents = (Set<Student>)school.getStudents();
 
-DatabaseConnection db = new DatabaseConnection();
-SessionFactory sessionFactory = db.getSessionFactory();
-Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
-
 for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);

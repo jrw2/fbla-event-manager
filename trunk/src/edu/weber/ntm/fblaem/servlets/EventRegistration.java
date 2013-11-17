@@ -20,6 +20,7 @@ import edu.weber.ntm.fblaem.databaseio.*;
 @WebServlet(name="EventRegistration", 
 urlPatterns={"/EventRegistration"})
 public class EventRegistration extends HttpServlet{
+	
 	private static SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 	
 	private static final long serialVersionUID = 3743123062179776667L;
