@@ -17,6 +17,9 @@
         <property name="createdDate" type="timestamp">
             <column name="CreatedDate" length="0" />
         </property>
+        <many-to-one name="eventInstance" class="edu.weber.ntm.fblaem.databaseio.EventInstance" lazy="false" fetch="select">
+            <column name="EventInstanceID" not-null="true" />
+        </many-to-one>
         <set name="studentEventTeams" table="StudentEventTeam" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="TeamID" not-null="true" />
