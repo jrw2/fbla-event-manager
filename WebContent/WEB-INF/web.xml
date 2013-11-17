@@ -20,7 +20,6 @@
 <security-constraint>
     <web-resource-collection>
         <web-resource-name>Secure Pages</web-resource-name>
-        <description/>
         <url-pattern>/disabled/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
