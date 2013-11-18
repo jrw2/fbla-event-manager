@@ -35,11 +35,11 @@
             </key>
             <one-to-many class="edu.weber.ntm.fblaem.databaseio.Login" />
         </set>
-        <set name="studentEventTeams" table="StudentEventTeam" inverse="true" lazy="true" fetch="select">
+        <set name="studentTeams" table="StudentTeam" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="EnrolledByTeacherID" />
             </key>
-            <one-to-many class="edu.weber.ntm.fblaem.databaseio.StudentEventTeam" />
+            <one-to-many class="edu.weber.ntm.fblaem.databaseio.StudentTeam" />
         </set>
     </class>
 </hibernate-mapping>

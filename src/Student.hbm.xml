@@ -23,11 +23,11 @@
         <property name="createDate" type="timestamp">
             <column name="CreateDate" length="0" />
         </property>
-        <set name="studentEventTeams" table="StudentEventTeam" inverse="true" lazy="false" fetch="select">
+        <set name="studentTeams" table="StudentTeam" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="StudentID" not-null="true" />
             </key>
-            <one-to-many class="edu.weber.ntm.fblaem.databaseio.StudentEventTeam" />
+            <one-to-many class="edu.weber.ntm.fblaem.databaseio.StudentTeam" />
         </set>
     </class>
 </hibernate-mapping>
