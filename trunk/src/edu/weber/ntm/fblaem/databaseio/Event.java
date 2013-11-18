@@ -19,7 +19,6 @@ public class Event implements java.io.Serializable {
 	private int maxEntriesPerSchool;
 	private Date createdDate;
 	private String details;
-	private Set studentEventTeams = new HashSet(0);
 	private Set eventInstances = new HashSet(0);
 
 	public Event() {
@@ -41,7 +40,6 @@ public class Event implements java.io.Serializable {
 		this.maxEntriesPerSchool = maxEntriesPerSchool;
 		this.createdDate = createdDate;
 		this.details = details;
-		this.studentEventTeams = studentEventTeams;
 		this.eventInstances = eventInstances;
 	}
 
@@ -107,14 +105,6 @@ public class Event implements java.io.Serializable {
 
 	public void setDetails(String details) {
 		this.details = details;
-	}
-
-	public Set getStudentEventTeams() {
-		return this.studentEventTeams;
-	}
-
-	public void setStudentEventTeams(Set studentEventTeams) {
-		this.studentEventTeams = studentEventTeams;
 	}
 
 	public Set getEventInstances() {

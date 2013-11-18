@@ -29,12 +29,6 @@
         <property name="details" type="string">
             <column name="Details" length="4000" />
         </property>
-        <set name="studentEventTeams" table="StudentEventTeam" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="EventID" not-null="true" />
-            </key>
-            <one-to-many class="edu.weber.ntm.fblaem.databaseio.StudentEventTeam" />
-        </set>
         <set name="eventInstances" table="EventInstance" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="EventID" not-null="true" />
