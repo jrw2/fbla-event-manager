@@ -175,7 +175,7 @@ for(int i=0; i < events.size(); i++){
 					<div id="header" style="border-bottom: 2px solid;">
 						<div id="title">
 						
-							<%/*event.getName()*/ %> | <%/*event.getEventType()*/ %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+							<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 							
 						</div>
 						

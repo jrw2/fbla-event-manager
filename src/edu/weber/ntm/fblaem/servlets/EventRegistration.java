@@ -72,18 +72,16 @@ public class EventRegistration extends HttpServlet{
 			// eventInstance everything tied too. event is master event
 
 			// FORWARD TO PAGE
-			RequestDispatcher rd = request.getRequestDispatcher("eventRegistration.jsp");
-			rd.forward(request, response);
-			
 			tx.commit();
 			
-			
 		} catch (Exception e) {
-			
 			e.printStackTrace();
-			
 		}
 	
+		RequestDispatcher rd = request.getRequestDispatcher("eventRegistration.jsp");
+		rd.forward(request, response);
+		
+		
 	}
 	
 	/**
