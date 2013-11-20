@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
 
 /**
- * Home object for domain model class StudentEventTeam.
+ * Home object for domain model class studentTeam.
  * @see edu.weber.ntm.fblaem.databaseio.StudentTeam
  * @author Hibernate Tools
  */
@@ -27,7 +27,7 @@ public class StudentTeamHome {
 	}
 
 	public void persist(StudentTeam transientInstance) {
-		log.debug("persisting StudentEventTeam instance");
+		log.debug("persisting StudentTeams instance");
 		try {
 			sessionFactory.getCurrentSession().persist(transientInstance);
 			log.debug("persist successful");
@@ -38,7 +38,7 @@ public class StudentTeamHome {
 	}
 
 	public void attachDirty(StudentTeam instance) {
-		log.debug("attaching dirty StudentEventTeam instance");
+		log.debug("attaching dirty StudentTeam instance");
 		try {
 			sessionFactory.getCurrentSession().saveOrUpdate(instance);
 			log.debug("attach successful");
@@ -49,7 +49,7 @@ public class StudentTeamHome {
 	}
 
 	public void attachClean(StudentTeam instance) {
-		log.debug("attaching clean StudentEventTeam instance");
+		log.debug("attaching clean StudentTeam instance");
 		try {
 			sessionFactory.getCurrentSession().lock(instance, LockMode.NONE);
 			log.debug("attach successful");
@@ -60,7 +60,7 @@ public class StudentTeamHome {
 	}
 
 	public void delete(StudentTeam persistentInstance) {
-		log.debug("deleting StudentEventTeam instance");
+		log.debug("deleting StudentTeam instance");
 		try {
 			sessionFactory.getCurrentSession().delete(persistentInstance);
 			log.debug("delete successful");
@@ -71,7 +71,7 @@ public class StudentTeamHome {
 	}
 
 	public StudentTeam merge(StudentTeam detachedInstance) {
-		log.debug("merging StudentEventTeam instance");
+		log.debug("merging StudentTeam instance");
 		try {
 			StudentTeam result = (StudentTeam) sessionFactory
 					.getCurrentSession().merge(detachedInstance);
@@ -85,11 +85,11 @@ public class StudentTeamHome {
 
 	public StudentTeam findById(
 			edu.weber.ntm.fblaem.databaseio.StudentTeamId id) {
-		log.debug("getting StudentEventTeam instance with id: " + id);
+		log.debug("getting studentTeam instance with id: " + id);
 		try {
 			StudentTeam instance = (StudentTeam) sessionFactory
 					.getCurrentSession().get(
-							"edu.weber.ntm.fblaem.databaseio.StudentEventTeam",
+							"edu.weber.ntm.fblaem.databaseio.studentTeam",
 							id);
 			if (instance == null) {
 				log.debug("get successful, no instance found");
@@ -104,12 +104,12 @@ public class StudentTeamHome {
 	}
 
 	public List findByExample(StudentTeam instance) {
-		log.debug("finding StudentEventTeam instance by example");
+		log.debug("finding studentTeam instance by example");
 		try {
 			List results = sessionFactory
 					.getCurrentSession()
 					.createCriteria(
-							"edu.weber.ntm.fblaem.databaseio.StudentEventTeam")
+							"edu.weber.ntm.fblaem.databaseio.studentTeam")
 					.add(Example.create(instance)).list();
 			log.debug("find by example successful, result size: "
 					+ results.size());

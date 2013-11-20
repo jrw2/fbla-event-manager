@@ -16,7 +16,7 @@ public class Team implements java.io.Serializable {
 	private String maxIndividuals;
 	private EventInstance eventInstance;
 	private Date createdDate;
-	private Set studentEventTeams = new HashSet(0);
+	private Set studentTeams = new HashSet(0);
 
 	public Team() {
 	}
@@ -30,11 +30,11 @@ public class Team implements java.io.Serializable {
 	}
 
 	public Team(String name, String maxIndividuals, Date createdDate,
-			Set studentEventTeams) {
+			Set studentTeams) {
 		this.name = name;
 		this.maxIndividuals = maxIndividuals;
 		this.createdDate = createdDate;
-		this.studentEventTeams = studentEventTeams;
+		this.studentTeams = studentTeams;
 	}
 
 	public Integer getId() {
@@ -69,12 +69,12 @@ public class Team implements java.io.Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public Set getStudentEventTeams() {
-		return this.studentEventTeams;
+	public Set getstudentTeams() {
+		return this.studentTeams;
 	}
 
-	public void setStudentEventTeams(Set studentEventTeams) {
-		this.studentEventTeams = studentEventTeams;
+	public void setstudentTeams(Set studentTeams) {
+		this.studentTeams = studentTeams;
 	}
 
 }

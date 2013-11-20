@@ -1,6 +1,8 @@
 package edu.weber.ntm.fblaem.servlets;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +25,7 @@ urlPatterns={"/EventRegistration"})
 public class EventRegistration extends HttpServlet{
 	
 	private static final long serialVersionUID = 3743123062179776667L;
-	private static SessionFactory factory; 
+	public static final SessionFactory sessionFactory = getSessionFactory();
 	
 	public EventRegistration()
 	{
@@ -36,30 +38,38 @@ public class EventRegistration extends HttpServlet{
 		
 		Transaction tx = null;
 		
-		try{
-			factory = new Configuration().configure().buildSessionFactory();
-			
-		}catch (Throwable ex) { 
-			  System.err.println("Failed to create sessionFactory object." + ex);
-		     throw new ExceptionInInitializerError(ex); 
-		}
+//		try{
+//			factory = new Configuration().configure().buildSessionFactory();
+//			
+//		}catch (Throwable ex) { 
+//			  System.err.println("Failed to create sessionFactory object." + ex);
+//		     throw new ExceptionInInitializerError(ex); 
+//		}
 		
-		Session session = factory.openSession();
-		
+//		Session session = factory.openSession();
 		try {
 			
-	        tx = session.beginTransaction();
+			// set this up to be created during login, and then use the same sessionFactory throughout. (do in loginManagement)
+			tx = sessionFactory.getCurrentSession().beginTransaction();
 			
 			//	GET DATA TO PASS TO PAGE
-			Login login = (Login) factory.getCurrentSession().get(Login.class, 1);
+			Login login = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
+			
 			Teacher teacher = login.getTeacher();
 			List<School> school = DatabaseConnection.getSchoolWithStudents(teacher.getSchool().getId());		
 			List<Event> events = DatabaseConnection.getAllEvents();
-			
+//			HashMap<Integer, Event> eventTypes = new HashMap<Integer, Event>();
+//			
+//			for (Event event : events) {
+//				eventTypes.put(event.getId(), event);
+//			}
 			// SET DATA FOR PAGE
 			request.setAttribute("school", school.get(0));
 			request.setAttribute("teacher", teacher);
 			request.setAttribute("events", events);
+//			request.setAttribute("eventTypeMap", eventTypes);
+			
+			// eventInstance everything tied too. event is master event
 
 			// FORWARD TO PAGE
 			RequestDispatcher rd = request.getRequestDispatcher("eventRegistration.jsp");
@@ -85,6 +95,19 @@ public class EventRegistration extends HttpServlet{
 		response.setContentType("text/html");
 		RequestDispatcher rd = request.getRequestDispatcher("EventRegistration");
 	
+	}
+	protected static SessionFactory getSessionFactory() {
+		try {
+			Configuration cfg = new Configuration();
+			cfg.configure();
+			SessionFactory sf = cfg.buildSessionFactory();
+			sf.openSession();
+			return sf;
+			//return (SessionFactory) new InitialContext().lookup("SessionFactory");*
+		} catch (Exception e) {
+			throw new IllegalStateException(
+					"Could not locate SessionFactory in JNDI");
+		}
 	}
 
 }
