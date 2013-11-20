@@ -19,7 +19,6 @@
 <!-- --------------------------------------------------------- -->
 
 <%@ include file="/includes/Shell/shell_header.jsp"%>
-
 <style>
 	.event {
 		margin-bottom: 20px;
