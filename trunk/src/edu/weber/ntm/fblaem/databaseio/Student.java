@@ -19,7 +19,7 @@ public class Student implements java.io.Serializable {
 	private String lastName;
 	private String middleName;
 	private Date createDate;
-	private Set studentEventTeams = new HashSet(0);
+	private Set studentTeams = new HashSet(0);
 
 	public Student() {
 	}
@@ -31,13 +31,13 @@ public class Student implements java.io.Serializable {
 	}
 
 	public Student(School school, String firstName, String lastName,
-			String middleName, Date createDate, Set studentEventTeams) {
+			String middleName, Date createDate, Set studentTeams) {
 		this.school = school;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.middleName = middleName;
 		this.createDate = createDate;
-		this.studentEventTeams = studentEventTeams;
+		this.studentTeams = studentTeams;
 	}
 
 	public Integer getId() {
@@ -88,12 +88,12 @@ public class Student implements java.io.Serializable {
 		this.createDate = createDate;
 	}
 
-	public Set getStudentEventTeams() {
-		return this.studentEventTeams;
+	public Set getStudentTeams() {
+		return this.studentTeams;
 	}
 
-	public void setStudentEventTeams(Set studentEventTeams) {
-		this.studentEventTeams = studentEventTeams;
+	public void setStudentTeams(Set studentTeams) {
+		this.studentTeams = studentTeams;
 	}
 
 }

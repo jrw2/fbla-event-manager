@@ -29,7 +29,7 @@ public class DatabaseConnection {
 	private EventTypeHome eventTypeHome = new EventTypeHome(sessionFactory);
 	private LoginHome loginHome = new LoginHome(sessionFactory);
 	private RoleHome roleHome = new RoleHome(sessionFactory);
-	private StudentEventTeamHome studentEventTeamHome = new StudentEventTeamHome(sessionFactory);
+	private StudentTeamHome studentTeamHome = new StudentTeamHome(sessionFactory);
 	private TeacherHome teacherHome = new TeacherHome(sessionFactory);
 	private TeamHome teamHome = new TeamHome(sessionFactory);
 	*/
@@ -105,7 +105,7 @@ public class DatabaseConnection {
 	{
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
 		Student student = (Student) sessionFactory.getCurrentSession()
-				.createQuery("select s from Student s inner join fetch s.studentEventTeams set inner join fetch set.team t inner join set.eventInstace where s.id =" + studentID).list();
+				.createQuery("select s from Student s inner join fetch s.studentTeams set inner join fetch set.team t inner join set.eventInstace where s.id =" + studentID).list();
 		tx.commit();
 		return student;
 	}

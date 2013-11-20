@@ -32,7 +32,7 @@ public class Event implements java.io.Serializable {
 
 	public Event(EventType eventType, String name, int minTeamSize,
 			int maxTeamSize, int maxEntriesPerSchool, Date createdDate,
-			String details, Set studentEventTeams, Set eventInstances) {
+			String details, Set studentTeams, Set eventInstances) {
 		this.eventType = eventType;
 		this.name = name;
 		this.minTeamSize = minTeamSize;

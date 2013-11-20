@@ -1,5 +1,4 @@
 <%@page import="org.hibernate.Hibernate"%>
-<%@page import="edu.weber.ntm.fblaem.databaseio.StudentTeam"%>
 <%@ include file="/includes/Shell/shell_top.jsp"%>
 
 <!-- IMPORTS ------------------------------------------------- -->
@@ -7,18 +6,18 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.School"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Event"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.StudentTeam"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.Team"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
 <%@page import="org.hibernate.SessionFactory"%>
 <%@page import="org.hibernate.Transaction"%>
 
-<%@page import="java.util.Set"%>
-<%@page import="java.util.List"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Iterator"%>
+<%@page import="java.util.*"%>
 <!-- --------------------------------------------------------- -->
 
 <%@ include file="/includes/Shell/shell_header.jsp"%>
+
 <style>
 	.event {
 		margin-bottom: 20px;
@@ -92,7 +91,6 @@
 <!-- GET PAGE DATA -->
 <%
 List<Event> events = (List<Event>)request.getAttribute("events");
-
 Teacher teacher = (Teacher)request.getAttribute("teacher");
 School school = (School)request.getAttribute("school");
 %>
@@ -124,162 +122,183 @@ Set<Student> availableStudents = (Set<Student>)school.getStudents();
 for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);
-	String maxTeams = Integer.toString(event.getMaxEntriesPerSchool());
-
-	Set<StudentTeam> studentEventTeams = (Set<StudentTeam>)event.getStudentEventTeams();
-	List<StudentTeam> schoolEventTeams = new ArrayList<StudentTeam>();
-	System.out.println("here3");
-	Iterator<StudentTeam> itr = (Iterator<StudentTeam>)studentEventTeams.iterator();
-
-    while(itr.hasNext()) {
-    	StudentTeam StudentTeam = (StudentTeam)itr.next();
-    	if(StudentTeam.getTeacher().getId() == teacher.getId()){
-    		schoolEventTeams.add(StudentTeam);        	
-        }
-    }
-
-	if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){ 
-		maxTeams = "href";
-	}
 	
-%>
-<!-- C form to use method post for when it submits, get for when grabbing the page (forward in post to go to get). -->
-	<form name="eventRegistration<%=event.getId()%>" action="EventRegistration" method="post">
+	if(event.getEventInstances() != null){
+		
+// 		EventInstance eventInstance = event.getEventInstaces()
+		
+		String maxTeamsPerSchool = Integer.toString(event.getMaxEntriesPerSchool());
+		
+		// how to get the number of teams enrolled for this school for an event???
+		
+// 		Set<StudentTeam> studentEventTeams = (Set<StudentTeam>)event.getStudentTeams();
+// 		List<StudentTeam> schoolTeams = new ArrayList<StudentTeam>();
+		
+		
+				
+		Iterator<EventInstance> itr = (Iterator<EventInstance>)event.getEventInstances().iterator();
 	
-		<div id="availableEvents" class="pageContainer event">
-		
-			<div id="header" style="border-bottom: 2px solid;">
-				<div id="title">
-				
-					<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
-					
-				</div>
-				
-				<div id="link" style="width: 90px;">
-				
-					<a <%=maxTeams%>="javascript:void(0)" onclick="showDiv('addTeam<%=event.getId()%>');">Add Team</a>
-					
-				</div>
-				
-				<div id="link">
-				
-					<a href="javascript:void(0)" onclick="showDiv('addStudent<%=event.getId()%>');">Register Student</a>
-					
-				</div>				
-			</div>
+		// HAS TO BE A BETTER WAY TO GO ABOUT THIS (TOMORROW UNDERSTAND DB BETTER AND WRITE GETTERS)
+	    while(itr.hasNext()) {
+	    	
+	    	List<Team> studentInstanceTeams = new ArrayList<Team>();
+	    	EventInstance eventInstance = (EventInstance)itr.next();
+	    	Set<Student> students = (Set<Student>)school.getStudents();
+	    	
+	    	for(Student student : students){
+	    		 
+	    		Set<StudentTeam> studentTeams = (Set<StudentTeam>)student.getStudentTeams();
+	    		
+	    		for(StudentTeam studentTeam : studentTeams){
+	    			
+	    			if(studentTeam.getTeam().getEventInstance().getId() == eventInstance.getId()){
+	    				
+	    				studentInstanceTeams.add(studentTeam.getTeam());
+	    				
+	    			}
+	    			
+	    		}
+	    		
+	    	}
 			
-			<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
 			
-				<%=event.getDetails()%>
-				
-			</div>				
+			if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
+				maxTeamsPerSchool = "href";
+			}
 			
-			<div id="addStudent<%=event.getId()%>" class="addEntryDiv" style="display: none">
-		
-				<input type="text" id="firstName<%=event.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=event.getId()%>)"/>
-				<input type="text" id="lastName<%=event.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=event.getId()%>')"/>
-				
-				<select id="team<%=event.getId()%>">
-					<% 
-					if(schoolEventTeams.size() > 0){
-						%>
-						<option value="-1">Select Team</option>
-						<optgroup label="-------------------------"></optgroup>
-						<%
-						for(int team = 0; team < schoolEventTeams.size(); team++){
-							
-							// HOW DO I GET THE NUMBER OF REGISTERED STUDENTS FOR AN EVENT????
-// 							StudentTeam StudentTeam = schoolEventTeams.get(team);
-// 							String eventMaxed = "";
-// // 							StudentTeam.getTeam().getMaxIndividuals()
-// 							StudentTeam.getEventInstance().getEvent().
-							Boolean maxStudentsForEvent = true;
-							
-							// if max # of teams reached do not allow this to create new team.
-							if(!maxStudentsForEvent){%> 
-								<option value="<%=i%>">Team <%=team%></option>
-							<%}
-						} 
-					} else {%>
-						<option>No Teams</option>
-					<%}
-					
-					%>
-					
-				</select>
-									
-				<input type="submit" onclick="submitChanges(eventId, type)" value=" Register Student "/>
-				<input type="button" onclick="cancelEntry('student', <%=event.getId()%>)" value=" Cancel "/>
+		%>
+			<!-- form to use method post for when it submits, get for when grabbing the page (forward in post to go to get). -->
+			<form name="eventRegistration<%=eventInstance.getId()%>" action="EventRegistration" method="post">
 			
-			</div>
-			
-			<div id="addTeam<%=event.getId()%>" class="addEntryDiv" style="display: none">
-		
-				<input type="text" id="teamName<%=event.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
+				<div id="availableEvents" class="pageContainer event">
 				
-				<%					
-				String disableSubmit = "disable";
-				
-				if(schoolEventTeams.size() < event.getMaxEntriesPerSchool()){
-					
-					disableSubmit = "";
-					
-				} %>
-				
-				<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
-				<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
-			
-			</div>
-			
-			<div style="border-top: 2px solid;">
-				<%
-				Iterator<StudentTeam> schoolTeamsItr = (Iterator<StudentTeam>)schoolEventTeams.iterator();
-				
-			    while(schoolTeamsItr.hasNext()) {
-				
-					StudentTeam StudentTeam = (StudentTeam)schoolTeamsItr.next();%>
-				
-					<div style="border-color:#848369">
-						<div id="title" style="width: 705px;">
+					<div id="header" style="border-bottom: 2px solid;">
+						<div id="title">
 						
-							&nbsp;&nbsp;<%=StudentTeam.getTeam().getName()%> ( <%="?/" + StudentTeam.getTeam().getMaxIndividuals()%> )
+							<%/*event.getName()*/ %> | <%/*event.getEventType()*/ %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 							
 						</div>
-		
+						
+						<div id="link" style="width: 90px;">
+						
+							<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="showDiv('addTeam<%=eventInstance.getId()%>');">Add Team</a>
+							
+						</div>
+						
 						<div id="link">
 						
-							<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamId);">Remove Team</a>
+							<a href="javascript:void(0)" onclick="showDiv('addStudent<%=eventInstance.getId()%>');">Register Student</a>
 							
-						</div>
-						
+						</div>				
 					</div>
 					
-					<%
-					// not sure how to get students registered for an event.  Need to not allow removal unless correct school
-					for(int teamMembers = 0; teamMembers < 5; teamMembers++){ %>
-						<div style="border-color:#848369; margin-left: 200px;">
+					<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
+					
+						<%=event.getDetails()%>
+						
+					</div>				
+					
+					<div id="addStudent<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
+				
+						<input type="text" id="firstName<%=eventInstance.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=eventInstance.getId()%>)"/>
+						<input type="text" id="lastName<%=eventInstance.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=eventInstance.getId()%>)"/>
+						
+						<select id="team<%=eventInstance.getId()%>">
+							<% 
+							if(studentInstanceTeams.size() > 0){
+								%>
+								<option value="-1">Select Team</option>
+								<optgroup label="-------------------------"></optgroup>
+								<%
+								for(int team = 0; team < studentInstanceTeams.size(); team++){
+									// need to create a way to insert a single student team
+									// Just allow them to create a team that has a single student.
+									Boolean maxStudentsForEvent = (studentInstanceTeams.size() < event.getMaxEntriesPerSchool()) ? true : false;
+									
+									// if max # of teams reached do not allow this to create new team.
+									if(!maxStudentsForEvent){%> 
+										<option value="<%=i%>"><%=studentInstanceTeams.get(team).getName()%></option>
+									<%}
+								} 
+							} else {%>
+								<option>No Teams</option>
+							<%}
 							
-							<div id="link">
+							%>
 							
-								<a <%=maxTeams%>="javascript:void(0)" onclick="remove(eventId, type, teamMemberId);" style="font-size: 13px; color: red;">X&nbsp;&nbsp;</a>
+						</select>
+											
+						<input type="submit" onclick="submitChanges(eventId, type)" value=" Register Student "/>
+						<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
+					
+					</div>
+					
+					<div id="addTeam<%=event.getId()%>" class="addEntryDiv" style="display: none">
+				
+						<input type="text" id="teamName<%=eventInstance.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
+						
+						<%					
+						String disableSubmit = "disable";
+						// move the code from admin here for creating teams.
+						if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){
+							
+							disableSubmit = "";
+							
+						} %>
+						
+						<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
+						<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
+					
+					</div>
+					
+					<div style="border-top: 2px solid;">
+						<%
+					   for(int iT = 0; iT < studentInstanceTeams.size(); iT++){
+						
+							Team team = studentInstanceTeams.get(iT);%>
+						
+							<div style="border-color:#848369">
+								<div id="title" style="width: 705px;">
+								
+									&nbsp;&nbsp;<%=team.getName()%> ( <%="?/" + team.getMaxIndividuals()%> )
+									
+								</div>
+				
+								<div id="link">
+								
+									<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="remove(eventId, type, teamId);">Remove Team</a>
+									
+								</div>
 								
 							</div>
 							
-							<div id="teamMem">
-							
-								Norm Johnson <%=teamMembers%>
-								
-							</div>
-			
-						</div>
-					<%} %>
-				<%} %>
-			</div>
-		</div>			
-		
-	</form>
-	
-<%} %>
+							<%
+							// not sure how to get students registered for an event.  Need to not allow removal unless correct school
+							for(int teamMembers = 0; teamMembers < 5; teamMembers++){ %>
+								<div style="border-color:#848369; margin-left: 200px;">
+									
+									<div id="link">
+									
+										<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="remove(eventId, type, teamMemberId);" style="font-size: 13px; color: red;">X&nbsp;&nbsp;</a>
+										
+									</div>
+									
+									<div id="teamMem">
+									
+										Norm Johnson <%=teamMembers%>
+										
+									</div>
+					
+								</div>
+							<%} %>
+						<%} %>
+					</div>
+				</div>			
+				
+			</form>
+		<%}
+	}
+} %>
 
 <!-- End Page Content -->
 <%@ include file="/includes/Shell/shell_footer.jsp"%>
