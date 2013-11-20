@@ -12,6 +12,10 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
 <%@page import="org.hibernate.SessionFactory"%>
 <%@page import="org.hibernate.Transaction"%>
+<%@page import="org.hibernate.Query"%>
+<%@page import="org.hibernate.SessionFactory"%>
+<%@page import="org.hibernate.Transaction"%>
+<%@page import="org.hibernate.cfg.Configuration"%>
 
 <%@page import="java.util.*"%>
 <!-- --------------------------------------------------------- -->
@@ -56,6 +60,8 @@
 </style>
 
 <script type="text/javascript">
+
+
 	function cancelEntry(type, eventId){
 		
 		if(type == "student"){
@@ -117,8 +123,15 @@ School school = (School)request.getAttribute("school");
 </div>
 
 <%
-Set<Student> availableStudents = (Set<Student>)school.getStudents();
+Configuration cfg = new Configuration();
+cfg.configure();
+SessionFactory sf = cfg.buildSessionFactory();
+sf.openSession();
 
+Set<Student> availableStudents = (Set<Student>)school.getStudents();
+Transaction  tx = sf.getCurrentSession().beginTransaction();
+Query query = sf.getCurrentSession().createQuery("from Event e join fetch e.eventInstances ei");
+events = query.list();
 for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);

@@ -1,9 +1,6 @@
 package edu.weber.ntm.fblaem.databaseio;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -109,10 +106,6 @@ public class DatabaseConnection {
 		tx.commit();
 		return student;
 	}
-	public static List<Team> getEventWithTeams(int id)
-	{
-		return null;
-	}	
 	public static void saveOrUpdate(Object object)
 	{//if ID exists it is updated, otherise a new one is saved
 		Transaction  tx = sessionFactory.getCurrentSession().beginTransaction();
