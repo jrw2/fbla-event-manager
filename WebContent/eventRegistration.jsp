@@ -9,8 +9,11 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.Team"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
+<%@page import="edu.weber.ntm.fblaem.databaseio.HibernateUtil"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
-<%@page import="org.hibernate.SessionFactory"%>
+<%@page import="org.hibernate.Session"%>
+
+<%@page import="org.hibernate.HibernateException"%>
 <%@page import="org.hibernate.Transaction"%>
 <%@page import="org.hibernate.Query"%>
 <%@page import="org.hibernate.SessionFactory"%>
@@ -123,14 +126,11 @@ School school = (School)request.getAttribute("school");
 </div>
 
 <%
-Configuration cfg = new Configuration();
-cfg.configure();
-SessionFactory sf = cfg.buildSessionFactory();
-sf.openSession();
+Session sf = HibernateUtil.getSessionFactory().openSession();
 
 Set<Student> availableStudents = (Set<Student>)school.getStudents();
-Transaction  tx = sf.getCurrentSession().beginTransaction();
-Query query = sf.getCurrentSession().createQuery("from Event e join fetch e.eventInstances ei");
+Transaction  tx = sf.beginTransaction();
+Query query = sf.createQuery("from Event e join fetch e.eventInstances ei");
 events = query.list();
 for(int i=0; i < events.size(); i++){ 
 	
