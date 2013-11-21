@@ -8,7 +8,7 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="eventType" class="edu.weber.ntm.fblaem.databaseio.EventType" fetch="select">
+        <many-to-one name="eventType" class="edu.weber.ntm.fblaem.databaseio.EventType" lazy="false" fetch="join">
             <column name="EventTypeID" />
         </many-to-one>
         <property name="name" type="string">
@@ -29,7 +29,7 @@
         <property name="details" type="string">
             <column name="Details" length="4000" />
         </property>
-        <set name="eventInstances" table="EventInstance" inverse="true" lazy="true" fetch="select">
+        <set name="eventInstances" table="EventInstance" inverse="true" lazy="false" fetch="join">
             <key>
                 <column name="EventID" not-null="true" />
             </key>

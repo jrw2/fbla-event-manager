@@ -9,7 +9,6 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.Team"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
-<%@page import="edu.weber.ntm.fblaem.databaseio.HibernateUtil"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
 <%@page import="org.hibernate.Session"%>
 
@@ -118,7 +117,6 @@ School school = (School)request.getAttribute("school");
 				<a href="admin.jsp">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 <%-- 		<%} %> --%>
 			<a href="eventRegistration.jsp">Event Registration</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a href="">Profile</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="login.jsp">Logout</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="exportEvent?eventId=-1"><img src="<%=pdf%>"/> Export All Events</a>
 			
@@ -126,16 +124,15 @@ School school = (School)request.getAttribute("school");
 </div>
 
 <%
-Session sf = HibernateUtil.getSessionFactory().openSession();
 
 Set<Student> availableStudents = (Set<Student>)school.getStudents();
-Transaction  tx = sf.beginTransaction();
-Query query = sf.createQuery("from Event e join fetch e.eventInstances ei");
-events = query.list();
+// Transaction  tx = sf.beginTransaction();
+// Query query = sf.createQuery("from Event e join fetch e.eventInstances ei");
+// events = query.list();
 for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);
-	
+
 	if(event.getEventInstances() != null){
 		
 // 		EventInstance eventInstance = event.getEventInstaces()
@@ -146,8 +143,6 @@ for(int i=0; i < events.size(); i++){
 		
 // 		Set<StudentTeam> studentEventTeams = (Set<StudentTeam>)event.getStudentTeams();
 // 		List<StudentTeam> schoolTeams = new ArrayList<StudentTeam>();
-		
-		
 				
 		Iterator<EventInstance> itr = (Iterator<EventInstance>)event.getEventInstances().iterator();
 	
@@ -157,10 +152,11 @@ for(int i=0; i < events.size(); i++){
 	    	List<Team> studentInstanceTeams = new ArrayList<Team>();
 	    	EventInstance eventInstance = (EventInstance)itr.next();
 	    	Set<Student> students = (Set<Student>)school.getStudents();
-	    	
+	    	Set<Team> teams = (Set<Team>)eventInstance.getTeams();
 	    	for(Student student : students){
 	    		 
 	    		Set<StudentTeam> studentTeams = (Set<StudentTeam>)student.getStudentTeams();
+	    		
 	    		
 	    		for(StudentTeam studentTeam : studentTeams){
 	    			
@@ -188,7 +184,7 @@ for(int i=0; i < events.size(); i++){
 					<div id="header" style="border-bottom: 2px solid;">
 						<div id="title">
 						
-							<%=event.getName() %> | <%=event.getEventType() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+							<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 							
 						</div>
 						
@@ -204,10 +200,13 @@ for(int i=0; i < events.size(); i++){
 							
 						</div>				
 					</div>
+					<%// WE NEED to handle null her as they won't have a description sometimes. 
+					// we need to 
 					
+					%>
 					<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
-					
-						<%=event.getDetails()%>
+
+						<%=event.getDetails() != null ? event.getDetails() : "No Description"%>
 						
 					</div>				
 					
@@ -218,19 +217,19 @@ for(int i=0; i < events.size(); i++){
 						
 						<select id="team<%=eventInstance.getId()%>">
 							<% 
-							if(studentInstanceTeams.size() > 0){
+							if(teams.size() > 0){
 								%>
 								<option value="-1">Select Team</option>
 								<optgroup label="-------------------------"></optgroup>
 								<%
-								for(int team = 0; team < studentInstanceTeams.size(); team++){
+								for(Team team : teams){
 									// need to create a way to insert a single student team
 									// Just allow them to create a team that has a single student.
-									Boolean maxStudentsForEvent = (studentInstanceTeams.size() < event.getMaxEntriesPerSchool()) ? true : false;
+									Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? true : false;
 									
 									// if max # of teams reached do not allow this to create new team.
 									if(!maxStudentsForEvent){%> 
-										<option value="<%=i%>"><%=studentInstanceTeams.get(team).getName()%></option>
+										<option value="<%=team.getId()%>"><%=team.getName()%></option>
 									<%}
 								} 
 							} else {%>
@@ -246,7 +245,7 @@ for(int i=0; i < events.size(); i++){
 					
 					</div>
 					
-					<div id="addTeam<%=event.getId()%>" class="addEntryDiv" style="display: none">
+					<div id="addTeam<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
 				
 						<input type="text" id="teamName<%=eventInstance.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName')"/>
 						
@@ -260,20 +259,23 @@ for(int i=0; i < events.size(); i++){
 						} %>
 						
 						<input type="submit" onclick="submitChanges(eventId, type)" <%=disableSubmit %>value=" Add Team "/>
-						<input type="button" onclick="cancelEntry('team', <%=event.getId()%>)" value=" Cancel "/>
+						<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
 					
 					</div>
 					
 					<div style="border-top: 2px solid;">
 						<%
-					   for(int iT = 0; iT < studentInstanceTeams.size(); iT++){
+					   for(Team team : teams){
 						
-							Team team = studentInstanceTeams.get(iT);%>
+							Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
 						
 							<div style="border-color:#848369">
 								<div id="title" style="width: 705px;">
-								
-									&nbsp;&nbsp;<%=team.getName()%> ( <%="?/" + team.getMaxIndividuals()%> )
+									<%
+										String enrolledStudents = Integer.toString(team.getstudentTeams().size());
+										String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
+									%>
+									&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
 									
 								</div>
 				
@@ -287,7 +289,7 @@ for(int i=0; i < events.size(); i++){
 							
 							<%
 							// not sure how to get students registered for an event.  Need to not allow removal unless correct school
-							for(int teamMembers = 0; teamMembers < 5; teamMembers++){ %>
+							for(StudentTeam studentTeam : studentTeams){ %>
 								<div style="border-color:#848369; margin-left: 200px;">
 									
 									<div id="link">
@@ -298,7 +300,7 @@ for(int i=0; i < events.size(); i++){
 									
 									<div id="teamMem">
 									
-										Norm Johnson <%=teamMembers%>
+										<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName() %>
 										
 									</div>
 					
