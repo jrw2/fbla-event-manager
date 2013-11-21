@@ -1,6 +1,10 @@
 package edu.weber.ntm.fblaem.servlets;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,8 +25,10 @@ import org.hibernate.cfg.Configuration;
 
 import edu.weber.ntm.fblaem.databaseio.*;
 
-@WebServlet(name="EventRegistration", 
-urlPatterns={"/EventRegistration"})
+@WebServlet(
+		name="EventRegistration", 
+		urlPatterns={"/EventRegistration"}
+)
 public class EventRegistration extends HttpServlet{
 	
 	private static final long serialVersionUID = 3743123062179776667L;
@@ -52,22 +58,6 @@ public class EventRegistration extends HttpServlet{
 			
 			tx.commit();
 			
-//			request.setAttribute("studentTeams", getStudentTeams());
-			
-			/*
-			Team - id, eventInstanceId
-			StudentTeam - studentId, teamId
-			EventInstance - id, eventId
-			Event has information.
-
-			1. Get Events
-			2. Loop through events
-			3. get EventInstance where eventId = event
-			4. getTeams using eventInstanceId
-			5. getStudentTeam using teamId
-			*/
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,7 +78,31 @@ public class EventRegistration extends HttpServlet{
 	
 	protected void processSubmission(HttpServletRequest request, HttpServletResponse response){
 		
-		// submission logic
+		String pageAction = request.getParameter("pageAction");
+		Transaction  tx = sf.beginTransaction();
+		
+		switch (pageAction) {
+		
+			case "addTeam":
+				System.out.println("Adding Team");
+				Team newTeam = new Team(); 
+				newTeam.setName(request.getParameter("teamName"));
+				newTeam.setCreatedDate(new Date());
+//				Query query = sf.createQuery("FROM EventInstance e WHERE e.id = " + request.getParameter("eventInstanceId"));
+				EventInstance newEventInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
+				newTeam.setEventInstance(newEventInstance); // need to fill in eventInstance data.
+				tx.commit();				
+				break;
+				
+			case "registerStudent":
+				System.out.println("Registering Student");
+				break;
+				
+			case "removeTeam":
+				System.out.println("Removing Team");
+				break;
+				
+		}
 		
 	}
 	
@@ -123,6 +137,7 @@ public class EventRegistration extends HttpServlet{
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		System.out.println("getting to submission post");
 		if(request.getParameter("errorMessage") == null){
 			processSubmission(request, response);
 		}
