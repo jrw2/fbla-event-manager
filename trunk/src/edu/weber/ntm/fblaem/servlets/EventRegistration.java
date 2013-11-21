@@ -48,6 +48,7 @@ public class EventRegistration extends HttpServlet{
 			request.setAttribute("teacher", teacher);
 			request.setAttribute("school", getSchoolWithStudents(teacher.getSchool().getId()));			
 			request.setAttribute("events", getAllEvents());
+			request.setAttribute("errorValue", request.getAttribute("errorMessage"));
 			
 			tx.commit();
 			
@@ -121,8 +122,11 @@ public class EventRegistration extends HttpServlet{
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		processSubmission(request, response);
+		
+		if(request.getParameter("errorMessage") == null){
+			processSubmission(request, response);
+		}
+		
 		processRequest(request, response);
 		
 	}
