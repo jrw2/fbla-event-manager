@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -25,62 +26,94 @@ urlPatterns={"/EventRegistration"})
 public class EventRegistration extends HttpServlet{
 	
 	private static final long serialVersionUID = 3743123062179776667L;
-	public static final SessionFactory sessionFactory = getSessionFactory();
+	private static Session sf = HibernateUtil.getSessionFactory().openSession();
 	
 	public EventRegistration()
 	{
 		super();
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response){
 		
 		response.setContentType("text/html");
 		
-		Transaction tx = null;
-		
-//		try{
-//			factory = new Configuration().configure().buildSessionFactory();
-//			
-//		}catch (Throwable ex) { 
-//			  System.err.println("Failed to create sessionFactory object." + ex);
-//		     throw new ExceptionInInitializerError(ex); 
-//		}
-		
-//		Session session = factory.openSession();
 		try {
 			
-			// set this up to be created during login, and then use the same sessionFactory throughout. (do in loginManagement)
-			tx = sessionFactory.getCurrentSession().beginTransaction();
+			Transaction  tx = sf.beginTransaction();
 			
 			//	GET DATA TO PASS TO PAGE
-			Login login = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
+			Login login = (Login) sf.get(Login.class, 1);
 			
 			Teacher teacher = login.getTeacher();
-			List<School> school = DatabaseConnection.getSchoolWithStudents(teacher.getSchool().getId());		
-			List<Event> events = DatabaseConnection.getAllEvents();
-//			HashMap<Integer, Event> eventTypes = new HashMap<Integer, Event>();
-//			
-//			for (Event event : events) {
-//				eventTypes.put(event.getId(), event);
-//			}
-			// SET DATA FOR PAGE
-			request.setAttribute("school", school.get(0));
 			request.setAttribute("teacher", teacher);
-			request.setAttribute("events", events);
-//			request.setAttribute("eventTypeMap", eventTypes);
+			request.setAttribute("school", getSchoolWithStudents(teacher.getSchool().getId()));			
+			request.setAttribute("events", getAllEvents());
 			
-			// eventInstance everything tied too. event is master event
-
-			// FORWARD TO PAGE
 			tx.commit();
+			
+//			request.setAttribute("studentTeams", getStudentTeams());
+			
+			/*
+			Team - id, eventInstanceId
+			StudentTeam - studentId, teamId
+			EventInstance - id, eventId
+			Event has information.
+
+			1. Get Events
+			2. Loop through events
+			3. get EventInstance where eventId = event
+			4. getTeams using eventInstanceId
+			5. getStudentTeam using teamId
+			*/
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	
 		RequestDispatcher rd = request.getRequestDispatcher("eventRegistration.jsp");
-		rd.forward(request, response);
 		
+		try {
+			
+			rd.forward(request, response);
+			
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	protected void processSubmission(HttpServletRequest request, HttpServletResponse response){
+		
+		// submission logic
+		
+	}
+	
+	protected School getSchoolWithStudents(int schoolId){
+		
+		@SuppressWarnings("unchecked")
+		List<School> school = (List<School>) sf.createQuery("select s from School s inner join fetch s.students ss where s.id = " + schoolId).list();
+		
+		return school.get(0);
+		
+		
+	}
+	
+	protected List<Event> getAllEvents(){
+		Query query = sf.createQuery("from Event e join fetch e.eventInstances ei");
+		return query.list();
+	}
+	
+	protected List<Team> getStudentTeams(){
+		Query query = sf.createQuery("from Team s join fetch s.studentTeams t");
+		return query.list();
+	}
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		processRequest(request, response);
 		
 	}
 	
@@ -88,24 +121,11 @@ public class EventRegistration extends HttpServlet{
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// process updates and forward to servlet for display using doGet()
-		// LOGIC HERE FOR SUBMISSION OF NEW DATA
-		response.setContentType("text/html");
-		RequestDispatcher rd = request.getRequestDispatcher("EventRegistration");
-	
+
+		processSubmission(request, response);
+		processRequest(request, response);
+		
 	}
-	protected static SessionFactory getSessionFactory() {
-		try {
-			Configuration cfg = new Configuration();
-			cfg.configure();
-			SessionFactory sf = cfg.buildSessionFactory();
-			sf.openSession();
-			return sf;
-			//return (SessionFactory) new InitialContext().lookup("SessionFactory");*
-		} catch (Exception e) {
-			throw new IllegalStateException(
-					"Could not locate SessionFactory in JNDI");
-		}
-	}
+
 
 }

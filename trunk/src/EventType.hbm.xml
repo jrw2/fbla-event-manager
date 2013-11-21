@@ -11,7 +11,7 @@
         <property name="typeName" type="string">
             <column name="TypeName" />
         </property>
-        <set name="events" table="Event" inverse="true" lazy="true" fetch="select">
+        <set name="events" table="Event" inverse="true" lazy="false" fetch="join">
             <key>
                 <column name="EventTypeID" />
             </key>

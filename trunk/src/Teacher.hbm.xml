@@ -8,7 +8,7 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="school" class="edu.weber.ntm.fblaem.databaseio.School" fetch="select">
+        <many-to-one name="school" class="edu.weber.ntm.fblaem.databaseio.School" fetch="join">
             <column name="SchoolID" not-null="true" />
         </many-to-one>
         <property name="email" type="string">
@@ -35,7 +35,7 @@
             </key>
             <one-to-many class="edu.weber.ntm.fblaem.databaseio.Login" />
         </set>
-        <set name="studentTeams" table="StudentTeam" inverse="true" lazy="true" fetch="select">
+        <set name="studentTeams" table="StudentTeam" inverse="true" lazy="true" fetch="join">
             <key>
                 <column name="EnrolledByTeacherID" />
             </key>

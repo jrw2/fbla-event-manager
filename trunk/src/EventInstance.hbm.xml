@@ -8,9 +8,12 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="event" class="edu.weber.ntm.fblaem.databaseio.Event"  fetch="select">
-            <column name="EventID" not-null="true" />
-        </many-to-one>
+        <set name="teams" table="Teams" inverse="true" lazy="false" fetch="join">
+            <key>
+                <column name="id" not-null="true" />
+            </key>
+            <one-to-many class="edu.weber.ntm.fblaem.databaseio.Team" />
+        </set>
         <property name="createdDate" type="timestamp">
             <column name="CreatedDate" length="0" />
         </property>	
