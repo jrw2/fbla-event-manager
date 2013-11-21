@@ -63,37 +63,53 @@
 
 <script type="text/javascript">
 
-
-	function cancelEntry(type, eventId){
+	function cancelEntry(type, eventInstanceId){
 		
 		if(type == "student"){
-			$("#firstName" + eventId).val("First Name");
-			$("#lastName" + eventId).val("Last Name");
-			showDiv("addStudent" + eventId);
+			$("#firstName" + eventInstanceId).val("First Name");
+			$("#lastName" + eventInstanceId).val("Last Name");
+			showDiv("addStudent" + eventInstanceId);
 		} else{
-			$('#teamName' + eventId).val("Team Name");
-			showDiv("addTeam" + eventId);
+			$('#teamName' + eventInstanceId).val("Team Name");
+			showDiv("addTeam" + eventInstanceId);
 		}
 		
 	}
 	
-	function checkEntry(id, eventId){
-		if($("#" + id).val() == ""){
+	function checkEntry(id, eventInstanceId){
+		if($("#" + id + eventInstanceId).val() == ""){
 			if(id == "firstName"){
-				$("#" + id + eventId).val("First Name");
+				$("#" + id + eventInstanceId).val("First Name");
 			} else if(id == "lastName"){
-				$("#" + id + eventId).val("Last Name");
+				$("#" + id + eventInstanceId).val("Last Name");
 			} else if(id == "teamName"){
-				$("#" + id + eventId).val("Team Name");
+				$("#" + id + eventInstanceId).val("Team Name");
 			} 
 		}
 	}
 	
-	function addTeam(eventId){
+	function addTeam(eventInstanceId){
+		var newTeamName = $("#teamName" + eventInstanceId).val(); 
+		alert(eventInstanceId);
+		if(newTeamName != "" && newTeamName != "Team Name"){
+			$("#teamName").val($("#teamName" + eventInstanceId).val());
+			$("#eventInstanceId").val(eventInstanceId);
+			$("#pageAction").val("addTeam");
+			alert($("#teamName" + eventInstanceId).val());
+		} else {
+			$("#errorMessage").val("Invalid Team Name");
+		}
+		
+		$("form#eventRegistration" + eventInstanceId).submit();
+
+	}
+	function addStudent(eventInstanceId){
 		var newTeamName = $("#teamName" + eventId).val(); 
 		
 		if(newTeamName != "" && newTeamName != "Team Name"){
-			$("#teamName").val($("#teamName" + eventId).val());					
+			$("#teamName").val($("#teamName" + eventInstanceId).val());
+			$("#eventInstanceId").val(eventInstanceId);
+			$("#pageAction").val("addTeam");
 		} else {
 			
 			$("#errorMessage").val("Invalid Team Name");
@@ -101,6 +117,7 @@
 		}
 
 	}
+	
 </script>
 
 <%@ include file="/includes/Shell/shell_body.jsp"%>
@@ -114,9 +131,15 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 %>
 
 <!-- |BEGIN PAGE CONTENT| -->
-<!-- Submission Variables -->
+<!-- Submission Type -->
 <input type="hidden" id="pageAction" value="">
+
+<!-- Team Submission -->
 <input type="hidden" id="teamName" value="">
+<input type="hidden" id="eventInstanceId" value="">
+<input type="hidden" id="MaxIndividuals" value=""> <!--  Not Implemented -->
+
+<!-- Validation -->
 <input type="hidden" id="errorMessage" value="">
 
 <div id="pageHeader" class="titleDiv" style="display: block; border-bottom: 3px solid; margin-bottom: 4px;">
@@ -140,9 +163,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		<%} %>	
 </div>
 
-<%
-
-for(int i=0; i < events.size(); i++){ 
+<%for(int i=0; i < events.size(); i++){ 
 	
 	Event event = events.get(i);
 
@@ -242,7 +263,7 @@ for(int i=0; i < events.size(); i++){
 							
 						} %>
 						
-						<input type="submit" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
+						<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
 						<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
 					
 					</div>
