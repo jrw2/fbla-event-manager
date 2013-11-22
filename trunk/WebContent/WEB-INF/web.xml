@@ -17,15 +17,31 @@
         <form-error-page>/login.jsp</form-error-page>
     </form-login-config>
 </login-config>
+<!-- 
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Unsecure Pages</web-resource-name>
+        <description/>
+        <url-pattern>/Logout</url-pattern>
+        <url-pattern>/includes/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+        <description/>
+        <role-name>*</role-name>
+    </auth-constraint>
+</security-constraint>  -->
 <security-constraint>
     <web-resource-collection>
         <web-resource-name>Secure Pages</web-resource-name>
-        <url-pattern>/disabled/*</url-pattern>
+        <description/>
+        <url-pattern>/EventRegistration</url-pattern>
     </web-resource-collection>
     <auth-constraint>
+        <description/>
         <role-name>Administrator</role-name>
     </auth-constraint>
 </security-constraint> 
+
 
   <!-- <servlet>
     <servlet-name>PDFServlet</servlet-name>

@@ -42,11 +42,11 @@ public class TestClass {
 			db.saveOrUpdate(s);*/
 			
 
-			/*Setting password of a login
+			//Setting password of a login
 			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
 			Login l = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
 			l.setPassword(LoginManagement.hash("admin"));
-			tx.commit();*/
+			tx.commit();
 		
 			
 			
