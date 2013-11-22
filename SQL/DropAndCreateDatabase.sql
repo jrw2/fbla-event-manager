@@ -64,7 +64,6 @@ CREATE TABLE Login
 	RoleID mediumint NOT NULL,
 	Username nvarchar(255) NOT NULL,
 	Password nvarchar(1000) NOT NULL,
-	Salt nvarchar(20),
 	LastLoginDate datetime,
 	PRIMARY KEY (id),
 	FOREIGN KEY (TeacherID)
@@ -141,7 +140,7 @@ INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`
 INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`,`CreateDate`)VALUES("2","teacher2@nowhere.com","TestTeacherfname","TestTeacherlname","1234567890",now());
 INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","testStudentfname","testStudentlname",now());
 INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","test2Studentfname","test2Studentlname",now());
-INSERT INTO `fblaem`.`Login`(`TeacherID`,`RoleID`,`Username`,`Password`,`Salt`)VALUES("1","1","admin","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918","salt");
+INSERT INTO `fblaem`.`Login`(`TeacherID`,`RoleID`,`Username`,`Password`)VALUES("1","1","admin","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Individual");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Team");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Team/Individual");
