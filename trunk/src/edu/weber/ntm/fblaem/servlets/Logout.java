@@ -37,7 +37,9 @@ public class Logout extends HttpServlet{
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		@SuppressWarnings("unused")
 		Boolean x =request.isUserInRole("Administrator");
+		@SuppressWarnings("unused")
 		Principal x1 = request.getUserPrincipal();
 		HttpSession s = request.getSession();
 		request.logout();
