@@ -19,11 +19,12 @@ public class Student implements java.io.Serializable {
 	private String lastName;
 	private String middleName;
 	private Date createDate;
-	private Set studentTeams = new HashSet(0);
 
 	public Student() {
 	}
-
+	public Student(int studentId) {
+		this.id = studentId;
+	}
 	public Student(School school, String firstName, String lastName) {
 		this.school = school;
 		this.firstName = firstName;
@@ -37,7 +38,6 @@ public class Student implements java.io.Serializable {
 		this.lastName = lastName;
 		this.middleName = middleName;
 		this.createDate = createDate;
-		this.studentTeams = studentTeams;
 	}
 
 	public Integer getId() {
@@ -86,14 +86,6 @@ public class Student implements java.io.Serializable {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
-	}
-
-	public Set getStudentTeams() {
-		return this.studentTeams;
-	}
-
-	public void setStudentTeams(Set studentTeams) {
-		this.studentTeams = studentTeams;
 	}
 
 }
