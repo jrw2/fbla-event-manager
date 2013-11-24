@@ -116,18 +116,17 @@
 	}		
 	
 	function addStudent(eventInstanceId){
-		var newTeamName = $("#teamName" + eventId).val(); 
 		
-		if(newTeamName != "" && newTeamName != "Team Name"){
-			$("#teamName").val($("#teamName" + eventInstanceId).val());
+			$("#firstName").val($("#firstName" + eventInstanceId).val());
+			$("#lastName").val($("#lastName" + eventInstanceId).val());
 			$("#eventInstanceId").val(eventInstanceId);
-			$("#pageAction").val("addTeam");
-		} else {
+			$("#teamId").val($("#team" + eventInstanceId).val());
+			$("#pageAction").val("registerStudent");
 			
-			$("#errorMessage").val("Invalid Team Name");
+			if($("#team" + eventInstanceId).val() >= 0){
+				document.submissionForm.submit();
+			}
 			
-		}
-
 	}
 	
 </script>
@@ -158,6 +157,10 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 	<!-- General Submission -->
 	<input type="hidden" name="eventInstanceId" id="eventInstanceId" value="">	
 	<input type="hidden" name="eventId" id="eventId" value="">
+	
+	<!-- Student Submission -->
+	<input type="hidden" name="firstName" id="firstName" value="">	
+	<input type="hidden" name="lastName" id="lastName" value="">
 	
 	<!-- Validation -->
 	<input type="hidden" id="errorMessage" value="">
@@ -268,7 +271,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 							
 						</select>
 											
-						<input type="submit" onclick="submitChanges(eventId, type)" value=" Register Student "/>
+						<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student "/>
 						<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
 					
 					</div>

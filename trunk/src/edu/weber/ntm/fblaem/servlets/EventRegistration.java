@@ -1,6 +1,7 @@
 package edu.weber.ntm.fblaem.servlets;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,6 +34,9 @@ public class EventRegistration extends HttpServlet{
 	
 	private static final long serialVersionUID = 3743123062179776667L;
 	private static Session sf = HibernateUtil.getSessionFactory().openSession();
+	private Teacher teacher;
+	private Login login;
+	private Transaction tx;
 	
 	public EventRegistration()
 	{
@@ -64,12 +68,11 @@ public class EventRegistration extends HttpServlet{
 		
 		try {
 			
-			Transaction  tx = sf.beginTransaction();
+			tx = sf.beginTransaction();
+			login = (Login) sf.get(Login.class, 1);
 			
-			//	GET DATA TO PASS TO PAGE
-			Login login = (Login) sf.get(Login.class, 1);
-			
-			Teacher teacher = login.getTeacher();
+//			GET DATA TO PASS TO PAGE
+			teacher = login.getTeacher();
 			request.setAttribute("teacher", teacher);
 			request.setAttribute("school", getSchoolWithStudents(teacher.getSchool().getId()));			
 			request.setAttribute("events", getAllEvents());
@@ -148,15 +151,25 @@ public class EventRegistration extends HttpServlet{
 					
 				}
 				
-				//EventInstance removeTeamReference = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
-//				removeTeamReference.getTeams().remove(removeTeam);
-//				sf.saveOrUpdate(removeTeamReference);
-//				sf.delete(removeTeam);
 				tx.commit();				
 				break;						
 				
 			case "registerStudent":
 				System.out.println("Registering Student");
+				login = (Login) sf.get(Login.class, 1);
+				teacher = login.getTeacher();
+				Team addStudentTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
+				School school = (School) sf.load(School.class, teacher.getSchool().getId());
+				Student addStudent = new Student(school, request.getParameter("firstName"), request.getParameter("lastName"));
+//				addStudent = (Student) sf.load(Student.class, new Integer(request.getParameter("teamId")));
+				Integer studentId = new Integer((Integer)sf.save(addStudent));
+				StudentTeamId newStudentTeamId = new StudentTeamId(studentId, new Integer(request.getParameter("teamId")));
+				StudentTeam  newStudentTeam = new StudentTeam(newStudentTeamId, addStudentTeam, addStudent);
+				addStudentTeam.getstudentTeams().add(newStudentTeam);
+				
+				sf.saveOrUpdate(newStudentTeam);
+				tx.commit();	
+				
 				break;
 				
 			default:
