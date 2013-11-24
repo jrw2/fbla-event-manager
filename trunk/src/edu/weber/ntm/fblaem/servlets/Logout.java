@@ -43,8 +43,8 @@ public class Logout extends HttpServlet{
 		Principal x1 = request.getUserPrincipal();
 		HttpSession s = request.getSession();
 		request.logout();
-		request.getSession().invalidate();
-		response.sendRedirect("login.jsp");
+		s.invalidate();
+		response.sendError(0, "Close browser");
 		
 	}
 	
