@@ -1,5 +1,6 @@
 package edu.weber.ntm.fblaem.databaseio;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.mail.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.SessionFactoryImplementor;
 
 import edu.weber.ntm.fblaem.servlets.LoginManagement;
 
@@ -42,15 +44,11 @@ public class TestClass {
 			db.saveOrUpdate(s);*/
 			
 
-			//Setting password of a login
-			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
-			Login l = (Login) sessionFactory.getCurrentSession().get(Login.class, 1);
-			l.setPassword(LoginManagement.hash("admin"));
-			tx.commit();
+			
 		
-			
-			
-			
+			PreparedStatement ps = ((SessionFactoryImplementor)sessionFactory).getConnectionProvider()
+                    .getConnection().prepareStatement("{call FBLAEM_Reset}");
+			ps.execute();
 			System.out.println("");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

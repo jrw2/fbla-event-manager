@@ -1,16 +1,8 @@
 package edu.weber.ntm.fblaem.servlets;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,10 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-
 import edu.weber.ntm.fblaem.databaseio.*;
 
 @WebServlet(
@@ -44,7 +33,12 @@ public class EventRegistration extends HttpServlet{
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		if(request.getUserPrincipal() == null)
+		{
+			request.getSession().removeAttribute("isActive");
+			request.getSession().invalidate();
+			response.sendRedirect("Login.jsp");
+		}
 		processRequest(request, response);
 		
 	}
@@ -53,7 +47,12 @@ public class EventRegistration extends HttpServlet{
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		if(request.getUserPrincipal() == null)
+		{		
+			request.getSession().removeAttribute("isActive");
+			request.getSession().invalidate();
+			response.sendRedirect("Login.jsp");
+		}
 		if(request.getParameter("errorMessage") == null){
 			processSubmission(request, response);
 		}

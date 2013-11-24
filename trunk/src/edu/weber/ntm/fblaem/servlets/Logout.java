@@ -36,23 +36,16 @@ public class Logout extends HttpServlet{
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		@SuppressWarnings("unused")
-		Boolean x =request.isUserInRole("Administrator");
-		@SuppressWarnings("unused")
-		Principal x1 = request.getUserPrincipal();
-		HttpSession s = request.getSession();
-		request.logout();
-		s.invalidate();
-		response.sendError(0, "Close browser");
-		
+		request.getSession().removeAttribute("isActive");
+		request.getSession().invalidate();
+		response.sendRedirect("Login.jsp");
 	}
 	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		request.getSession().removeAttribute("isActive");
 		request.getSession().invalidate();
 		response.sendRedirect("Login.jsp");
 		
