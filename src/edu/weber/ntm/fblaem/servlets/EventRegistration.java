@@ -39,6 +39,25 @@ public class EventRegistration extends HttpServlet{
 		super();
 	}
 	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		processRequest(request, response);
+		
+	}
+	
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		if(request.getParameter("errorMessage") == null){
+			processSubmission(request, response);
+		}
+		
+		processRequest(request, response);
+		
+	}
+	
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response){
 		
 		response.setContentType("text/html");
@@ -80,7 +99,6 @@ public class EventRegistration extends HttpServlet{
 		
 		String pageAction = request.getParameter("pageAction");
 		Transaction  tx = sf.beginTransaction();
-		
 		switch (pageAction) {
 		
 			case "addTeam":
@@ -88,18 +106,60 @@ public class EventRegistration extends HttpServlet{
 				Team newTeam = new Team(); 
 				newTeam.setName(request.getParameter("teamName"));
 				newTeam.setCreatedDate(new Date());
-//				Query query = sf.createQuery("FROM EventInstance e WHERE e.id = " + request.getParameter("eventInstanceId"));
+				newTeam.setEventInstanceID(Integer.parseInt(request.getParameter("eventInstanceId")));
 				EventInstance newEventInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
-				newTeam.setEventInstance(newEventInstance); // need to fill in eventInstance data.
+//				newTeam.setEventInstance(newEventInstance); // need to fill in eventInstance data.
+				newEventInstance.getTeams().add(newTeam);
+				
+				sf.saveOrUpdate(newTeam);
+//				sf.update(newEventInstance);
 				tx.commit();				
 				break;
+
+			case "removeTeam":
+				System.out.println("Removing Team");
+				Team removeTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
+				EventInstance removeTeamReference = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
+				removeTeamReference.getTeams().remove(removeTeam);
+				sf.saveOrUpdate(removeTeamReference);
+				sf.delete(removeTeam);
+				tx.commit();				
+				break;		
+				
+			case "removeStudentFromTeam":
+				System.out.println("Removing Student");
+				Team removeStudentFromTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
+				Student student = new Student(new Integer(request.getParameter("studentId")));
+				StudentTeamId studentTeamId = new StudentTeamId(new Integer(request.getParameter("studentId")), new Integer(request.getParameter("teamId")));
+				
+				StudentTeam studentTeam = (StudentTeam) sf.load(StudentTeam.class, studentTeamId);
+				EventInstance removeFromInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
+				
+				removeStudentFromTeam.getstudentTeams().remove(studentTeam);
+				
+				if(removeStudentFromTeam.getstudentTeams().size() == 0){
+					sf.delete(studentTeam);
+					removeFromInstance.getTeams().remove(removeStudentFromTeam);
+					sf.saveOrUpdate(removeFromInstance);
+					sf.delete(removeStudentFromTeam);
+				} else {
+					
+					sf.delete(studentTeam);
+					
+				}
+				
+				//EventInstance removeTeamReference = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
+//				removeTeamReference.getTeams().remove(removeTeam);
+//				sf.saveOrUpdate(removeTeamReference);
+//				sf.delete(removeTeam);
+				tx.commit();				
+				break;						
 				
 			case "registerStudent":
 				System.out.println("Registering Student");
 				break;
 				
-			case "removeTeam":
-				System.out.println("Removing Team");
+			default:
 				break;
 				
 		}
@@ -126,25 +186,4 @@ public class EventRegistration extends HttpServlet{
 		return query.list();
 	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		processRequest(request, response);
-		
-	}
-	
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		System.out.println("getting to submission post");
-		if(request.getParameter("errorMessage") == null){
-			processSubmission(request, response);
-		}
-		
-		processRequest(request, response);
-		
-	}
-
-
 }

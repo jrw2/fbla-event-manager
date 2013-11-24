@@ -1,4 +1,3 @@
-<%@page import="org.hibernate.Hibernate"%>
 <%@ include file="/includes/Shell/shell_top.jsp"%>
 
 <!-- IMPORTS ------------------------------------------------- -->
@@ -11,14 +10,13 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
 <%@page import="org.hibernate.Session"%>
-
+<%@page import="org.hibernate.Hibernate"%>
 <%@page import="org.hibernate.HibernateException"%>
 <%@page import="org.hibernate.Transaction"%>
 <%@page import="org.hibernate.Query"%>
 <%@page import="org.hibernate.SessionFactory"%>
 <%@page import="org.hibernate.Transaction"%>
 <%@page import="org.hibernate.cfg.Configuration"%>
-
 <%@page import="java.util.*"%>
 <!-- --------------------------------------------------------- -->
 
@@ -90,19 +88,33 @@
 	
 	function addTeam(eventInstanceId){
 		var newTeamName = $("#teamName" + eventInstanceId).val(); 
-		alert(eventInstanceId);
 		if(newTeamName != "" && newTeamName != "Team Name"){
 			$("#teamName").val($("#teamName" + eventInstanceId).val());
 			$("#eventInstanceId").val(eventInstanceId);
 			$("#pageAction").val("addTeam");
-			alert($("#teamName" + eventInstanceId).val());
 		} else {
 			$("#errorMessage").val("Invalid Team Name");
+			$("#pageAction").val("error");	
 		}
 		
-		$("form#eventRegistration" + eventInstanceId).submit();
-
+		document.submissionForm.submit();
 	}
+	function removeTeam(eventInstanceId, teamId){
+		$("#teamId").val(teamId);
+		$("#eventInstanceId").val(eventInstanceId);
+		$("#pageAction").val("removeTeam");
+		
+		document.submissionForm.submit();
+	}
+	function removeStudentFromTeam(studentId, teamId, eventInstanceId){
+		$("#teamId").val(teamId);
+		$("#eventInstanceId").val(eventInstanceId);
+		$("#studentId").val(studentId);
+		$("#pageAction").val("removeStudentFromTeam");
+		
+		document.submissionForm.submit();
+	}		
+	
 	function addStudent(eventInstanceId){
 		var newTeamName = $("#teamName" + eventId).val(); 
 		
@@ -132,15 +144,24 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 
 <!-- |BEGIN PAGE CONTENT| -->
 <!-- Submission Type -->
-<input type="hidden" id="pageAction" value="">
-
-<!-- Team Submission -->
-<input type="hidden" id="teamName" value="">
-<input type="hidden" id="eventInstanceId" value="">
-<input type="hidden" id="MaxIndividuals" value=""> <!--  Not Implemented -->
-
-<!-- Validation -->
-<input type="hidden" id="errorMessage" value="">
+<form name="submissionForm" action="EventRegistration" method="post">
+	<input type="hidden" name="pageAction" id="pageAction" value="">
+	
+	<!-- Team Submission / Removal -->
+	<input type="hidden" name="teamName" id="teamName" value="">
+	<input type="hidden" name="MaxIndividuals" id="MaxIndividuals" value=""> <!--  Not Implemented -->
+	<input type="hidden" name="teamId" id="teamId" value=""> 
+	
+	<!-- Student Team Removal -->
+	<input type="hidden" name="studentId" id="studentId" value="">
+	
+	<!-- General Submission -->
+	<input type="hidden" name="eventInstanceId" id="eventInstanceId" value="">	
+	<input type="hidden" name="eventId" id="eventId" value="">
+	
+	<!-- Validation -->
+	<input type="hidden" id="errorMessage" value="">
+</form>
 
 <div id="pageHeader" class="titleDiv" style="display: block; border-bottom: 3px solid; margin-bottom: 4px;">
 		<div>
@@ -184,7 +205,9 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 			
 			if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
 				maxTeamsPerSchool = "href";
-			}%>
+			}
+			// REMOVE THE ID ADDITION TO FIELDS, BUT LEAVE IT ON FORM NAME AND JUST SUBMIT THE FORM WITH GENERIC FIELD NAMES.
+			%>
 			<form name="eventRegistration<%=eventInstance.getId()%>" action="EventRegistration" method="post">
 			
 				<div id="availableEvents" class="pageContainer event">
@@ -232,7 +255,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 								for(Team team : teams){
 									// need to create a way to insert a single student team
 									// Just allow them to create a team that has a single student.
-									Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? true : false;
+									Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? false : true;
 									
 									// if max # of teams reached do not allow this to create new team.
 									if(!maxStudentsForEvent){%> 
@@ -286,19 +309,19 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				
 								<div id="link">
 								
-									<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="remove(eventId, type, teamId);">Remove Team</a>
+									<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);">Remove Team</a>
 									
 								</div>
 								
 							</div>
 							
 							<%
-							for(StudentTeam studentTeam : studentTeams){ %>
+							for(StudentTeam studentTeam : studentTeams){%>
 								<div style="border-color:#848369; margin-left: 200px;">
 									
 									<div id="link">
 									
-										<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="remove(eventId, type, teamMemberId);" style="font-size: 13px; font-weight: bold; color: red;">X&nbsp;&nbsp;</a>
+										<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);" style="font-size: 13px; font-weight: bold; color: red;">X&nbsp;&nbsp;</a>
 										
 									</div>
 									

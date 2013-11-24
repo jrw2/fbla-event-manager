@@ -14,21 +14,13 @@ public class Team implements java.io.Serializable {
 	private Integer id;
 	private String name;
 	private String maxIndividuals;
-	private EventInstance eventInstance;
 	private Date createdDate;
 	private Set studentTeams = new HashSet(0);
+	private Integer EventInstanceID;
 
 	public Team() {
 	}
 	
-	public EventInstance getEventInstance() {
-		return eventInstance;
-	}
-
-	public void setEventInstance(EventInstance eventInstance) {
-		this.eventInstance = eventInstance;
-	}
-
 	public Team(String name, String maxIndividuals, Date createdDate,
 			Set studentTeams) {
 		this.name = name;
@@ -75,6 +67,14 @@ public class Team implements java.io.Serializable {
 
 	public void setstudentTeams(Set studentTeams) {
 		this.studentTeams = studentTeams;
+	}
+
+	public Integer getEventInstanceID() {
+		return EventInstanceID;
+	}
+
+	public void setEventInstanceID(Integer eventInstanceID) {
+		EventInstanceID = eventInstanceID;
 	}
 
 }
