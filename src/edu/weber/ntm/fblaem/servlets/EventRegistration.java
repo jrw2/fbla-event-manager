@@ -68,12 +68,12 @@ public class EventRegistration extends HttpServlet{
 		try {
 			
 			tx = sf.beginTransaction();
-			login = (Login) sf.get(Login.class, 1);
+			login = getUser(request.getRemoteUser());
 			
 //			GET DATA TO PASS TO PAGE
 			teacher = login.getTeacher();
 			request.setAttribute("teacher", teacher);
-			request.setAttribute("school", getSchoolWithStudents(teacher.getSchool().getId()));			
+			request.setAttribute("school", teacher.getSchool());			
 			request.setAttribute("events", getAllEvents());
 			request.setAttribute("errorValue", request.getAttribute("errorMessage"));
 			
@@ -155,7 +155,7 @@ public class EventRegistration extends HttpServlet{
 				
 			case "registerStudent":
 				System.out.println("Registering Student");
-				login = (Login) sf.get(Login.class, 1);
+				login = getUser(request.getRemoteUser());
 				teacher = login.getTeacher();
 				Team addStudentTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
 				School school = (School) sf.load(School.class, teacher.getSchool().getId());
@@ -196,6 +196,10 @@ public class EventRegistration extends HttpServlet{
 	protected List<Team> getStudentTeams(){
 		Query query = sf.createQuery("from Team s join fetch s.studentTeams t");
 		return query.list();
+	}
+	protected Login getUser(String username)
+	{
+		return (Login) sf.createQuery("from Login l where l.username= '" + username+"'").uniqueResult();
 	}
 	
 }
