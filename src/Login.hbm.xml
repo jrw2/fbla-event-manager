@@ -9,7 +9,7 @@
             <generator class="identity" />
         </id>
         <many-to-one name="teacher" class="edu.weber.ntm.fblaem.databaseio.Teacher" lazy="false" fetch="join">
-            <column name="TeacherID" not-null="false" />
+            <column name="TeacherID" not-null="true" />
         </many-to-one>
         <many-to-one name="role" class="edu.weber.ntm.fblaem.databaseio.Role" lazy="false" fetch="join">
             <column name="RoleID" not-null="true" />
@@ -19,9 +19,6 @@
         </property>
         <property name="password" type="string">
             <column name="Password" length="1000" not-null="true" />
-        </property>
-        <property name="salt" type="string">
-            <column name="Salt" length="20" />
         </property>
         <property name="lastLoginDate" type="timestamp">
             <column name="LastLoginDate" length="0" />
