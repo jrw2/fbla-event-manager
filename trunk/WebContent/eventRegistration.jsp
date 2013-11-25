@@ -71,7 +71,7 @@
 			$('#teamName' + eventInstanceId).val("Team Name");
 			showDiv("addTeam" + eventInstanceId);
 		}
-		
+			
 	}
 	
 	function checkEntry(id, eventInstanceId){
@@ -172,11 +172,11 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		</div>
 		<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
 <%-- 		<%if(user.isAdmin()){ %> --%>
-				<a href="admin.jsp">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+				<a href="Administration">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 <%-- 		<%} %> --%>
 			<a href="eventRegistration.jsp">Event Registration</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a href="login.jsp">Logout</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="exportEvent?eventId=-1"><img src="<%=pdf%>"/> Export All Events</a>
+			<a href="Logout">Logout</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		</div>
 		<%if(!validation.equals("")){ %>		
 			<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
@@ -217,7 +217,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				
 					<div id="header" style="border-bottom: 2px solid;">
 						<div id="title">
-						
+
 							<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 							
 						</div>

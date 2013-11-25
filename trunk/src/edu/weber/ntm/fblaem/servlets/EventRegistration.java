@@ -115,7 +115,6 @@ public class EventRegistration extends HttpServlet{
 				
 				sf.saveOrUpdate(newTeam);
 //				sf.update(newEventInstance);
-				tx.commit();				
 				break;
 
 			case "removeTeam":
@@ -125,7 +124,6 @@ public class EventRegistration extends HttpServlet{
 				removeTeamReference.getTeams().remove(removeTeam);
 				sf.saveOrUpdate(removeTeamReference);
 				sf.delete(removeTeam);
-				tx.commit();				
 				break;		
 				
 			case "removeStudentFromTeam":
@@ -150,12 +148,11 @@ public class EventRegistration extends HttpServlet{
 					
 				}
 				
-				tx.commit();				
 				break;						
 				
 			case "registerStudent":
 				System.out.println("Registering Student");
-				login = getUser(request.getRemoteUser());
+				login = (Login) sf.get(Login.class, 1);
 				teacher = login.getTeacher();
 				Team addStudentTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
 				School school = (School) sf.load(School.class, teacher.getSchool().getId());
@@ -167,15 +164,15 @@ public class EventRegistration extends HttpServlet{
 				addStudentTeam.getstudentTeams().add(newStudentTeam);
 				
 				sf.saveOrUpdate(newStudentTeam);
-				tx.commit();	
 				
 				break;
 				
 			default:
 				break;
-				
+			
 		}
 		
+		tx.commit();		
 	}
 	
 	protected School getSchoolWithStudents(int schoolId){
@@ -196,10 +193,6 @@ public class EventRegistration extends HttpServlet{
 	protected List<Team> getStudentTeams(){
 		Query query = sf.createQuery("from Team s join fetch s.studentTeams t");
 		return query.list();
-	}
-	protected Login getUser(String username)
-	{
-		return (Login) sf.createQuery("from Login l where l.username= '" + username+"'").uniqueResult();
 	}
 	
 }
