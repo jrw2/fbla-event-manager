@@ -44,11 +44,9 @@ public class TestClass {
 			db.saveOrUpdate(s);*/
 			
 
-			
-		
-			PreparedStatement ps = ((SessionFactoryImplementor)sessionFactory).getConnectionProvider()
-                    .getConnection().prepareStatement("{call FBLAEM_Reset}");
-			ps.execute();
+			Transaction tx = sessionFactory.getCurrentSession().beginTransaction();
+			int count  = ((Long)sessionFactory.getCurrentSession().createQuery("select count(*) from StudentTeam s where s.teacher.school like '%Weber State%'").uniqueResult()).intValue();
+			tx.commit();
 			System.out.println("");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
