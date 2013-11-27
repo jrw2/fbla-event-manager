@@ -17,6 +17,53 @@
         <form-error-page>/login.jsp</form-error-page>
     </form-login-config>
 </login-config>
+
+<servlet>
+	<servlet-name>EventRegistration</servlet-name>
+	<servlet-class>edu.weber.ntm.fblaem.servlets.ViewController</servlet-class>
+
+	<init-param>
+		<param-name>viewType</param-name>
+		<param-value>eventRegistration</param-value>
+	</init-param>
+</servlet>
+<servlet-mapping>
+ <servlet-name>EventRegistration</servlet-name>
+    <url-pattern>/EventRegistration</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>Administration</servlet-name>
+	<servlet-class>edu.weber.ntm.fblaem.servlets.ViewController</servlet-class>
+
+	<init-param>
+		<param-name>viewType</param-name>
+		<param-value>administration</param-value>
+	</init-param>
+</servlet>
+<servlet-mapping>
+	<servlet-name>Administration</servlet-name>
+    <url-pattern>/Administration</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>PDF</servlet-name>
+	<servlet-class>edu.weber.ntm.fblaem.servlets.ViewController</servlet-class>
+
+	<init-param>
+		<param-name>viewType</param-name>
+		<param-value>PDF</param-value>
+	</init-param>
+</servlet>
+<servlet-mapping>
+	<servlet-name>PDF</servlet-name>
+    <url-pattern>/PDF</url-pattern>
+</servlet-mapping>
+
+<!-- <servlet-mapping> -->
+<!-- 	<servlet-name>ServletName</servlet-name> -->
+<!-- 	<url-pattern>/Demo</url-pattern> -->
+<!-- </servlet-mapping> -->
 <!-- 
 <security-constraint>
     <web-resource-collection>
@@ -30,17 +77,17 @@
         <role-name>*</role-name>
     </auth-constraint>
 </security-constraint>  -->
-<security-constraint>
-    <web-resource-collection>
-        <web-resource-name>Secure Pages</web-resource-name>
-        <description/>
-        <url-pattern>/EventRegistration</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-        <description/>
-        <role-name>Administrator</role-name>
-    </auth-constraint>
-</security-constraint> 
+<!-- <security-constraint> -->
+<!--     <web-resource-collection> -->
+<!--         <web-resource-name>Secure Pages</web-resource-name> -->
+<!--         <description/> -->
+<!--         <url-pattern>/EventRegistration</url-pattern> -->
+<!--     </web-resource-collection> -->
+<!--     <auth-constraint> -->
+<!--         <description/> -->
+<!--         <role-name>Administrator</role-name> -->
+<!--     </auth-constraint> -->
+<!-- </security-constraint>  -->
 
 
   <!-- <servlet>

@@ -7,7 +7,6 @@
 <%@page import="edu.weber.ntm.fblaem.databaseio.StudentTeam"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Team"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.Student"%>
-<%@page import="edu.weber.ntm.fblaem.databaseio.DatabaseConnection"%>
 <%@page import="edu.weber.ntm.fblaem.databaseio.EventInstance"%>
 <%@page import="org.hibernate.Session"%>
 <%@page import="org.hibernate.Hibernate"%>

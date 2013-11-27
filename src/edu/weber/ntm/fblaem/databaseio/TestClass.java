@@ -19,7 +19,7 @@ public class TestClass {
 	public static final SessionFactory sessionFactory = getSessionFactory();
 	public static void main(String[] args)
 	{
-		DatabaseConnection db;
+//		DatabaseConnection db;
 		try {
 			/*
 			Login l = (Login)db.getByID(Login.class, 1);
