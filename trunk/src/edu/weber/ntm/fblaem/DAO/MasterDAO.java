@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import edu.weber.ntm.fblaem.databaseio.EventInstance;
 import edu.weber.ntm.fblaem.databaseio.HibernateUtil;
 import edu.weber.ntm.fblaem.databaseio.Login;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
@@ -21,21 +22,10 @@ public abstract class MasterDAO {
 	}
 	
 	public MasterDAO(HttpServletRequest request) {
+		this.request = request;
 	}
 	
 	public abstract void process();
-	
-	protected void getUser(String remoteUser){
-		
-		this.login = (Login) sf.createQuery("from Login as login where login.username=" + remoteUser);
-		
-	}
-	
-	protected void endSession(){
-		
-		tx.commit();
-		
-	}
 	
 	// Sessions
 	protected void initializeSession(){
@@ -46,5 +36,17 @@ public abstract class MasterDAO {
 		teacher = login.getTeacher(); // Teacher / Admin
 		
 	}
+	
+	protected void endSession(){
+		
+		tx.commit();
+		
+	}
 
-}
+	protected void getUser(String remoteUser){
+		
+		this.login = (Login) sf.createQuery("from Login as login where login.username='" + remoteUser + "'").uniqueResult();
+//		this.login = (Login) sf.load(Login.class, remoteUser);
+	}
+	
+}	
