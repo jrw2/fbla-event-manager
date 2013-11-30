@@ -52,10 +52,10 @@ public class SubmissionDAO extends MasterDAO{
 		String pageAction = request.getParameter("pageAction");
 		switch (pageAction) {
 		
-			case "addTeam": addTeam();
-			case "removeTeam": removeTeam();
-			case "removeStudentFromTeam": removeStudentFromTeam();
-			case "registerStudent": registerStudent();
+			case "addTeam": addTeam(); break;
+			case "removeTeam": removeTeam(); break;
+			case "removeStudentFromTeam": removeStudentFromTeam(); break;
+			case "registerStudent": registerStudent(); break;
 				
 			default:
 				break;
@@ -68,12 +68,12 @@ public class SubmissionDAO extends MasterDAO{
 		
 		switch (pageAction) {
 		
-		case "addSchool": addSchool();
-		case "deleteSchool": deleteSchool();
-		case "createEvent": createEvent();
-		case "createLogin": createLogin();
-		case "deleteLogin": deleteLogin();
-		case "modifyEvent": modifyEvent();
+		case "addSchool": addSchool(); break;
+		case "deleteSchool": deleteSchool(); break;
+		case "createEvent": createEvent(); break;
+		case "createLogin": createLogin(); break;
+		case "deleteLogin": deleteLogin(); break;
+		case "modifyEvent": modifyEvent(); break;
 		default:
 			break;
 		}
