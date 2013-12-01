@@ -38,7 +38,7 @@
 
 	<init-param>
 		<param-name>viewType</param-name>
-		<param-value>administration</param-value>
+		<param-value>admin</param-value>
 	</init-param>
 </servlet>
 <servlet-mapping>
@@ -60,51 +60,4 @@
     <url-pattern>/PDF</url-pattern>
 </servlet-mapping>
 
-<!-- <servlet-mapping> -->
-<!-- 	<servlet-name>ServletName</servlet-name> -->
-<!-- 	<url-pattern>/Demo</url-pattern> -->
-<!-- </servlet-mapping> -->
-<!-- 
-<security-constraint>
-    <web-resource-collection>
-        <web-resource-name>Unsecure Pages</web-resource-name>
-        <description/>
-        <url-pattern>/Logout</url-pattern>
-        <url-pattern>/includes/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-        <description/>
-        <role-name>*</role-name>
-    </auth-constraint>
-</security-constraint>  -->
-<!-- <security-constraint> -->
-<!--     <web-resource-collection> -->
-<!--         <web-resource-name>Secure Pages</web-resource-name> -->
-<!--         <description/> -->
-<!--         <url-pattern>/EventRegistration</url-pattern> -->
-<!--     </web-resource-collection> -->
-<!--     <auth-constraint> -->
-<!--         <description/> -->
-<!--         <role-name>Administrator</role-name> -->
-<!--     </auth-constraint> -->
-<!-- </security-constraint>  -->
-
-
-   <servlet>
-    <servlet-name>PDF</servlet-name>
-    <servlet-class>edu.weber.ntm.fblaem.servlets.PDF</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>PDF</servlet-name>
-    <url-pattern>/PDF</url-pattern>
-  </servlet-mapping>
-  <!--
-  <servlet>
-    <servlet-name>EmailListServlet</servlet-name>
-    <servlet-class>servlets.EmailListServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>EmailListServlet</servlet-name>
-    <url-pattern>/EmailListServletWeb</url-pattern>
-  </servlet-mapping>-->
 </web-app>

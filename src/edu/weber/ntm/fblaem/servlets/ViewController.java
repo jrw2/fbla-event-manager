@@ -74,6 +74,7 @@ public class ViewController extends HttpServlet{
 			
 			response.setContentType("text/html");
 			rd.forward(request, response);
+			return;
 			
 		} catch (Exception e) {
 			e.printStackTrace();

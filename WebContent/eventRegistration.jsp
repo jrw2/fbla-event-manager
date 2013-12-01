@@ -132,6 +132,8 @@
 
 <%@ include file="/includes/Shell/shell_body.jsp"%>
 
+<% String remove = "http://localhost:8080/FBLAEM/includes/Images/remove.png"; %> 
+
 <!-- GET PAGE DATA -->
 <%
 List<Event> events = (List<Event>)request.getAttribute("events");
@@ -171,11 +173,10 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		</div>
 		<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
 <%-- 		<%if(user.isAdmin()){ %> --%>
-				<a href="Administration">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+<!-- 				<a href="Administration">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
 <%-- 		<%} %> --%>
-			<a href="eventRegistration.jsp">Event Registration</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a href="exportEvent?eventId=-1"><img src="<%=pdf%>"/> Export All Events</a>
-			<a href="Logout">Logout</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="exportEvent?eventId=-1"><img src="<%=pdf %>"/> Export All Events</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="Logout">LOGOUT</a>
 		</div>
 		<%if(!validation.equals("")){ %>		
 			<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
@@ -210,135 +211,125 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 			}
 			// REMOVE THE ID ADDITION TO FIELDS, BUT LEAVE IT ON FORM NAME AND JUST SUBMIT THE FORM WITH GENERIC FIELD NAMES.
 			%>
-			<form name="eventRegistration<%=eventInstance.getId()%>" action="EventRegistration" method="post">
+			<div id="availableEvents" class="pageContainer event">
 			
-				<div id="availableEvents" class="pageContainer event">
-				
-					<div id="header" style="border-bottom: 2px solid;">
-						<div id="title">
+				<div id="header" style="border-bottom: 2px solid;">
+					<div id="title">
 
-							<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
-							
-						</div>
+						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 						
-						<div id="link" style="width: 90px;">
-						
-							<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="showDiv('addTeam<%=eventInstance.getId()%>');">Add Team</a>
-							
-						</div>
-						
-						<div id="link">
-						
-							<a href="javascript:void(0)" onclick="showDiv('addStudent<%=eventInstance.getId()%>');">Register Student</a>
-							
-						</div>				
 					</div>
-					<%// WE NEED to handle null her as they won't have a description sometimes. 
-					// we need to 
 					
-					%>
-					<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
-
-						<%=event.getDetails() != null ? event.getDetails() : "No Description"%>
+					<div id="link" style="width: 90px;">
+					
+						<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="showDiv('addTeam<%=eventInstance.getId()%>');">Add Team</a>
+						
+					</div>
+					
+					<div id="link">
+					
+						<a href="javascript:void(0)" onclick="showDiv('addStudent<%=eventInstance.getId()%>');">Register Student</a>
 						
 					</div>				
-					
-					<div id="addStudent<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
+				</div>
+				<%// WE NEED to handle null her as they won't have a description sometimes. 
+				// we need to 
 				
-						<input type="text" id="firstName<%=eventInstance.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=eventInstance.getId()%>)"/>
-						<input type="text" id="lastName<%=eventInstance.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=eventInstance.getId()%>)"/>
-						
-						<select id="team<%=eventInstance.getId()%>">
-							<%if(teams.size() > 0){
-								%>
-								<option value="-1">Select Team</option>
-								<optgroup label="-------------------------"></optgroup>
-								<%
-								for(Team team : teams){
-									// need to create a way to insert a single student team
-									// Just allow them to create a team that has a single student.
-									Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? false : true;
-									
-									// if max # of teams reached do not allow this to create new team.
-									if(!maxStudentsForEvent){%> 
-										<option value="<%=team.getId()%>"><%=team.getName()%></option>
-									<%}
-								} 
-							} else {%>
-								<option>No Teams</option>
-							<%}%>
-							
-						</select>
-											
-						<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student "/>
-						<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
+				%>
+				<div id="description" style="width: 780px; margin-bottom: 20px; margin-left: 9px;">
+
+					<%=event.getDetails() != null ? event.getDetails() : "No Description"%>
 					
-					</div>
-					
-					<div id="addTeam<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
+				</div>				
 				
-						<input type="text" id="teamName<%=eventInstance.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName', <%=eventInstance.getId()%>)"/>
-						
-						<%					
-						String disableSubmit = "disable";
-						// move the code from admin here for creating teams.
-						if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){
-							
-							disableSubmit = "";
-							
-						} %>
-						
-						<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
-						<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
+				<div id="addStudent<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
+			
+					<input type="text" id="firstName<%=eventInstance.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=eventInstance.getId()%>)"/>
+					<input type="text" id="lastName<%=eventInstance.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=eventInstance.getId()%>)"/>
 					
-					</div>
-					
-					<div style="border-top: 2px solid;">
-						<%
-					   for(Team team : teams){
-						
-							Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
-						
-							<div style="border-color:#848369">
-								<div id="title" style="width: 705px;">
-									<%
-										String enrolledStudents = Integer.toString(team.getstudentTeams().size());
-										String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-									%>
-									&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
-									
-								</div>
-				
-								<div id="link">
+					<select id="team<%=eventInstance.getId()%>">
+						<%if(teams.size() > 0){
+							%>
+							<option value="-1">Select Team</option>
+							<optgroup label="-------------------------"></optgroup>
+							<%
+							for(Team team : teams){
+								// need to create a way to insert a single student team
+								// Just allow them to create a team that has a single student.
+								Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? false : true;
 								
-									<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);">Remove Team</a>
-									
-								</div>
+								// if max # of teams reached do not allow this to create new team.
+								if(!maxStudentsForEvent){%> 
+									<option value="<%=team.getId()%>"><%=team.getName()%></option>
+								<%}
+							} 
+						} else {%>
+							<option>No Teams</option>
+						<%}%>
+						
+					</select>
+										
+					<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student "/>
+					<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
+				
+				</div>
+				
+				<div id="addTeam<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
+			
+					<input type="text" id="teamName<%=eventInstance.getId()%>" value="Team Name" onFocus="this.value=''" onblur="checkEntry('teamName', <%=eventInstance.getId()%>)"/>
+					
+					<%					
+					String disableSubmit = "disable";
+					// move the code from admin here for creating teams.
+					if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){
+						
+						disableSubmit = "";
+						
+					} %>
+					
+					<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
+					<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
+				
+				</div>
+				
+				<div style="border-top: 2px solid;">
+					<%
+				   for(Team team : teams){
+					
+						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
+					
+						<div style="border-color:#848369">
+							<div id="title" style="width: 685px;">
+								<%
+									String enrolledStudents = Integer.toString(team.getstudentTeams().size());
+									String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
+								%>
+								&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
+								
+							</div>
+			
+							<div id="link">
+							
+								<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);"><img src="<%=remove%>"/>&nbsp;Remove Team</a>
 								
 							</div>
 							
-							<%
-							for(StudentTeam studentTeam : studentTeams){%>
-								<div style="border-color:#848369; margin-left: 200px;">
-									
-									<div id="link">
-									
-										<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);" style="font-size: 13px; font-weight: bold; color: red;">X&nbsp;&nbsp;</a>
-										
-									</div>
-									
-									<div id="teamMem">
-									
-										<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName()%>
-										
-									</div>
-					
+						</div>
+						<%
+						for(StudentTeam studentTeam : studentTeams){%>
+							<div style="border-color:#848369; margin-left: 200px;">
+								
+								<div id="teamMem">
+<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
+									<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName()%>
+<%-- 									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);" style="font-size: 12px; color: red;">&nbsp;remove</a> --%>
 								</div>
-							<%} 
-						} %>
-					</div>
-				</div>			
-			</form>
+				
+							</div>
+						<%} 
+					} %>
+				</div>
+			</div>			
 		<%}
 	}
 } %>
