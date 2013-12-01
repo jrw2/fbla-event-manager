@@ -10,8 +10,6 @@ import edu.weber.ntm.fblaem.databaseio.Teacher;
 
 public class DataDAO extends MasterDAO{
 
-	private static final String PAGE_EVENT_REGISTRATION = "eventRegistration";
-	private static final String PAGE_ADMINISTRATION = "administration";
 	private static final String PAGE_PDF = "PDF";
 	
 	private String requestType;
@@ -28,10 +26,10 @@ public class DataDAO extends MasterDAO{
 		
 		// Get Page
 		switch(requestType){
-			case(PAGE_EVENT_REGISTRATION):
+			case(TYPE_EVENT_REGISTRATION):
 				getEventRegistration();
 				break;
-			case(PAGE_ADMINISTRATION):
+			case(TYPE_ADMINISTRATION):
 				getAdministration();
 				break;	
 			case(PAGE_PDF):
@@ -56,7 +54,7 @@ public class DataDAO extends MasterDAO{
 	private void getAdministration(){
 		
 		request.setAttribute("admin", teacher);
-		request.setAttribute("schools", getSchoolsWithStudents());			
+		request.setAttribute("schools", getSchools());			
 		request.setAttribute("events", getAllEvents());
 		request.setAttribute("teacherLogins", getAllTeachers());
 		
@@ -76,19 +74,27 @@ public class DataDAO extends MasterDAO{
 		
 	}
 	
-	protected School getSchoolsWithStudents(){
+	protected List<School> getSchoolsWithStudents(){
 		
 		@SuppressWarnings("unchecked")
-		List<School> school = (List<School>) sf.createQuery("from School s join fetch s.students ss").list();
-		return school.get(0);
+		List<School> schools = (List<School>) sf.createQuery("from School s join fetch s.students ss").list();
+		return schools;
 		
 	}
 	
 	protected List<Teacher> getAllTeachers(){
 		
 		@SuppressWarnings("unchecked")
-		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
+		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from Teacher").list();
 		return teachers;
+		
+	}
+	
+	protected List<School> getSchools(){
+		
+		@SuppressWarnings("unchecked")
+		List<School> schools = (List<School>) sf.createQuery("from School").list();
+		return schools;
 		
 	}
 	

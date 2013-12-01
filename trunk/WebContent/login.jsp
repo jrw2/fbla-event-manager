@@ -7,8 +7,6 @@
 
 <script type="text/javascript">
 
-
-
 </script>
 
 <style>

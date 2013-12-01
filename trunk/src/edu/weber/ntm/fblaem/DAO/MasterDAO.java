@@ -11,6 +11,9 @@ import edu.weber.ntm.fblaem.databaseio.Login;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 
 public abstract class MasterDAO {
+	
+	protected static final String TYPE_EVENT_REGISTRATION = "eventRegistration";
+	protected static final String TYPE_ADMINISTRATION = "admin";
 
 	protected static Session sf;
 	protected HttpServletRequest request;
@@ -46,7 +49,7 @@ public abstract class MasterDAO {
 	protected void getUser(String remoteUser){
 		
 		this.login = (Login) sf.createQuery("from Login as login where login.username='" + remoteUser + "'").uniqueResult();
-//		this.login = (Login) sf.load(Login.class, remoteUser);
+
 	}
 	
 }	

@@ -2,11 +2,16 @@ package edu.weber.ntm.fblaem.DAO;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import org.hibernate.Query;
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.EventInstance;
+import edu.weber.ntm.fblaem.databaseio.EventType;
+import edu.weber.ntm.fblaem.databaseio.Login;
+import edu.weber.ntm.fblaem.databaseio.Role;
 import edu.weber.ntm.fblaem.databaseio.School;
 import edu.weber.ntm.fblaem.databaseio.Student;
 import edu.weber.ntm.fblaem.databaseio.StudentTeam;
@@ -14,10 +19,8 @@ import edu.weber.ntm.fblaem.databaseio.StudentTeamId;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 import edu.weber.ntm.fblaem.databaseio.Team;
 
-public class SubmissionDAO extends MasterDAO{
+public class SubmissionDAO extends MasterDAO {
 
-	private static final String TYPE_EVENT_REGISTRATION = "eventRegistration";
-	private static final String TYPE_ADMINISTRATION = "administration";
 	private String submissionType;
 	private String pageAction;
 	
@@ -26,7 +29,6 @@ public class SubmissionDAO extends MasterDAO{
 		this.submissionType = submissionType;
 		this.pageAction = request.getParameter("pageAction");
 	}
-	
 	
 	public void process(){
 		
@@ -38,7 +40,7 @@ public class SubmissionDAO extends MasterDAO{
 				eventDataSubmission();
 				break;
 			case(TYPE_ADMINISTRATION):
-				administrationDataSubmission();
+				adminDataSubmission();
 				break;	
 		}
 		
@@ -64,23 +66,23 @@ public class SubmissionDAO extends MasterDAO{
 		
 	}
 	
-	private void administrationDataSubmission(){
+	private void adminDataSubmission(){
 		
 		switch (pageAction) {
-		
+		case "createEvent": createEvent(); break;
+		case "removeEvent": removeEvent(); break;		
 		case "addSchool": addSchool(); break;
 		case "deleteSchool": deleteSchool(); break;
-		case "createEvent": createEvent(); break;
 		case "createLogin": createLogin(); break;
 		case "deleteLogin": deleteLogin(); break;
-		case "modifyEvent": modifyEvent(); break;
+		case "reset": reset(); break;
 		default:
 			break;
 		}
 		
 	}
 
-	// Event Registration Submission
+	// Event Registration Submission --------------------------------------------------------------------------------
 	private void addTeam(){
 		
 		System.out.println("Adding Team");
@@ -122,6 +124,7 @@ public class SubmissionDAO extends MasterDAO{
 		
 		removeStudentFromTeam.getstudentTeams().remove(studentTeam);
 		
+		/* Add this back in if we want a team to get removed when all students are removed.
 		if(removeStudentFromTeam.getstudentTeams().size() == 0){
 			
 			sf.delete(studentTeam);
@@ -131,10 +134,10 @@ public class SubmissionDAO extends MasterDAO{
 			sf.delete(removeStudentFromTeam);
 			
 		} else {
-			
+		*/	
 			sf.delete(studentTeam);
 			
-		}
+//		}
 		
 	}
 	
@@ -162,70 +165,92 @@ public class SubmissionDAO extends MasterDAO{
 	}
 	
 	private School getSchoolsWithStudents(){
+		
 		@SuppressWarnings("unchecked")
 		List<School> school = (List<School>) sf.createQuery("from School s join fetch s.students ss").list();
 		return school.get(0);
+		
 	}
 	
 	private List<Teacher> getAllTeachers(){
+		
 		@SuppressWarnings("unchecked")
 		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
 		return teachers;
+		
 	}
 	
-	// Administration Submission
-	private void addSchool(){
-		System.out.println("Adding School");
-		Team newTeam = new Team(); 
-		newTeam.setName(request.getParameter("teamName"));
-		newTeam.setCreatedDate(new Date());
-		newTeam.setEventInstanceID(Integer.parseInt(request.getParameter("eventInstanceId")));
-		EventInstance newEventInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
-//		newTeam.setEventInstance(newEventInstance); // need to fill in eventInstance data.
-		newEventInstance.getTeams().add(newTeam);
+	// Administration Submission --------------------------------------------------------------------------------
+	private void createEvent(){
 		
-		sf.saveOrUpdate(newTeam);
-//		sf.update(newEventInstance);
-		tx.commit();		
+		System.out.println("Creating Event");
+		
+		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(6));
+		String description = request.getParameter("eventDescription");
+		String name = request.getParameter("eventName");
+		String eventName = request.getParameter("eventName");
+		int minTeamSize = Integer.parseInt(request.getParameter("minTeamSize"));
+		int maxTeamSize = Integer.parseInt(request.getParameter("maxTeamSize"));
+		int maxEntries = Integer.parseInt(request.getParameter("maxEntries"));
+		
+		Event newEvent = new Event(newEventType, name, minTeamSize, maxTeamSize, maxEntries, new Date(), description);
+		sf.saveOrUpdate(newEvent);
+	}
+	
+	private void removeEvent(){
+		
+		System.out.println("Removing Event");
+		
+		Event event = (Event) sf.load(Event.class, new Integer(request.getParameter("removeEvent")));
+		sf.delete(event);
+		
+	}	
+	
+	private void addSchool(){
+		
+		System.out.println("Adding School");
+		
+		String name = request.getParameter("schoolName");
+		String streetAddress = request.getParameter("schoolAddress");
+		String city = request.getParameter("schoolCity");
+		String state = request.getParameter("schoolState");
+		String zip = request.getParameter("schoolZip");
+		String phone = request.getParameter("schoolPhone");
+		
+		School newSchool = new School(name, streetAddress, city, state, zip, phone);
+		
+		sf.save(newSchool);
+		
 	}
 	
 	private void deleteSchool(){
+		
 		System.out.println("Adding School");
-	}
-	
-	private void createEvent(){
 		
-		System.out.println("Removing Team");
+		School school = (School) sf.load(School.class, new Integer(request.getParameter("delSchool")));
+		sf.delete(school);
 		
-		Team removeTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
-		EventInstance removeTeamReference = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
-		removeTeamReference.getTeams().remove(removeTeam);
-		sf.saveOrUpdate(removeTeamReference);
-		sf.delete(removeTeam);
-
-	}
+	}	
 	
 	private void createLogin(){
 		
-		System.out.println("Removing Student");
+		System.out.println("Creating Login");
 		
-		Team removeStudentFromTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
-		Student student = new Student(new Integer(request.getParameter("studentId")));
-		StudentTeamId studentTeamId = new StudentTeamId(new Integer(request.getParameter("studentId")), new Integer(request.getParameter("teamId")));
+		String email = request.getParameter("email");
+		String firstName = request.getParameter("firstName");
+		String lastName = request.getParameter("lastName");
+		String phone = request.getParameter("phone");
+		String altPhone = request.getParameter("altPhone");
+		String userName = request.getParameter("userName");
+		String password = request.getParameter("password");
 		
-		StudentTeam studentTeam = (StudentTeam) sf.load(StudentTeam.class, studentTeamId);
-		EventInstance removeFromInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
+		School school = (School) sf.load(School.class, new Integer(request.getParameter("loginSchool")));
+		Role role = (Role) sf.load(Role.class, 15); // static for teacher until additional functionality added by future teams.
+		Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
+		Login newLogin = new Login(teacher, role, userName, password);
 		
-		removeStudentFromTeam.getstudentTeams().remove(studentTeam);
-		
-		if(removeStudentFromTeam.getstudentTeams().size() == 0){
-			sf.delete(studentTeam);
-			removeFromInstance.getTeams().remove(removeStudentFromTeam);
-			sf.saveOrUpdate(removeFromInstance);
-			sf.delete(removeStudentFromTeam);
-		} else {
-			sf.delete(studentTeam);
-		}
+		sf.save(teacher);
+		sf.save(newLogin);
 		
 	}
 	
@@ -245,9 +270,47 @@ public class SubmissionDAO extends MasterDAO{
 		sf.saveOrUpdate(newStudentTeam);	
 		
 	}
-	
-	private void modifyEvent(){
+
+	private void reset(){
 		
+		System.out.println("Resetting System");
+		
+		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
+		List<EventInstance> eventInstances = (List<EventInstance>) sf.createQuery("from EventInstance").list();	
+		List<Team> teams = (List<Team>) sf.createQuery("from Team").list();
+		List<Login> logins = (List<Login>) sf.createQuery("from Login").list();
+		List<School> schools = (List<School>) sf.createQuery("from School").list();
+		List<Student> students = (List<Student>) sf.createQuery("from Student").list();
+		List<StudentTeam> studentTeams = (List<StudentTeam>) sf.createQuery("from StudentTeam").list();
+
+		for(Teacher teacher : teachers){
+			sf.delete(teacher);
+		}
+		
+		for(EventInstance eventInstance : eventInstances){
+			sf.delete(eventInstance);
+		}
+		
+		for(Team team : teams){
+			sf.delete(team);
+		}
+		
+		for(Login login : logins){
+			sf.delete(login);
+		}
+		
+		for(School school : schools){
+			sf.delete(school);
+		}
+		
+		for(Student student : students){
+			sf.delete(student);
+		}
+		
+		for(StudentTeam studentTeam : studentTeams){
+			sf.delete(studentTeam);
+		}
+
 	}
 	
 }
