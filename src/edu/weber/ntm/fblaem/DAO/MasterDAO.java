@@ -46,7 +46,11 @@ public abstract class MasterDAO {
 	
 	protected void endSession(){
 		
-		tx.commit();
+		if(tx != null){
+		
+			tx.commit();
+			
+		}
 		
 	}
 

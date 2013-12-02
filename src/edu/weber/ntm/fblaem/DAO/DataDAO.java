@@ -30,6 +30,7 @@ public class DataDAO extends MasterDAO{
 		
 		try {
 			
+			verifyActiveUser();
 			initializeSession();
 			
 			// Get Page
@@ -59,8 +60,6 @@ public class DataDAO extends MasterDAO{
 			endSession();
 			
 		}
-		
-		verifyActiveUser();
 		
 	}
 	
