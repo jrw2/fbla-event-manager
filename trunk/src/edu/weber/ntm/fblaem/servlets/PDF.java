@@ -55,7 +55,6 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64.OutputStream;
 
-import edu.weber.ntm.fblaem.databaseio.DatabaseConnection;
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.HibernateUtil;
 import edu.weber.ntm.fblaem.databaseio.School;
