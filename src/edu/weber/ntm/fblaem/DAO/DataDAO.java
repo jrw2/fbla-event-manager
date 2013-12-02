@@ -1,7 +1,10 @@
 package edu.weber.ntm.fblaem.DAO;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.Query;
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
@@ -12,34 +15,69 @@ public class DataDAO extends MasterDAO{
 
 	private static final String PAGE_PDF = "PDF";
 	
+	private static final int ROLE_TYPE_ADMIN = 1;
+	private static final int ROLE_TYPE_TEACHER = 2;
+	
 	private String requestType;
 	
-	public DataDAO(HttpServletRequest request, String requestType) {
-		super(request);
+	public DataDAO(HttpServletRequest request, HttpServletResponse response, String requestType) {
+		super(request, response);
 		this.requestType = requestType;
 	}
 	
 	@Override
 	public void process(){
 		
-		initializeSession();
-		
-		// Get Page
-		switch(requestType){
-			case(TYPE_EVENT_REGISTRATION):
-				getEventRegistration();
-				break;
-			case(TYPE_ADMINISTRATION):
-				getAdministration();
-				break;	
-			case(PAGE_PDF):
-				getPDF();
-				break;	
+		try {
+			
+			initializeSession();
+			
+			// Get Page
+			switch(requestType){
+				case(TYPE_LOGIN):
+					getLoginRedirect();
+					break;
+				case(TYPE_EVENT_REGISTRATION):
+					getEventRegistration();
+					break;
+				case(TYPE_ADMINISTRATION):
+					getAdministration();
+					break;	
+				case(PAGE_PDF):
+					getPDF();
+					break;	
+			}
+			
+			request.setAttribute("errorValue", request.getAttribute("errorMessage"));
+			
+		} catch (Exception e){
+			
+			e.printStackTrace();
+			
+		} finally {
+			
+			endSession();
+			
 		}
 		
-		request.setAttribute("errorValue", request.getAttribute("errorMessage"));
+		verifyActiveUser();
 		
-		endSession();
+	}
+	
+	// Initial load
+	private void getLoginRedirect(){
+		
+		int loginType = login.getRole().getId();
+		
+		switch (loginType){
+			case(ROLE_TYPE_ADMIN):
+				getAdministration();
+				break;
+			case(ROLE_TYPE_TEACHER):
+				getEventRegistration();
+				break;
+		}
+		
 	}
 	
 	// Views
@@ -96,6 +134,21 @@ public class DataDAO extends MasterDAO{
 		List<School> schools = (List<School>) sf.createQuery("from School").list();
 		return schools;
 		
+	}
+	
+	private void verifyActiveUser(){
+		if(request.getUserPrincipal() == null)
+		{		
+			request.getSession().removeAttribute("isActive");
+			request.getSession().invalidate();
+			
+			try {
+				response.sendRedirect("login.jsp");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 }

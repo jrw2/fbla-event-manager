@@ -31,9 +31,9 @@ public class ViewController extends HttpServlet{
 		this.request = request;
 		this.response = response;
 		
-		verifyActiveUser();
-		
 		processRequest();
+		
+		return;
 		
 	}
 	
@@ -46,13 +46,13 @@ public class ViewController extends HttpServlet{
 		this.request = request;
 		this.response = response;
 		
-		verifyActiveUser();
-		
 		if(request.getParameter("errorMessage") == null){
 			processSubmission();
 		}
 		
 		processRequest();
+		
+		return;
 		
 	}
 	
@@ -63,18 +63,20 @@ public class ViewController extends HttpServlet{
 			String viewType = getServletConfig().getInitParameter("viewType");
 			
 			// Initialize Data Access
-			DataDAO dao = new DataDAO(request, viewType); 
+			DataDAO dao = new DataDAO(request, response, viewType); 
 
 			// Return data
 			dao.process();
 			
 			// Redirect
 			String redirection = viewType.equals("PDF") ? viewType : viewType + ".jsp"; // move pdf from servlet to DataDAO. 
-			RequestDispatcher rd = request.getRequestDispatcher(redirection);
 			
+			RequestDispatcher rd = request.getRequestDispatcher(redirection);
 			response.setContentType("text/html");
-			rd.forward(request, response);
-			return;
+//			getServletContext().getRequestDispatcher(redirection).forward(arg0, arg1)
+			
+			rd.forward(this.request, this.response);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,29 +87,11 @@ public class ViewController extends HttpServlet{
 		
 		// Initialize Submission 
 		String viewType = getServletConfig().getInitParameter("viewType");
-		SubmissionDAO dao = new SubmissionDAO(request, viewType);
+		SubmissionDAO dao = new SubmissionDAO(request, response, viewType);
 		
 		// Process Submission
 		dao.process();
 		
-		// Redirect
-		processRequest();
-	
-	}
-	
-	private void verifyActiveUser(){
-		if(request.getUserPrincipal() == null)
-		{		
-			request.getSession().removeAttribute("isActive");
-			request.getSession().invalidate();
-			
-			try {
-				response.sendRedirect("login.jsp");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
 	}
 	
 }

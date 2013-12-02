@@ -1,6 +1,7 @@
 package edu.weber.ntm.fblaem.DAO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -14,9 +15,11 @@ public abstract class MasterDAO {
 	
 	protected static final String TYPE_EVENT_REGISTRATION = "eventRegistration";
 	protected static final String TYPE_ADMINISTRATION = "admin";
-
+	protected static final String TYPE_LOGIN = "login";
+	
 	protected static Session sf;
 	protected HttpServletRequest request;
+	protected HttpServletResponse response;
 	protected Transaction tx;
 	protected Login login;
 	protected Teacher teacher;
@@ -24,8 +27,9 @@ public abstract class MasterDAO {
 	public MasterDAO() {
 	}
 	
-	public MasterDAO(HttpServletRequest request) {
+	public MasterDAO(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
+		this.response = response;
 	}
 	
 	public abstract void process();
