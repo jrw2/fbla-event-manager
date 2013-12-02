@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.hibernate.Query;
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
@@ -24,34 +26,45 @@ public class SubmissionDAO extends MasterDAO {
 	private String submissionType;
 	private String pageAction;
 	
-	public SubmissionDAO(HttpServletRequest request, String submissionType) {
-		super(request);
+	public SubmissionDAO(HttpServletRequest request, HttpServletResponse response, String submissionType) {
+		super(request, response);
 		this.submissionType = submissionType;
 		this.pageAction = request.getParameter("pageAction");
 	}
 	
 	public void process(){
 		
-		initializeSession();
-		
-		// Get Page
-		switch(submissionType){
-			case(TYPE_EVENT_REGISTRATION):
-				eventDataSubmission();
-				break;
-			case(TYPE_ADMINISTRATION):
-				adminDataSubmission();
-				break;	
+		try {
+			
+			initializeSession();
+			
+			// Get Page
+			switch(submissionType){
+				case(TYPE_EVENT_REGISTRATION):
+					eventDataSubmission();
+					break;
+				case(TYPE_ADMINISTRATION):
+					adminDataSubmission();
+					break;	
+			}
+			
+			request.setAttribute("errorValue", request.getAttribute("errorMessage"));
+			
+		} catch (Exception e){
+			
+			e.printStackTrace();
+			
+		} finally {
+			
+			endSession();
+			
 		}
 		
-		request.setAttribute("errorValue", request.getAttribute("errorMessage"));
 		
-		endSession();
 	}
 	
 	private void eventDataSubmission(){
 		
-		String pageAction = request.getParameter("pageAction");
 		switch (pageAction) {
 		
 			case "addTeam": addTeam(); break;
@@ -69,15 +82,18 @@ public class SubmissionDAO extends MasterDAO {
 	private void adminDataSubmission(){
 		
 		switch (pageAction) {
-		case "createEvent": createEvent(); break;
-		case "removeEvent": removeEvent(); break;		
-		case "addSchool": addSchool(); break;
-		case "deleteSchool": deleteSchool(); break;
-		case "createLogin": createLogin(); break;
-		case "deleteLogin": deleteLogin(); break;
-		case "reset": reset(); break;
-		default:
-			break;
+		
+			case "createEvent": createEvent(); break;
+			case "removeEvent": removeEvent(); break;		
+			case "addSchool": addSchool(); break;
+			case "deleteSchool": deleteSchool(); break;
+			case "createLogin": createLogin(); break;
+			case "deleteLogin": deleteLogin(); break;
+			case "reset": reset(); break;
+			
+			default:
+				break;
+				
 		}
 		
 	}

@@ -34,6 +34,19 @@
 
 <%@ include file="/includes/Shell/shell_body.jsp"%>
 <!-- Begin Page Content -->
+
+<%
+
+String loginError = "";
+
+if(request.getParameter("Error") != null){
+	
+	loginError = request.getParameter("Error");
+	System.out.println("--------------------------------- error -----------------------------------");
+}
+
+%>
+
 <form action="j_security_check" method="post">
 
 	<div id="main" style="width:100%; height: 100%;">
@@ -48,7 +61,11 @@
 		</div>
 		<div class="centerPage" style="margin-top: 10px;">
 			<input type="submit" value="Sign in"/>
-		</div>		
+		</div>	
+		<div class="centerPage" style="margin-top: 10px;">
+			<span style="color: red;"><%=loginError%></span>
+		</div>			
+			
 	</div>
 	
 </form>

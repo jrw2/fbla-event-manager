@@ -61,7 +61,9 @@
 <script type="text/javascript">
 	function submit(type){
 		
+		alert('type: ' + type);
 		$("#pageAction").val(type);
+		alert('pageAction: ' + $("#pageAction").val());
 		
 		var submit = true;
 		
@@ -70,6 +72,7 @@
 		}
 		
 		if(submit == true){
+			alert('submit');
 			document.submissionForm.submit();
 		}
 		
@@ -110,101 +113,94 @@
 		
 	}
 	
-	function checkEntry(id, eventId){
+	function checkEntry(id){
+		
+			var replacement = "";
+			
+			if(id == "email"){
+				replacement = "Email";
+			}
+			
+			if(id == "firstName"){
+				replacement = "First Name";
+			}
+			
+			if(id == "lastName"){
+				replacement = "Last Name";
+			}
+			
+			if(id == "phone"){
+				replacement = "Phone";
+			}
+			
+			if(id == "altPhone"){
+				replacement = "Alt Phone";
+			}
+			
+			if(id == "schoolName"){
+				replacement = "School Name";
+			}
+			
+			if(id == "schoolAddress"){
+				replacement = "Street Address";
+			}
+			
+			if(id == "schoolCity"){
+				replacement =  "City";
+			}
+			
+			if(id == "schoolState"){
+				replacement = "State";
+			}
+			
+			if(id == "schoolZip"){
+				replacement = "Zip";
+			}
+				
+			if(id == "schoolPhone"){
+				replacement = "Phone";
+			}
+			
+			if(id == "eventDescription"){
+				replacement = "Event Description";
+			}
+			
+			if(id == "eventName"){
+				replacement = "Event Name";
+			}
+			
+			if(id == "numTeams"){
+				replacement = "Number of Teams";
+			}
+			
+			if(id == "minTeamSize"){
+				replacement = "Min Team Size";
+			}
+			
+			if(id == "maxTeamSize"){
+				replacement = "Max Team Size";
+			}
+	
+			if(id == "maxEntries"){
+				replacement = "Max School Entries";
+			}
+			
+			if(id == "modifyDescription"){
+				replacement = "Enter New Description";
+			}
+			
+			if(id == "modifyName"){
+				replacement = "Enter New Name";
+			}	
 
-		var replacement = "";
-		
-		if(id == "email"){
-			replacement = "Email";
-		}
-		
-		if(id == "firstName"){
-			replacement = "First Name";
-		}
-		
-		if(id == "lastName"){
-			replacement = "Last Name";
-		}
-		
-		if(id == "phone"){
-			replacement = "Phone";
-		}
-		
-		if(id == "altPhone"){
-			replacement = "Alt Phone";
-		}
-		
-		if(id == "schoolName"){
-			replacement = "School Name";
-		}
-		
-		if(id == "schoolAddress"){
-			replacement = "Street Address";
-		}
-		
-		if(id == "schoolCity"){
-			replacement =  "City";
-		}
-		
-		if(id == "schoolState"){
-			replacement = "State";
-		}
-		
-		if(id == "schoolZip"){
-			replacement = "Zip";
-		}
+			if(replacement != "" && $("#" + id).val() == ""){
+				
+				$("#" + id).val(replacement);
+				
+			} 
 			
-		if(id == "schoolPhone"){
-			replacement = "Phone";
-		}
-		
-		if(id == "eventDescription"){
-			replacement = "Event Description";
-		}
-		
-		if(id == "eventName"){
-			replacement = "Event Name";
-		}
-		
-		if(id == "numTeams"){
-			replacement = "Number of Teams";
-		}
-		
-		if(id == "minTeamSize"){
-			replacement = "Min Team Size";
-		}
-		
-		if(id == "maxTeamSize"){
-			replacement = "Max Team Size";
-		}
-
-		if(id == "maxEntries"){
-			replacement = "Max School Entries";
-		}
-		
-		if(id == "modifyDescription"){
-			replacement = "Enter New Description";
-		}
-		
-		if(id == "modifyName"){
-			replacement = "Enter New Name";
-		}	
-		
-		if(id == "maxEntries"){
-			replacement = "Enter New Name";
-		}	
-		
-		if(replacement != "" && eventId == -1){
-			
-			$("#" + id).val(replacement);
-			
-		} else if (replacement != ""){
-			
-			$("#" + id + eventId).val(replacement);
-			
-		}
-		
 	}
+	
 </script>
 
 <%@ include file="/includes/Shell/shell_body.jsp"%>
@@ -217,9 +213,6 @@ List<Teacher> teacherLogins = (List<Teacher>)request.getAttribute("teacherLogins
 String validation = (String)request.getAttribute("errorValue") != null ? (String)request.getAttribute("errorValue") : "";%>
 
 <!-- |BEGIN PAGE CONTENT| -->
-<!-- Submission Type -->
-<input type="hidden" name="pageAction" id="pageAction" value="">
-
 <div id="pageHeader" class="titleDiv" style="display: block; border-bottom: 3px solid; margin-bottom: 4px; width: 930px;">
 	<div>
 		Administration
@@ -237,17 +230,19 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 	</div>
 </div>
 	
-<form name="submissionForm" action="Administraton" method="post">	
+<form name="submissionForm" action="Administration" method="post">	
+<!-- Submission Type -->
+<input type="hidden" name="pageAction" id="pageAction" value="">
 	<div id="availableEvents" class="newData event">
 
 		<div id="createEvent" class="addEntryDiv" style="display: none; width: 54%;">
 		
-			<input type="text" id="eventDescription" style="width: 598px; height: 130px;" value="Event Description" onFocus="this.value=''" onblur="checkEntry('eventDescription', -1)"/>
-			<input type="text" id="eventName" value="Event Name" onFocus="this.value=''" onblur="checkEntry('eventName', -1)"/>
-			<input type="text" id="numTeams" value="Number of Teams" onFocus="this.value=''" onblur="checkEntry('numTeams', -1)" style="width: 120px;"/>
-			<input type="text" id="minTeamSize" value="Min Team Size" onFocus="this.value=''" onblur="checkEntry('minTeamSize', -1)" style="width: 120px;"/>
-			<input type="text" id="maxTeamSize" value="Max Team Size" onFocus="this.value=''" onblur="checkEntry('maxTeamSize', -1)" style="width: 100px;"/>
-			<input type="text" id="maxEntries" value="Max School Entries" onFocus="this.value=''" onblur="checkEntry('maxEntries', -1)" style="width: 115px;"/>
+			<input type="text" id="eventDescription" style="width: 598px; height: 130px;" value="Event Description" onFocus="this.value=''" onblur="checkEntry('eventDescription')"/>
+			<input type="text" id="eventName" value="Event Name" onFocus="this.value=''" onblur="checkEntry('eventName')"/>
+			<input type="text" id="numTeams" value="Number of Teams" onFocus="this.value=''" onblur="checkEntry('numTeams')" style="width: 120px;"/>
+			<input type="text" id="minTeamSize" value="Min Team Size" onFocus="this.value=''" onblur="checkEntry('minTeamSize')" style="width: 120px;"/>
+			<input type="text" id="maxTeamSize" value="Max Team Size" onFocus="this.value=''" onblur="checkEntry('maxTeamSize')" style="width: 100px;"/>
+			<input type="text" id="maxEntries" value="Max School Entries" onFocus="this.value=''" onblur="checkEntry('maxEntries')" style="width: 115px;"/>
 			
 			<input type="button" onclick="submit('createEvent')" value=" Create Event "/>
 			<input type="button" onclick="cancelEntry('createEvent')" value=" Cancel "/>
@@ -271,12 +266,12 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		
 		<div id="addSchool" class="addEntryDiv" style="display: none">
 		
-			<input type="text" id="schoolName" value="School Name" onFocus="this.value=''" onblur="checkEntry('schoolName', -1)"/>
-			<input type="text" id="schoolAddress" value="Street Address" onFocus="this.value=''" onblur="checkEntry('schoolAddress', -1)" style="width: 200px;"/>
-			<input type="text" id="schoolCity" value="City" onFocus="this.value=''" onblur="checkEntry('schoolCity', -1)" style="width: 100px;"/>
-			<input type="text" id="schoolState" value="UT" onFocus="this.value='UT'" onblur="checkEntry('schoolState', -1)" style="width: 16px;" disabled/>
-			<input type="text" id="schoolZip" value="Zip" onFocus="this.value=''" onblur="checkEntry('schoolZip', -1)" style="width: 50px;"/>
-			<input type="text" id="schoolPhone" value="Phone" onFocus="this.value=''" onblur="checkEntry('schoolPhone', -1)" style="width: 80px;"/>
+			<input type="text" id="schoolName" value="School Name" onFocus="this.value=''" onblur="checkEntry('schoolName')"/>
+			<input type="text" id="schoolAddress" value="Street Address" onFocus="this.value=''" onblur="checkEntry('schoolAddress')" style="width: 200px;"/>
+			<input type="text" id="schoolCity" value="City" onFocus="this.value=''" onblur="checkEntry('schoolCity')" style="width: 100px;"/>
+			<input type="text" id="schoolState" value="UT" onFocus="this.value='UT'" onblur="checkEntry('schoolState')" style="width: 16px;" disabled/>
+			<input type="text" id="schoolZip" value="Zip" onFocus="this.value=''" onblur="checkEntry('schoolZip')" style="width: 50px;"/>
+			<input type="text" id="schoolPhone" value="Phone" onFocus="this.value=''" onblur="checkEntry('schoolPhone')" style="width: 80px;"/>
 			
 			<input type="button" onclick="submit('addSchool')" value=" Create Event "/>
 			<input type="button" onclick="cancelEntry('addSchool')" value=" Cancel "/>
@@ -305,11 +300,11 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		</div>		
 		
 		<div id="createLogin" class="addEntryDiv" style="display: none">
-			<input type="text" id="firstName" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', -1)" style="width: 100px;"/>
-			<input type="text" id="lastName" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName', -1)" style="width: 100px;"/>
-			<input type="text" id="email" value="Email" onFocus="this.value=''" onblur="checkEntry('email', -1)" style="width: 110px;"/>
-			<input type="text" id="phone" value="Phone" onFocus="this.value=''" onblur="checkEntry('phone', -1)" style="width: 80px;"/>
-			<input type="text" id="altPhone" value="Alt Phone" onFocus="this.value=''" onblur="checkEntry('altPhone', -1)" style="width: 80px;"/>
+			<input type="text" id="firstName" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName')" style="width: 100px;"/>
+			<input type="text" id="lastName" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName')" style="width: 100px;"/>
+			<input type="text" id="email" value="Email" onFocus="this.value=''" onblur="checkEntry('email')" style="width: 110px;"/>
+			<input type="text" id="phone" value="Phone" onFocus="this.value=''" onblur="checkEntry('phone')" style="width: 80px;"/>
+			<input type="text" id="altPhone" value="Alt Phone" onFocus="this.value=''" onblur="checkEntry('altPhone')" style="width: 80px;"/>
 			
 			<select id="loginSchool">
 				<%if(schools.size() > 0){
