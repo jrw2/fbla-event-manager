@@ -18,6 +18,6 @@
 	<classpathentry kind="lib" path="ExternalClasses/cglib-2.1.3.jar"/>
 	<classpathentry kind="lib" path="ExternalClasses/asm.jar"/>
 	<classpathentry kind="lib" path="ExternalClasses/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Anthony/Downloads/itextpdf-5.4.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
+	
 </classpath>
