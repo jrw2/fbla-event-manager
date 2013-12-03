@@ -74,7 +74,7 @@
 	}
 	
 	function checkEntry(id, eventInstanceId){
-		if($("#" + id + eventInstanceId).val() == ""){
+		if($.trim($("#" + id + eventInstanceId).val()) == ""){
 			if(id == "firstName"){
 				$("#" + id + eventInstanceId).val("First Name");
 			} else if(id == "lastName"){
@@ -83,6 +83,24 @@
 				$("#" + id + eventInstanceId).val("Team Name");
 			} 
 		}
+		else if($.trim($("#" + id + eventInstanceId).val()) != "Team Name"  &&
+			 $.trim($("#" + id + eventInstanceId).val()) != "First Name" &&
+			 $.trim($("#" + id + eventInstanceId).val()) != "Last Name"){
+		 
+			 	 var ready = "true";
+				 $("#" + id + eventInstanceId).siblings("input").each(function (){
+					 if($.trim($(this).val()) == "Team Name"  ||
+							 $.trim($(this).val()) == "First Name" ||
+							 $.trim($(this).val()) == "Last Name")
+						 {
+						 	ready = "false";
+						 }
+					 });
+				 if(ready == "true")
+				 {
+					 $("#" + id + eventInstanceId).siblings().removeAttr('disabled');
+				 }
+			 }
 	}
 	
 	function addTeam(eventInstanceId){
@@ -245,7 +263,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<div id="addStudent<%=eventInstance.getId()%>" class="addEntryDiv" style="display: none">
 			
 					<input type="text" id="firstName<%=eventInstance.getId()%>" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName', <%=eventInstance.getId()%>)"/>
-					<input type="text" id="lastName<%=eventInstance.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName, <%=eventInstance.getId()%>)"/>
+					<input type="text" id="lastName<%=eventInstance.getId()%>" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName', <%=eventInstance.getId()%>)"/>
 					
 					<select id="team<%=eventInstance.getId()%>">
 						<%if(teams.size() > 0){
@@ -269,7 +287,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 						
 					</select>
 										
-					<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student "/>
+					<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student " disabled/>
 					<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
 				
 				</div>
@@ -287,7 +305,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 						
 					} %>
 					
-					<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
+					<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team " disabled/>
 					<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
 				
 				</div>
