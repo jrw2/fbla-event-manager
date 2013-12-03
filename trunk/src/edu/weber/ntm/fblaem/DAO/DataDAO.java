@@ -15,8 +15,8 @@ public class DataDAO extends MasterDAO{
 
 	private static final String PAGE_PDF = "PDF";
 	
-	private static final int ROLE_TYPE_ADMIN = 1;
-	private static final int ROLE_TYPE_TEACHER = 2;
+	private static final int ROLE_TYPE_ADMIN = 14;
+	private static final int ROLE_TYPE_TEACHER = 15;
 	
 	private String requestType;
 	
@@ -75,19 +75,26 @@ public class DataDAO extends MasterDAO{
 			case(ROLE_TYPE_TEACHER):
 				getEventRegistration();
 				break;
+			default:
+			try {
+				response.sendRedirect("login.jsp");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				break;
+		
 		}
 		
 	}
 	
 	// Views
 	private void getEventRegistration(){
-		
 		request.setAttribute("teacher", teacher);
 		request.setAttribute("school", teacher.getSchool());			
 		request.setAttribute("events", getAllEvents());
 		
 	}
-	
 	private void getAdministration(){
 		
 		request.setAttribute("admin", teacher);
