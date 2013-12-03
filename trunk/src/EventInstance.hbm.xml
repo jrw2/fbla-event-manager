@@ -24,8 +24,11 @@
         <property name="location" type="string">
             <column name="Location" length="4000" />
         </property>
-        <property name="schoolId" type="int">
-            <column name="schoolId" />
-        </property>        
+<!--         <property name="schoolId" type="int"> -->
+<!--             <column name="schoolId" /> -->
+<!--         </property>   -->
+        <property name="eventId" type="int">
+            <column name="EventID" />
+        </property>    
     </class>
 </hibernate-mapping>

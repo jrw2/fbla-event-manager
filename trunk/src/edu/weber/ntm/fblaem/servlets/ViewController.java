@@ -73,7 +73,6 @@ public class ViewController extends HttpServlet{
 			
 			RequestDispatcher rd = request.getRequestDispatcher(redirection);
 			response.setContentType("text/html");
-//			getServletContext().getRequestDispatcher(redirection).forward(arg0, arg1)
 			
 			rd.forward(this.request, this.response);
 			

@@ -17,7 +17,8 @@ public class EventInstance implements java.io.Serializable {
 	private Date endTime;
 	private String location;
 	private Set teams;
-	private int schoolId;
+//	private int schoolId;
+	private int eventId;
 	
 	public EventInstance() {
 	}
@@ -29,13 +30,13 @@ public class EventInstance implements java.io.Serializable {
 	}
 
 	public EventInstance(Event event, Date createdDate, Date startTime,
-			Date endTime, String location, Integer schoolId) {
+			Date endTime, String location/*, Integer schoolId*/) {
 		this.event = event;
 		this.createdDate = createdDate;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.location = location;
-		this.schoolId = schoolId;
+//		this.schoolId = schoolId;
 	}
 
 	public Integer getId() {
@@ -93,12 +94,20 @@ public class EventInstance implements java.io.Serializable {
 		this.teams = teams;
 	}
 	
-	public int getSchoolId() {
-		return schoolId;
+//	public int getSchoolId() {
+//		return schoolId;
+//	}
+//
+//	public void setSchoolId(int schoolId) {
+//		this.schoolId = schoolId;
+//	}
+
+	public int getEventId() {
+		return eventId;
 	}
 
-	public void setSchoolId(int schoolId) {
-		this.schoolId = schoolId;
+	public void setEventId(int eventId) {
+		this.eventId = eventId;
 	}
 
 

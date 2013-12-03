@@ -19,7 +19,7 @@ public class Event implements java.io.Serializable {
 	private int maxEntriesPerSchool;
 	private Date createdDate;
 	private String details;
-	private Set eventInstances = new HashSet(0);
+	private Set<EventInstance> eventInstances = new HashSet(0);
 
 	public Event() {
 	}
@@ -119,7 +119,7 @@ public class Event implements java.io.Serializable {
 		this.details = details;
 	}
 
-	public Set getEventInstances() {
+	public Set<EventInstance> getEventInstances() {
 		return this.eventInstances;
 	}
 

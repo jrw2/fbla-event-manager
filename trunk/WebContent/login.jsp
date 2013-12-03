@@ -37,13 +37,13 @@
 
 <%
 
-String loginError = "";
+// String loginError = "";
 
-if(request.getParameter("Error") != null){
+// if(request.getParameter("Error") != null){
 	
-	loginError = request.getParameter("Error");
-	System.out.println("--------------------------------- error -----------------------------------");
-}
+// 	loginError = request.getParameter("Error");
+// 	System.out.println("--------------------------------- error -----------------------------------");
+// }
 
 %>
 
@@ -62,9 +62,9 @@ if(request.getParameter("Error") != null){
 		<div class="centerPage" style="margin-top: 10px;">
 			<input type="submit" value="Sign in"/>
 		</div>	
-		<div class="centerPage" style="margin-top: 10px;">
-			<span style="color: red;"><%=loginError%></span>
-		</div>			
+<!-- 		<div class="centerPage" style="margin-top: 10px;"> -->
+<%-- 			<span style="color: red;"><%=loginError%></span> --%>
+<!-- 		</div>			 -->
 			
 	</div>
 	

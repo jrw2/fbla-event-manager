@@ -1,64 +1,27 @@
 package edu.weber.ntm.fblaem.servlets;
 
-
-
-
-import edu.weber.ntm.fblaem.databaseio.*;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-
-
-
-
-
-
-
-
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.codec.Base64.OutputStream;
 
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.HibernateUtil;
 import edu.weber.ntm.fblaem.databaseio.School;
-import edu.weber.ntm.fblaem.databaseio.Student;
 import edu.weber.ntm.fblaem.databaseio.Team;
 
 

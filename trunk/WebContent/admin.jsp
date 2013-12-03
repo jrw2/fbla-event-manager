@@ -59,11 +59,10 @@
 	}
 </style>
 <script type="text/javascript">
-	function submit(type){
-		
-		alert('type: ' + type);
+
+	function submitData(type){
+
 		$("#pageAction").val(type);
-		alert('pageAction: ' + $("#pageAction").val());
 		
 		var submit = true;
 		
@@ -72,7 +71,6 @@
 		}
 		
 		if(submit == true){
-			alert('submit');
 			document.submissionForm.submit();
 		}
 		
@@ -114,8 +112,8 @@
 	}
 	
 	function checkEntry(id){
-		
-			var replacement = "";
+
+		var replacement = "";
 			
 			if(id == "email"){
 				replacement = "Email";
@@ -224,7 +222,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		<a href="javascript:void(0)" onclick="showDiv('deleteSchool');">Delete School</a>&nbsp;&nbsp;|&nbsp;&nbsp;			
 		<a href="javascript:void(0)" onclick="showDiv('createLogin');">Add Login</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="javascript:void(0)" onclick="showDiv('deleteLogin');">Delete Login</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-		<a href="javascript:void(0)" onclick="submit('reset');">Reset System</a>&nbsp;&nbsp;|&nbsp;&nbsp;			
+		<a href="javascript:void(0)" onclick="submitData('reset');">Reset System</a>&nbsp;&nbsp;|&nbsp;&nbsp;			
 		<a href="exportEvent?eventId=-1">Export All Events&nbsp;<img src="<%=pdf%>"/></a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="Logout">LOGOUT</a>
 	</div>
@@ -237,14 +235,14 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 
 		<div id="createEvent" class="addEntryDiv" style="display: none; width: 54%;">
 		
-			<input type="text" id="eventDescription" style="width: 598px; height: 130px;" value="Event Description" onFocus="this.value=''" onblur="checkEntry('eventDescription')"/>
-			<input type="text" id="eventName" value="Event Name" onFocus="this.value=''" onblur="checkEntry('eventName')"/>
-			<input type="text" id="numTeams" value="Number of Teams" onFocus="this.value=''" onblur="checkEntry('numTeams')" style="width: 120px;"/>
-			<input type="text" id="minTeamSize" value="Min Team Size" onFocus="this.value=''" onblur="checkEntry('minTeamSize')" style="width: 120px;"/>
-			<input type="text" id="maxTeamSize" value="Max Team Size" onFocus="this.value=''" onblur="checkEntry('maxTeamSize')" style="width: 100px;"/>
-			<input type="text" id="maxEntries" value="Max School Entries" onFocus="this.value=''" onblur="checkEntry('maxEntries')" style="width: 115px;"/>
+			<input type="text" name="eventDescription"  id="eventDescription" style="width: 598px; height: 130px;" value="Event Description" onFocus="this.value=''" onblur="checkEntry('eventDescription')"/>
+			<input type="text" name="eventName" id="eventName" value="Event Name" onFocus="this.value=''" onblur="checkEntry('eventName')"/>
+			<input type="text" name="numTeams" id="numTeams" value="Number of Teams" onFocus="this.value=''" onblur="checkEntry('numTeams')" style="width: 120px;"/>
+			<input type="text" name="minTeamSize" id="minTeamSize" value="Min Team Size" onFocus="this.value=''" onblur="checkEntry('minTeamSize')" style="width: 120px;"/>
+			<input type="text" name="maxTeamSize" id="maxTeamSize" value="Max Team Size" onFocus="this.value=''" onblur="checkEntry('maxTeamSize')" style="width: 100px;"/>
+			<input type="text" name="maxEntries"  id="maxEntries" value="Max School Entries" onFocus="this.value=''" onblur="checkEntry('maxEntries')" style="width: 115px;"/>
 			
-			<input type="button" onclick="submit('createEvent')" value=" Create Event "/>
+			<input type="button" onclick="submitData('createEvent')" value=" Create Event "/>
 			<input type="button" onclick="cancelEntry('createEvent')" value=" Cancel "/>
 		
 		</div>
@@ -259,7 +257,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 					<%}%>
 			</select>				
 			
-			<input type="button" onclick="submit('removeEvent')" value=" Remove Event "/>
+			<input type="button" onclick="submitData('removeEvent')" value=" Remove Event "/>
 			<input type="button" onclick="cancelEntry('removeEvent')" value=" Cancel "/>						
 		
 		</div>		
@@ -273,7 +271,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 			<input type="text" id="schoolZip" value="Zip" onFocus="this.value=''" onblur="checkEntry('schoolZip')" style="width: 50px;"/>
 			<input type="text" id="schoolPhone" value="Phone" onFocus="this.value=''" onblur="checkEntry('schoolPhone')" style="width: 80px;"/>
 			
-			<input type="button" onclick="submit('addSchool')" value=" Create Event "/>
+			<input type="button" onclick="submitData('addSchool')" value=" Create Event "/>
 			<input type="button" onclick="cancelEntry('addSchool')" value=" Cancel "/>
 		
 		</div>	
@@ -294,7 +292,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<%}%>
 				
 			</select>		
-			<input type="button" onclick="submit('deleteSchool')" value=" Delete School "/>
+			<input type="button" onclick="submitData('deleteSchool')" value=" Delete School "/>
 			<input type="button" onclick="cancelEntry('deleteSchool')" value=" Cancel "/>
 		
 		</div>		
@@ -322,7 +320,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 			
 			User Name: <input type="text" id="userName" value="" onFocus="this.value=''"/>
 			Password: <input type="password" id="password" value="" onFocus="this.value=''"/>
-			<input type="button" onclick="submit('createLogin')" value=" Create Login "/>
+			<input type="button" onclick="submitData('createLogin')" value=" Create Login "/>
 			<input type="button" onclick="cancelEntry('createLogin')" value=" Cancel "/>
 		
 		</div>
@@ -338,7 +336,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<%} %>
 			</select>
 		
-			<input type="button" onclick="submit('deleteLogin')" value=" Delete Login "/>
+			<input type="button" onclick="submitData('deleteLogin')" value=" Delete Login "/>
 			<input type="button" onclick="cancelEntry('deleteLogin')" value=" Cancel "/>
 	
 		</div>	
