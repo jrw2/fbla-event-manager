@@ -15,9 +15,6 @@ public class DataDAO extends MasterDAO{
 
 	private static final String PAGE_PDF = "PDF";
 	
-	private static final int ROLE_TYPE_ADMIN = 14;
-	private static final int ROLE_TYPE_TEACHER = 15;
-	
 	private String requestType;
 	
 	public DataDAO(HttpServletRequest request, HttpServletResponse response, String requestType) {
