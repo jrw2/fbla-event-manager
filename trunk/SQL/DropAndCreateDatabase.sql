@@ -91,6 +91,7 @@ CREATE TABLE EventInstance
 	StartTime datetime, 
 	EndTime datetime,
 	Location nvarchar(4000),
+	schoolId INT NOT NULL,
 	PRIMARY KEY(id),
 	FOREIGN KEY (EventID)
 		REFERENCES Event(id)
