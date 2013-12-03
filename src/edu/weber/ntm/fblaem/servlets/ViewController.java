@@ -1,11 +1,14 @@
 package edu.weber.ntm.fblaem.servlets;
 
 import java.io.IOException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import edu.weber.ntm.fblaem.DAO.DataDAO;
 import edu.weber.ntm.fblaem.DAO.SubmissionDAO;
 
@@ -61,7 +64,13 @@ public class ViewController extends HttpServlet{
 		try {
 			
 			String viewType = getServletConfig().getInitParameter("viewType");
-			
+			HttpSession session = request.getSession(false);//false means don't create one if it doesn't exist
+			if(session != null && !session.isNew()) {
+			    viewType = "eventRegistration";
+			    
+			} else {
+			    response.sendRedirect("login.jsp");
+			}
 			// Initialize Data Access
 			DataDAO dao = new DataDAO(request, response, viewType); 
 
