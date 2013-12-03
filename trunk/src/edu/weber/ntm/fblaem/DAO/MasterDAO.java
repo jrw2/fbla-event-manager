@@ -17,6 +17,9 @@ public abstract class MasterDAO {
 	protected static final String TYPE_ADMINISTRATION = "admin";
 	protected static final String TYPE_LOGIN = "login";
 	
+	public static final int ROLE_TYPE_ADMIN = 14;
+	public static final int ROLE_TYPE_TEACHER = 15;
+	
 	protected static Session sf;
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
