@@ -204,12 +204,26 @@ public class SubmissionDAO extends MasterDAO {
 		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(6));
 		String description = request.getParameter("eventDescription");
 		String name = request.getParameter("eventName");
-		String eventName = request.getParameter("eventName");
 		int minTeamSize = Integer.parseInt(request.getParameter("minTeamSize"));
 		int maxTeamSize = Integer.parseInt(request.getParameter("maxTeamSize"));
 		int maxEntries = Integer.parseInt(request.getParameter("maxEntries"));
 		
 		Event newEvent = new Event(newEventType, name, minTeamSize, maxTeamSize, maxEntries, new Date(), description);
+		sf.save(newEvent);
+		
+//		List<School> schools = getAllSchools();
+		
+//		for(School school: schools){
+			
+		// Create event instances for all schools.
+		EventInstance eI = new EventInstance(newEvent, new Date(), new Date(), new Date(), "WSU"/*, new Integer(school.getId())*/); // future team will implement scheduling.
+		eI.setEventId(newEvent.getId());
+		sf.save(eI);
+		
+		newEvent.getEventInstances().add(eI);
+			
+//		}
+		
 		sf.saveOrUpdate(newEvent);
 	}
 	
@@ -234,6 +248,8 @@ public class SubmissionDAO extends MasterDAO {
 		String phone = request.getParameter("schoolPhone");
 		
 		School newSchool = new School(name, streetAddress, city, state, zip, phone);
+		
+		// assign event instances
 		
 		sf.save(newSchool);
 		
@@ -327,6 +343,12 @@ public class SubmissionDAO extends MasterDAO {
 			sf.delete(studentTeam);
 		}
 
+	}
+	
+	private List<School> getAllSchools(){
+		
+		return (List<School>)sf.createQuery("from School").list();
+		
 	}
 	
 }
