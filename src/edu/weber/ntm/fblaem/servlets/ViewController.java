@@ -110,6 +110,18 @@ public class ViewController extends HttpServlet{
 			
 			rd.forward(this.request, this.response);
 			
+			// New Redirect for pdf
+//			String redirection = viewType + ".jsp"; // move pdf from servlet to DataDAO. 
+//			
+//			if(!viewType.equals("PDF")){
+//				response.setContentType("text/html");
+//				RequestDispatcher rd = request.getRequestDispatcher(redirection);
+//			} else {
+//				response.setContentType("application/pdf");
+//			}
+//			
+//			rd.forward(this.request, this.response);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
