@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Query;
+
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.EventInstance;
@@ -20,6 +21,7 @@ import edu.weber.ntm.fblaem.databaseio.StudentTeam;
 import edu.weber.ntm.fblaem.databaseio.StudentTeamId;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 import edu.weber.ntm.fblaem.databaseio.Team;
+import edu.weber.ntm.fblaem.servlets.LoginManagement;
 
 public class SubmissionDAO extends MasterDAO {
 
@@ -231,7 +233,8 @@ public class SubmissionDAO extends MasterDAO {
 		
 		System.out.println("Removing Event");
 		
-		Event event = (Event) sf.load(Event.class, new Integer(request.getParameter("removeEvent")));
+		System.out.println("removeEvent: " + request.getParameter("removeEvent"));
+		Event event = (Event) sf.load(Event.class, Integer.parseInt(request.getParameter("removeEvent")));
 		sf.delete(event);
 		
 	}	
@@ -274,9 +277,9 @@ public class SubmissionDAO extends MasterDAO {
 		String phone = request.getParameter("phone");
 		String altPhone = request.getParameter("altPhone");
 		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
+		String password = LoginManagement.hash(request.getParameter("password"));
 		
-		School school = (School) sf.load(School.class, new Integer(request.getParameter("loginSchool")));
+		School school = (School) sf.load(School.class, Integer.parseInt(request.getParameter("loginSchool")));
 		Role role = (Role) sf.load(Role.class, 15); // static for teacher until additional functionality added by future teams.
 		Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
 		Login newLogin = new Login(teacher, role, userName, password);
@@ -288,18 +291,10 @@ public class SubmissionDAO extends MasterDAO {
 	
 	private void deleteLogin(){
 		
-		System.out.println("Registering Student");
+		System.out.println("Deleting Login");
 		
-		Team addStudentTeam = (Team) sf.load(Team.class, new Integer(request.getParameter("teamId")));
-		School school = (School) sf.load(School.class, teacher.getSchool().getId());
-		Student addStudent = new Student(school, request.getParameter("firstName"), request.getParameter("lastName"));
-//		addStudent = (Student) sf.load(Student.class, new Integer(request.getParameter("teamId")));
-		Integer studentId = new Integer((Integer)sf.save(addStudent));
-		StudentTeamId newStudentTeamId = new StudentTeamId(studentId, new Integer(request.getParameter("teamId")));
-		StudentTeam  newStudentTeam = new StudentTeam(newStudentTeamId, addStudentTeam, addStudent);
-		addStudentTeam.getstudentTeams().add(newStudentTeam);
-		
-		sf.saveOrUpdate(newStudentTeam);	
+		Login login = (Login) sf.load(Login.class, Integer.parseInt(request.getParameter("deleteUserLogin")));
+		sf.delete(login);
 		
 	}
 
