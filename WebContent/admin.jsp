@@ -69,6 +69,18 @@
 		if(type == 'reset'){
 			submit = confirm("This will remove all school and student data.  Would you like to continue?");
 		}
+
+		if(type == 'deleteLogin'){
+			submit = confirm("This will remove all data based on this login. Would you like to continue?");
+		}
+
+		if(type == 'deleteSchool'){
+			submit = confirm("This will remove all school data.  Would you like to continue?");
+		}
+
+		if(type == 'removeEvent'){
+			submit = confirm("This will remove all event related data. Would you like to continue?");
+		}
 		
 		if(submit == true){
 			document.submissionForm.submit();
@@ -249,7 +261,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 	
 		<div id="removeEvent" class="addEntryDiv" style="display: none; width: 54%;">
 		
-			<select id="removeEvent">
+			<select name="removeEvent" id="removeEvent">
 					<option value="-1">Select Event</option>
 					<optgroup label="-------------------------"></optgroup>
 					<%for(Event event : events){%>
@@ -264,21 +276,22 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		
 		<div id="addSchool" class="addEntryDiv" style="display: none">
 		
-			<input type="text" id="schoolName" value="School Name" onFocus="this.value=''" onblur="checkEntry('schoolName')"/>
-			<input type="text" id="schoolAddress" value="Street Address" onFocus="this.value=''" onblur="checkEntry('schoolAddress')" style="width: 200px;"/>
-			<input type="text" id="schoolCity" value="City" onFocus="this.value=''" onblur="checkEntry('schoolCity')" style="width: 100px;"/>
-			<input type="text" id="schoolState" value="UT" onFocus="this.value='UT'" onblur="checkEntry('schoolState')" style="width: 16px;" disabled/>
-			<input type="text" id="schoolZip" value="Zip" onFocus="this.value=''" onblur="checkEntry('schoolZip')" style="width: 50px;"/>
-			<input type="text" id="schoolPhone" value="Phone" onFocus="this.value=''" onblur="checkEntry('schoolPhone')" style="width: 80px;"/>
+			<input type="text" name="schoolName" id="schoolName" value="School Name" onFocus="this.value=''" onblur="checkEntry('schoolName')"/>
+			<input type="text" name="schoolAddress" id="schoolAddress" value="Street Address" onFocus="this.value=''" onblur="checkEntry('schoolAddress')" style="width: 200px;"/>
+			<input type="text" name="schoolCity" id="schoolCity" value="City" onFocus="this.value=''" onblur="checkEntry('schoolCity')" style="width: 100px;"/>
+			<input type="text" name="schoolStateVisual" id="schoolStateVisual" value="UT" style="width: 16px;" disabled/> 
+			<input type="hidden" name="schoolState" id="schoolState" value="UT" style="width: 16px;"/> <!--  Remove this and use the above box when there are schools from out of state. -->
+			<input type="text" name="schoolZip" id="schoolZip" value="Zip" onFocus="this.value=''" onblur="checkEntry('schoolZip')" style="width: 50px;"/>
+			<input type="text" name="schoolPhone" id="schoolPhone" value="Phone" onFocus="this.value=''" onblur="checkEntry('schoolPhone')" style="width: 80px;"/>
 			
-			<input type="button" onclick="submitData('addSchool')" value=" Create Event "/>
+			<input type="button" onclick="submitData('addSchool')" value=" Add School "/>
 			<input type="button" onclick="cancelEntry('addSchool')" value=" Cancel "/>
 		
 		</div>	
 
 		<div id="deleteSchool" class="addEntryDiv" style="display: none">
 		
-			<select id="delSchool">
+			<select name="delSchool" id="delSchool">
 				<%if(schools.size() > 0){
 					%>
 					<option value="-1">Select School</option>
@@ -298,13 +311,13 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		</div>		
 		
 		<div id="createLogin" class="addEntryDiv" style="display: none">
-			<input type="text" id="firstName" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName')" style="width: 100px;"/>
-			<input type="text" id="lastName" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName')" style="width: 100px;"/>
-			<input type="text" id="email" value="Email" onFocus="this.value=''" onblur="checkEntry('email')" style="width: 110px;"/>
-			<input type="text" id="phone" value="Phone" onFocus="this.value=''" onblur="checkEntry('phone')" style="width: 80px;"/>
-			<input type="text" id="altPhone" value="Alt Phone" onFocus="this.value=''" onblur="checkEntry('altPhone')" style="width: 80px;"/>
+			<input type="text" name="firstName" id="firstName" value="First Name" onFocus="this.value=''" onblur="checkEntry('firstName')" style="width: 100px;"/>
+			<input type="text" name="lastName" id="lastName" value="Last Name" onFocus="this.value=''" onblur="checkEntry('lastName')" style="width: 100px;"/>
+			<input type="text" name="email" id="email" value="Email" onFocus="this.value=''" onblur="checkEntry('email')" style="width: 110px;"/>
+			<input type="text" name="phone" id="phone" value="Phone" onFocus="this.value=''" onblur="checkEntry('phone')" style="width: 80px;"/>
+			<input type="text" name="altPhone" id="altPhone" value="Alt Phone" onFocus="this.value=''" onblur="checkEntry('altPhone')" style="width: 80px;"/>
 			
-			<select id="loginSchool">
+			<select name="loginSchool" id="loginSchool">
 				<%if(schools.size() > 0){
 					%>
 					<option value="-1">Select School</option>
@@ -318,8 +331,8 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<%}%>
 			</select><br />
 			
-			User Name: <input type="text" id="userName" value="" onFocus="this.value=''"/>
-			Password: <input type="password" id="password" value="" onFocus="this.value=''"/>
+			User Name: <input type="text" name="userName" id="userName" value="" onFocus="this.value=''"/>
+			Password: <input type="password" name="password"  id="password" value="" onFocus="this.value=''"/>
 			<input type="button" onclick="submitData('createLogin')" value=" Create Login "/>
 			<input type="button" onclick="cancelEntry('createLogin')" value=" Cancel "/>
 		
@@ -327,12 +340,12 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		
 		<div id="deleteLogin" class="addEntryDiv" style="display: none">
 	
-			<select id="deleteUserLogin" style="width: 300px;">
+			<select name="deleteUserLogin" id="deleteUserLogin" style="width: 300px;">
 				<option value="-1">Select User Login</option>
 				<optgroup label="-------------------------"></optgroup>
 				<%
-				for(int loginId = 0; loginId < teacherLogins.size(); loginId++){%>
-					<option value="<%=teacherLogins.get(loginId).getId()%>">User Login Name - School <%=loginId%></option>
+				for(Teacher teacher : teacherLogins){%>
+					<option value="<%=teacher.getId()%>"><%=teacher.getFirstName() + " " + teacher.getLastName() + " - " + teacher.getSchool().getName()%></option>
 				<%} %>
 			</select>
 		
