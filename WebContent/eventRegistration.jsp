@@ -311,8 +311,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				</div>
 				
 				<div style="border-top: 2px solid;">
-					<%
-				   for(Team team : teams){
+					<%for(Team team : teams){
 					
 						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
 					
@@ -338,7 +337,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 							<div style="border-color:#848369; margin-left: 200px;">
 								
 								<div id="teamMem">
-<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
+									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
 									<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName()%>
 <%-- 									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);" style="font-size: 12px; color: red;">&nbsp;remove</a> --%>
 								</div>
