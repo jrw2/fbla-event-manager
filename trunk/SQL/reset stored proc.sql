@@ -9,7 +9,8 @@ DELETE FROM Student;
 DELETE FROM EventType;
 DELETE FROM School;
 #INSERT INTO `fblaem`.`Role`(`RoleName`)VALUES("Administrator");
-SET @Role = (SELECT r.id FROM Role r where r.RoleName = "Administrator");
+SET @AdminRole = (SELECT r.id FROM Role r where r.RoleName = "Administrator");
+SET @UserRole = (SELECT r.id FROM Role r where r.RoleName = "Teacher");
 #INSERT INTO `fblaem`.`Role`(`RoleName`)VALUES("Teacher");
 INSERT INTO `fblaem`.`School`(`Name`,`StreetAddress`,`City`,`State`,`Zip`,`Phone`,`CreatedDate`)VALUES("Weber State","","Ogden","UT","84403","1234567890",now());
 set @Weber = last_insert_id();
@@ -19,9 +20,9 @@ INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`
 #INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","testStudentfname","testStudentlname",now());
 #INSERT INTO `fblaem`.`Student`(`SchoolID`,`FirstName`,`LastName`,`CreateDate`)VALUES("1","test2Studentfname","test2Studentlname",now());
 #admin admin
-INSERT INTO `fblaem`.`Login`(`RoleID`,`TeacherID`,`Username`,`Password`)VALUES(@Role,LAST_INSERT_ID(),"admin","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
+INSERT INTO `fblaem`.`Login`(`RoleID`,`TeacherID`,`Username`,`Password`)VALUES(@AdminRole,LAST_INSERT_ID(),"admin","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 INSERT INTO `fblaem`.`Teacher`(`SchoolID`,`Email`,`FirstName`,`LastName`,`Phone`,`CreateDate`)VALUES(@Weber,"admin@admin.com","Teacher","admin","1234567890",now());
-INSERT INTO `fblaem`.`Login`(`RoleID`,`TeacherID`,`Username`,`Password`)VALUES(@Role,LAST_INSERT_ID(),"teacher","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
+INSERT INTO `fblaem`.`Login`(`RoleID`,`TeacherID`,`Username`,`Password`)VALUES(@UserRole,LAST_INSERT_ID(),"teacher","8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Individual");
 SET @Individual = last_insert_id();
 INSERT INTO `fblaem`.`EventType`(`TypeName`)VALUES("Team");
