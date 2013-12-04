@@ -69,4 +69,46 @@
     <url-pattern>/PDF</url-pattern>
 </servlet-mapping>
 
+<<<<<<< .mine
+<!-- <servlet-mapping> -->
+<!-- 	<servlet-name>ServletName</servlet-name> -->
+<!-- 	<url-pattern>/Demo</url-pattern> -->
+<!-- </servlet-mapping> -->
+<!-- 
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Unsecure Pages</web-resource-name>
+        <description/>
+        <url-pattern>/Logout</url-pattern>
+        <url-pattern>/includes/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+        <description/>
+        <role-name>*</role-name>
+    </auth-constraint>
+</security-constraint>  -->
+<!-- <security-constraint> -->
+<!--     <web-resource-collection> -->
+<!--         <web-resource-name>Secure Pages</web-resource-name> -->
+<!--         <description/> -->
+<!--         <url-pattern>/EventRegistration</url-pattern> -->
+<!--     </web-resource-collection> -->
+<!--     <auth-constraint> -->
+<!--         <description/> -->
+<!--         <role-name>Administrator</role-name> -->
+<!--     </auth-constraint> -->
+<!-- </security-constraint>  -->
+
+
+  <!--
+  <servlet>
+    <servlet-name>EmailListServlet</servlet-name>
+    <servlet-class>servlets.EmailListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EmailListServlet</servlet-name>
+    <url-pattern>/EmailListServletWeb</url-pattern>
+  </servlet-mapping>-->
+=======
+>>>>>>> .r102
 </web-app>
