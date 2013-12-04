@@ -1,5 +1,8 @@
 package edu.weber.ntm.fblaem.DAO;
 
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
@@ -301,8 +305,15 @@ public class SubmissionDAO extends MasterDAO {
 	private void reset(){
 		
 		System.out.println("Resetting System");
-		Query query = sf.getNamedQuery("FBLAEM_Reset");
-		query.executeUpdate();
+		try {
+			
+			PreparedStatement st = sf.connection().prepareStatement("{call FBLAEM_Reset}"); 
+			st.execute();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
