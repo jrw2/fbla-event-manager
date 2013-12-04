@@ -16,6 +16,7 @@ public abstract class MasterDAO {
 	protected static final String TYPE_EVENT_REGISTRATION = "eventRegistration";
 	protected static final String TYPE_ADMINISTRATION = "admin";
 	protected static final String TYPE_LOGIN = "login";
+	protected static final String TYPE_PDF = "PDF";
 	
 	public static final int ROLE_TYPE_ADMIN = 14;
 	public static final int ROLE_TYPE_TEACHER = 15;

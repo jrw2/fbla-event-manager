@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Query;
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
+import edu.weber.ntm.fblaem.databaseio.PDFGenerator;
 import edu.weber.ntm.fblaem.databaseio.School;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 
 public class DataDAO extends MasterDAO{
 
-	private static final String PAGE_PDF = "PDF";
-	
 	private String requestType;
 	
 	public DataDAO(HttpServletRequest request, HttpServletResponse response, String requestType) {
@@ -39,10 +38,17 @@ public class DataDAO extends MasterDAO{
 					getEventRegistration();
 					break;
 				case(TYPE_ADMINISTRATION):
-					getAdministration();
+					getEventRegistration(); // pdf uses same data, /PDF?EventId=-1&ViewType
 					break;	
-				case(PAGE_PDF):
-					getPDF();
+				case(TYPE_PDF):
+					if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_ADMIN)){
+						getAdministration()(); // pdf uses same data
+					} else if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_TEACHER)){
+						getEventRegistration(); // pdf uses same data
+					}
+					
+					PDFGenerator.createDocument(request, response);
+				
 					break;	
 			}
 			
@@ -98,12 +104,6 @@ public class DataDAO extends MasterDAO{
 		request.setAttribute("schools", getSchools());			
 		request.setAttribute("events", getAllEvents());
 		request.setAttribute("teacherLogins", getAllTeachers());
-		
-	}
-	
-	private void getPDF(){
-		
-		// set your necessary data here for pdf (methods toget data below)
 		
 	}
 	
