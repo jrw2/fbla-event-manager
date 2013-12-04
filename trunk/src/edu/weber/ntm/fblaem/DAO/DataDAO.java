@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.Query;
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
-import edu.weber.ntm.fblaem.databaseio.PDFGenerator;
 import edu.weber.ntm.fblaem.databaseio.School;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
+import edu.weber.ntm.fblaem.exports.PDFGenerator;
 
 public class DataDAO extends MasterDAO{
 
