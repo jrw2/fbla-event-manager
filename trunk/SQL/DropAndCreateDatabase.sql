@@ -1,8 +1,8 @@
 USE fblaem;
 DROP VIEW IF EXISTS User_View;
 DROP VIEW IF EXISTS Group_View;
-DROP TABLE IF EXISTS StudentEventTeam;
 DROP TABLE IF EXISTS StudentTeam;
+DROP TABLE IF EXISTS EventType;
 DROP TABLE IF EXISTS EventInstance;
 DROP TABLE IF EXISTS Event;
 DROP TABLE IF EXISTS Team;
@@ -10,7 +10,6 @@ DROP TABLE IF EXISTS Login;
 DROP TABLE IF EXISTS Teacher;
 DROP TABLE IF EXISTS Role;
 DROP TABLE IF EXISTS Student;
-DROP TABLE IF EXISTS EventType;
 DROP TABLE IF EXISTS School;
 
 CREATE TABLE School
@@ -38,7 +37,7 @@ CREATE TABLE Student
 	CreateDate datetime,
 	PRIMARY KEY (id),
 	FOREIGN KEY (SchoolID)
-		REFERENCES School(id)
+		REFERENCES School(id) ON DELETE CASCADE ON UPDATE CASCADE
 	);
 CREATE TABLE Role
 	(id mediumint NOT NULL auto_increment,
@@ -56,7 +55,7 @@ CREATE TABLE Teacher
 	CreateDate datetime,
 	PRIMARY KEY (id),
 	FOREIGN KEY (SchoolID)
-		REFERENCES School(id)
+		REFERENCES School(id) ON DELETE CASCADE ON UPDATE CASCADE
 	);
 CREATE TABLE Login
 	(id mediumint NOT NULL auto_increment,
@@ -67,7 +66,7 @@ CREATE TABLE Login
 	LastLoginDate datetime,
 	PRIMARY KEY (id),
 	FOREIGN KEY (TeacherID)
-		REFERENCES Teacher(id),
+		REFERENCES Teacher(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (RoleID)
 		REFERENCES Role(id)
 	);
@@ -93,7 +92,7 @@ CREATE TABLE EventInstance
 	Location nvarchar(4000),
 	PRIMARY KEY(id),
 	FOREIGN KEY (EventID)
-		REFERENCES Event(id)
+		REFERENCES Event(id) ON DELETE CASCADE ON UPDATE CASCADE
 	);
 CREATE TABLE Team
 	(id mediumint NOT NULL auto_increment,
@@ -102,7 +101,7 @@ CREATE TABLE Team
 	CreatedDate datetime,
 	EventInstanceID mediumint NOT NULL,
 	FOREIGN KEY (EventInstanceID)
-		REFERENCES EventInstance(id),
+		REFERENCES EventInstance(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
 	);
 CREATE TABLE StudentTeam
@@ -113,11 +112,11 @@ CREATE TABLE StudentTeam
 	EnrolledByTeacherID mediumint,
 	PRIMARY KEY (StudentID, TeamID),
 	FOREIGN KEY (StudentID)
-		REFERENCES Student(id),
+		REFERENCES Student(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (TeamID)
-		REFERENCES Team(id),
+		REFERENCES Team(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (EnrolledByTeacherID)
-		REFERENCES Teacher(id)
+		REFERENCES Teacher(id) ON DELETE CASCADE ON UPDATE CASCADE
 	);
 CREATE VIEW `fblaem`.`Group_View` AS
     select 
