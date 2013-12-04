@@ -306,7 +306,10 @@ public class SubmissionDAO extends MasterDAO {
 	private void reset(){
 		
 		System.out.println("Resetting System");
+		Query query = sf.getNamedQuery("FBLAEM_Reset");
+		query.executeUpdate();
 		
+		/*
 		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
 		List<EventInstance> eventInstances = (List<EventInstance>) sf.createQuery("from EventInstance").list();	
 		List<Team> teams = (List<Team>) sf.createQuery("from Team").list();
@@ -342,7 +345,7 @@ public class SubmissionDAO extends MasterDAO {
 		for(StudentTeam studentTeam : studentTeams){
 			sf.delete(studentTeam);
 		}
-
+		*/
 	}
 	
 	private List<School> getAllSchools(){
