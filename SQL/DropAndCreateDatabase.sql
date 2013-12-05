@@ -100,6 +100,7 @@ CREATE TABLE Team
 	MaxIndividuals nvarchar(255),
 	CreatedDate datetime,
 	EventInstanceID mediumint NOT NULL,
+	SchoolId int NOT NULL,
 	FOREIGN KEY (EventInstanceID)
 		REFERENCES EventInstance(id) ON DELETE CASCADE ON UPDATE CASCADE,
 	PRIMARY KEY (id)
@@ -223,5 +224,3 @@ INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Locati
 INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(32,now(),now(),"");
 INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(33,now(),now(),"");
 INSERT INTO `fblaem`.`EventInstance`(`EventID`,`CreatedDate`,`StartTime`,`Location`)VALUES(34,now(),now(),"");
-INSERT INTO `fblaem`.`Team`(`Name`,`CreatedDate`,`EventInstanceID`)VALUES(`test`,now(),1);
-INSERT INTO `fblaem`.`Team`(`Name`,`CreatedDate`,`EventInstanceID`)VALUES(`test`,now(),2);

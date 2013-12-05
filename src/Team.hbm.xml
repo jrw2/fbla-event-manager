@@ -20,6 +20,9 @@
         <property name="EventInstanceID" type="int">
             <column name="EventInstanceID" />
         </property>
+        <property name="schoolId" type="int">
+            <column name="SchoolId" />
+        </property>
         <set name="studentTeams" table="StudentTeam" inverse="true" lazy="false" fetch="join">
             <key>
                 <column name="TeamID" not-null="true" />
