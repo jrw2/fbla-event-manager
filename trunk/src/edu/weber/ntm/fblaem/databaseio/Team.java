@@ -17,6 +17,7 @@ public class Team implements java.io.Serializable {
 	private Date createdDate;
 	private Set studentTeams = new HashSet(0);
 	private Integer EventInstanceID;
+	private int schoolId;
 
 	public Team() {
 	}
@@ -75,6 +76,14 @@ public class Team implements java.io.Serializable {
 
 	public void setEventInstanceID(Integer eventInstanceID) {
 		EventInstanceID = eventInstanceID;
+	}
+
+	public int getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
 	}
 
 }

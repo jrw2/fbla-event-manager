@@ -165,13 +165,15 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 
 <!-- |BEGIN PAGE CONTENT| -->
 <!-- Submission Type -->
+<!-- Could have just made entire page into form and grabbed specific data in back end like admin... -->
 <form name="submissionForm" action="EventRegistration" method="post">
 	<input type="hidden" name="pageAction" id="pageAction" value="">
 	
 	<!-- Team Submission / Removal -->
 	<input type="hidden" name="teamName" id="teamName" value="">
 	<input type="hidden" name="MaxIndividuals" id="MaxIndividuals" value=""> <!--  Not Implemented -->
-	<input type="hidden" name="teamId" id="teamId" value=""> 
+	<input type="hidden" name="teamId" id="teamId" value="">
+	<input type="hidden" name="schoolId" id="schoolId" value="<%=school.getId()%>"> 
 	
 	<!-- Student Team Removal -->
 	<input type="hidden" name="studentId" id="studentId" value="">
@@ -276,16 +278,18 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 							<%
 							for(Team team : teams){
 
-								Boolean maxStudentsForTeam = false;
-								
-								if(team.getMaxIndividuals() != null){
-									maxStudentsForTeam = (team.getstudentTeams().size() < Integer.parseInt(team.getMaxIndividuals())) ? false : true; // why string?
+								if(team.getSchoolId() == school.getId()){
+									Boolean maxStudentsForTeam = false;
+									
+									if(team.getMaxIndividuals() != null){
+										maxStudentsForTeam = (team.getstudentTeams().size() < Integer.parseInt(team.getMaxIndividuals())) ? false : true; // why string?
+									}
+									
+									// if max # of teams reached do not allow this to create new team.
+									if(!maxStudentsForTeam){%> 
+										<option value="<%=team.getId()%>"><%=team.getName()%></option>
+									<%}
 								}
-								
-								// if max # of teams reached do not allow this to create new team.
-								if(!maxStudentsForTeam){%> 
-									<option value="<%=team.getId()%>"><%=team.getName()%></option>
-								<%}
 							} 
 						} else {%>
 							<option>No Teams</option>
@@ -318,38 +322,39 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				
 				<div style="border-top: 2px solid;">
 					<%for(Team team : teams){
-					
-						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
-					
-						<div style="border-color:#848369">
-							<div id="title" style="width: 685px;">
-								<%
-									String enrolledStudents = Integer.toString(team.getstudentTeams().size());
-									String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-								%>
-								&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
-								
-							</div>
-			
-							<div id="link">
-							
-								<a href="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);"><img src="<%=remove%>"/>&nbsp;Remove Team</a>
-								
-							</div>
-							
-						</div>
-						<%
-						for(StudentTeam studentTeam : studentTeams){%>
-							<div style="border-color:#848369; margin-left: 200px;">
-								
-								<div id="teamMem">
-									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
-									<%=studentTeam.getStudent().getFullName()%>
+						if(team.getSchoolId() == school.getId()){
+							Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
+						
+							<div style="border-color:#848369">
+								<div id="title" style="width: 685px;">
+									<%
+										String enrolledStudents = Integer.toString(team.getstudentTeams().size());
+										String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
+									%>
+									&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
 									
 								</div>
 				
+								<div id="link">
+								
+									<a href="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);"><img src="<%=remove%>"/>&nbsp;Remove Team</a>
+									
+								</div>
+								
 							</div>
-						<%} 
+							<%
+							for(StudentTeam studentTeam : studentTeams){%>
+								<div style="border-color:#848369; margin-left: 200px;">
+									
+									<div id="teamMem">
+										<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
+										<%=studentTeam.getStudent().getFullName()%>
+										
+									</div>
+					
+								</div>
+							<%} 
+						}
 					} %>
 				</div>
 			</div>			

@@ -110,6 +110,7 @@ public class EventRegistration extends HttpServlet{
 				newTeam.setName(request.getParameter("teamName"));
 				newTeam.setCreatedDate(new Date());
 				newTeam.setEventInstanceID(Integer.parseInt(request.getParameter("eventInstanceId")));
+				newTeam.setSchoolId(Integer.parseInt(request.getParameter("storeId")));
 				EventInstance newEventInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
 //				newTeam.setEventInstance(newEventInstance); // need to fill in eventInstance data.
 				newEventInstance.getTeams().add(newTeam);
