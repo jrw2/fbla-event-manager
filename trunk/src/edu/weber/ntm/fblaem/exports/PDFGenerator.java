@@ -2,11 +2,15 @@ package edu.weber.ntm.fblaem.exports;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.Set;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -15,6 +19,7 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.EventInstance;
 import edu.weber.ntm.fblaem.databaseio.School;
@@ -22,12 +27,14 @@ import edu.weber.ntm.fblaem.databaseio.Student;
 import edu.weber.ntm.fblaem.databaseio.StudentTeam;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 import edu.weber.ntm.fblaem.databaseio.Team;
+
 import com.itextpdf.text.BaseColor;
 
 public class PDFGenerator {
 
 	public static final String EXPORT_ADMIN = "admin";
 	public static final String EXPORT_TEACHER = "teacher";
+	public static final int COST_PER_STUDENT = 20; // need to move this to db or somewhere else
 	
 	private static final int FONT_08 = 0;
 	private static final int FONT_08_BOLD = 1;
@@ -84,6 +91,7 @@ public class PDFGenerator {
 	private void generateAdminExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
+		List<School> completeSchoolList = (List<School>)request.getAttribute("schools");
 		
 		Font defaultFont = getPdfFont(FONT_08);
 		Font boldSmallFont = getPdfFont(FONT_08_BOLD);
@@ -114,7 +122,7 @@ public class PDFGenerator {
 				String maxTeamsPerSchool = Integer.toString(event.getMaxEntriesPerSchool());
 				
 				Iterator<EventInstance> itr = (Iterator<EventInstance>)event.getEventInstances().iterator();
-			
+				
 			    while(itr.hasNext()){
 			    	
 			    	PdfPTable eventTable = createTable(headerWidths, 100);
@@ -122,12 +130,7 @@ public class PDFGenerator {
 					eventTable.getDefaultCell().setBorderWidth(0);
 			    	
 			    	EventInstance eventInstance = (EventInstance)itr.next();
-			    	List<Team> studentInstanceTeams = new ArrayList<Team>();
 			    	Set<Team> teams = (Set<Team>)eventInstance.getTeams();
-					
-					if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
-						maxTeamsPerSchool = "href";
-					}
 					
 					eventTable.getDefaultCell().setBorderWidthTop(1);
 					eventTable.addCell(new Phrase(event.getName(), boldSmallFont));
@@ -139,49 +142,128 @@ public class PDFGenerator {
 					eventTable.getDefaultCell().setColspan(3);
 					eventTable.addCell(new Phrase(event.getDetails() != null ? event.getDetails() : "No Description", defaultFont));
 					
+					HashMap<String, ArrayList<Team>> teamsBySchool = new HashMap<String, ArrayList<Team>>();
 					
+					// Organize Teams by school
 					for(Team team : teams){
-					
-						eventTable.getDefaultCell().setColspan(3);
-						eventTable.addCell(new Phrase("   ", boldSmallFont));
 						
 						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();
-						String enrolledStudents = Integer.toString(team.getstudentTeams().size());
-						String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-						eventTable.getDefaultCell().setColspan(1);
 
-						eventTable.addCell(new Phrase("   ", boldSmallFont));
-						eventTable.addCell(new Phrase(team.getName() + "(" + enrolledStudents + "/" + maxIndividuals + ")", boldSmallFont));
-						eventTable.addCell(new Phrase("Enrolled Students", boldSmallFont));
-						
-						for(StudentTeam studentTeam : studentTeams){
+						while(studentTeams.iterator().hasNext()){
 							
-							eventTable.getDefaultCell().setColspan(2);
-							eventTable.addCell(new Phrase("   ", boldSmallFont));
-							eventTable.getDefaultCell().setColspan(1);
-							eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
+							StudentTeam studentTeam = studentTeams.iterator().next();
 							
-							if(eventId == -1 || eventId == event.getId()){
-								studentEnrollements++;
+							String schoolId = Integer.toString(studentTeam.getStudent().getSchool().getId()); // bad way, but no time!
+	
+							if(!teamsBySchool.containsKey(schoolId)){
+								
+								ArrayList <Team> schoolTeamList = new ArrayList<Team>();
+								schoolTeamList.add(team);
+								teamsBySchool.put(schoolId, schoolTeamList);
+								
+							} else {
+								
+								teamsBySchool.get(schoolId).add(team);
+								
 							}
-							
-						} 
+						}
+						
 					}
 					
-					if(eventId == -1 || eventId == eventInstance.getId()){
+					// Create Billing Data (move to method later)
+					HashMap<String, Integer> billingTotals = new HashMap<String, Integer>();
+					Set<String> schools = teamsBySchool.keySet();
+
+// TODO FOR TOTALS AT BOTTOM OF SHEET (future)	
+// TODO Turn this mess into a query.  Would do it now if I had time to learn hibernate QL better.					
+//					for(String schoolId : schools){
+//						
+//						ArrayList<Team> schoolTeams = teamsBySchool.get(schoolId);
+//						
+//						for(Team team : schoolTeams){
+//							
+//							Set<StudentTeam> studentTeams = team.getstudentTeams();
+//							
+//							for(StudentTeam studentTeam : studentTeams){
+//								
+//								if(!billingTotals.containsKey(schoolId)){
+//									
+//									billingTotals.put(schoolId, new Integer(1));
+//									
+//								} else {
+//									
+//									int total = billingTotals.get(schoolId);
+//									billingTotals.put(schoolId, new Integer(total++));									
+//									
+//								}
+//								
+//							}
+//							
+//						}
+//						
+//					}
+					
+					for(School school : completeSchoolList){
 						
-//						createDivider(eventTable, 3);
-						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-						eventTable.getDefaultCell().setColspan(2);
-						eventTable.addCell(new Phrase("", boldSmallFont));
-						eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
-						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-						eventTable.getDefaultCell().setColspan(3);
-						eventTable.addCell(new Phrase("   ", boldSmallFont));
-						eventTable.getDefaultCell().setColspan(1);
-						document.add(eventTable);
+						if(teamsBySchool.get(school.getId()) != null){
+							
+							eventTable.getDefaultCell().setColspan(3);
+							eventTable.addCell(new Phrase(school.getName(), boldSmallFont));
+							
+							List<Team> schoolTeams = teamsBySchool.get(school.getId());
+							
+							for(Team team : schoolTeams){
+								
+								eventTable.getDefaultCell().setColspan(3);
+								eventTable.addCell(new Phrase("   ", boldSmallFont));
+								
+								Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();
+								String enrolledStudents = Integer.toString(team.getstudentTeams().size());
+								String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
+								eventTable.getDefaultCell().setColspan(1);
+
+								eventTable.addCell(new Phrase("   ", boldSmallFont));
+								eventTable.addCell(new Phrase(team.getName() + "(" + enrolledStudents + "/" + maxIndividuals + ")", boldSmallFont));
+								eventTable.addCell(new Phrase("Enrolled Students", boldSmallFont));
+								
+								for(StudentTeam studentTeam : studentTeams){
+									
+									eventTable.getDefaultCell().setColspan(2);
+									eventTable.addCell(new Phrase("   ", boldSmallFont));
+									eventTable.getDefaultCell().setColspan(1);
+									eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
+									
+									if(eventId == -1 || eventId == event.getId()){
+										studentEnrollements++;
+									}
+									
+								} 
+								
+							}
+							
+						}
 						
-					} 
+						if(eventId == -1 || eventId == eventInstance.getId()){
+							
+//							createDivider(eventTable, 3);
+							eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+							eventTable.getDefaultCell().setColspan(2);
+							eventTable.addCell(new Phrase("", boldSmallFont));
+							eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
+							eventTable.addCell(new Phrase("", boldSmallFont));
+							eventTable.getDefaultCell().setColspan(1);						
+							eventTable.addCell(new Phrase("Billing: $" + (studentEnrollements * COST_PER_STUDENT) + ".00", boldSmallFont));
+							
+							
+							eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+							eventTable.getDefaultCell().setColspan(3);
+							eventTable.addCell(new Phrase("   ", boldSmallFont));
+							eventTable.getDefaultCell().setColspan(1);
+							document.add(eventTable);
+							
+						} 
+						
+					}
 					
 			    }
 			    
@@ -236,12 +318,7 @@ public class PDFGenerator {
 					eventTable.getDefaultCell().setBorderWidth(0);
 			    	
 			    	EventInstance eventInstance = (EventInstance)itr.next();
-			    	List<Team> studentInstanceTeams = new ArrayList<Team>();
 			    	Set<Team> teams = (Set<Team>)eventInstance.getTeams();
-					
-					if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
-						maxTeamsPerSchool = "href";
-					}
 					
 					eventTable.getDefaultCell().setBorderWidthTop(1);
 					eventTable.addCell(new Phrase(event.getName(), boldSmallFont));
