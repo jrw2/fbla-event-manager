@@ -56,6 +56,9 @@
 	#link {
 		float: left;
 	}
+	#description {
+		font-size: 12px;
+	}
 </style>
 
 <script type="text/javascript">
@@ -193,7 +196,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 <%-- 		<%if(user.isAdmin()){ %> --%>
 <!-- 				<a href="Administration">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
 <%-- 		<%} %> --%>
-			<a href="/PDF?eventId=-1&exportType=teacher&eventName=all"><img src="<%=pdf %>"/> Export All Events</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="PDF?eventId=-1&exportType=teacher&eventName=all"><img src="<%=pdf %>"/> Export All Events</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="Logout">LOGOUT</a>
 		</div>
 		<%if(!validation.equals("")){ %>		
@@ -234,7 +237,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<div id="header" style="border-bottom: 2px solid;">
 					<div id="title">
 
-						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="/PDF?eventId=<%=eventInstance.getId() %>&exportType=teacher&eventName=<%=event.getName()%>" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="PDF?eventId=<%=eventInstance.getId() %>&exportType=teacher&eventName=<%=event.getName()%>" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 						
 					</div>
 					
@@ -287,7 +290,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 						
 					</select>
 										
-					<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student " disabled/>
+					<input type="button" onclick="addStudent(<%=eventInstance.getId()%>);" value=" Register Student " />
 					<input type="button" onclick="cancelEntry('student', <%=eventInstance.getId()%>)" value=" Cancel "/>
 				
 				</div>
@@ -305,7 +308,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 						
 					} %>
 					
-					<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team " disabled/>
+					<input type="button" onclick="addTeam(<%=eventInstance.getId()%>)" <%=disableSubmit %>value=" Add Team "/>
 					<input type="button" onclick="cancelEntry('team', <%=eventInstance.getId()%>)" value=" Cancel "/>
 				
 				</div>
