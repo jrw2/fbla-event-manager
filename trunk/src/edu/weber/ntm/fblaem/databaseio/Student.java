@@ -87,5 +87,9 @@ public class Student implements java.io.Serializable {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+	
+	public String getFullName(){
+		return firstName + " " + lastName;
+	}
 
 }

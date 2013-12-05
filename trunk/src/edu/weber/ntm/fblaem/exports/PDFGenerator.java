@@ -1,37 +1,41 @@
 package edu.weber.ntm.fblaem.exports;
 
-import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.Query;
-
-//import com.lowagie.text.DocumentException;
-//import com.lowagie.text.Font;
-//import com.lowagie.text.FontFactory;
-//import com.lowagie.text.Phrase;
-//import com.lowagie.text.pdf.BaseFont;
-//import com.lowagie.text.pdf.PdfPTable;
-
-import edu.weber.ntm.fblaem.DAO.MasterDAO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Set;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import edu.weber.ntm.fblaem.databaseio.Event;
+import edu.weber.ntm.fblaem.databaseio.EventInstance;
 import edu.weber.ntm.fblaem.databaseio.School;
+import edu.weber.ntm.fblaem.databaseio.Student;
+import edu.weber.ntm.fblaem.databaseio.StudentTeam;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
+import edu.weber.ntm.fblaem.databaseio.Team;
+import com.itextpdf.text.BaseColor;
 
 public class PDFGenerator {
-	/*
-	public static String EXPORT_ADMIN = "admin";
-	public static String EXPORT_TEACHER = "teacher";
+
+	public static final String EXPORT_ADMIN = "admin";
+	public static final String EXPORT_TEACHER = "teacher";
 	
-	private static int FONT_08 = 0;
-	private static int FONT_08_BOLD = 1;
-	private static int FONT_09_BOLD = 2;
+	private static final int FONT_08 = 0;
+	private static final int FONT_08_BOLD = 1;
+	private static final int FONT_09_BOLD = 2;
 	
 	private int eventId;
 	private String type, eventName;
-	private document;
+	private Document document;
 	
 	public void createDocument(HttpServletRequest request, HttpServletResponse response){
 		
@@ -45,25 +49,37 @@ public class PDFGenerator {
 		
 		response.setHeader("Content-Disposition", "inline; filename=" + eventName + ".pdf");
         response.setContentType("application/pdf");
-        PdfWriter.getInstance(document, response.getOutputStream());
-        document.open();
-		
-		switch(type){
+        
+        try {
+        	
+			PdfWriter.getInstance(document, response.getOutputStream());
+
+	        document.open();
 			
-			case(EXPORT_ADMIN):
-				generateAdminExport();
-				break;
-			case(EXPORT_TEACHER):
-				generateTeacherExport();
-				break;
+			switch(type){
+				
+				case(EXPORT_ADMIN):
+					generateAdminExport(request, response);
+					break;
+				case(EXPORT_TEACHER):
+					generateTeacherExport(request, response);
+					break;
+				
+			}
 			
+			document.close();
+			
+		} catch (DocumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		document.close();
 		
 	}
 	
-	private void generateAdminExport(){
+	private void generateAdminExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
 		List<School> schools = (List<School>)request.getAttribute("schools");
@@ -73,17 +89,21 @@ public class PDFGenerator {
 		Font boldSmallFont = getPdfFont(FONT_08_BOLD);
 		Font boldTitleFont = getPdfFont(FONT_09_BOLD);
 		
-		int titleHeaderwidths[] = {100}; // percentage
-		PdfPTable titleTable = new PdfPTable(titleHeaderwidths, 100);
+		float titleHeaderwidths[] = {100}; // percentage
+		PdfPTable titleTable = createTable(titleHeaderwidths, 100);
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
 		
 		String allEvents = eventId == -1 ? "All Events" : "Event Name: " + eventId;
 		titleTable.addCell(new Phrase("Teacher Name, School Name - " + allEvents, boldTitleFont)); document.add(titleTable);
 		
+		int headerWidths[] = new int[]{10, 15, 52, 13, 10};
+		
 		for(int i=0; i < events.size(); i++){ 
 			
 			Event event = events.get(i);
+			
+			PdfPTable eventTable = createTable(titleHeaderwidths, 100);
 
 			if(event.getEventInstances() != null){
 				
@@ -126,16 +146,13 @@ public class PDFGenerator {
 										
 								for(StudentTeam studentTeam : studentTeams){
 										
-									studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName();
+									studentTeam.getStudent().getFullName();
 											
 								} 
 							} 
 						} 
 				}
 			}
-			
-			int headerWidths[] = new int[]{10, 15, 52, 13, 10};
-			PdfPTable eventTable = new PdfPTable(titleHeaderwidths, 100);
 			
 			if(eventId == -1 || eventId == event.getId()){
 				
@@ -148,7 +165,7 @@ public class PDFGenerator {
 		
 	}
 	
-	private void generateTeacherExport(){
+	private void generateTeacherExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
 		Teacher teacher = (Teacher)request.getAttribute("teacher");
@@ -158,13 +175,16 @@ public class PDFGenerator {
 		Font boldSmallFont = getPdfFont(FONT_08_BOLD);
 		Font boldTitleFont = getPdfFont(FONT_09_BOLD);
 		
-		int titleHeaderwidths[] = {100}; // percentage
-		PdfPTable titleTable = new PdfPTable(titleHeaderwidths, 100);
+		float titleHeaderwidths[] = {100}; // percentage
+		PdfPTable titleTable = createTable(titleHeaderwidths, 100);
+		
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
+		titleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		String title = (String)request.getAttribute("singleEventTitle");
 		
-		String allEvents = eventId == -1 ? "All Events" : "Event Name: " + eventId;
-		titleTable.addCell(new Phrase("Teacher Name, School Name - " + allEvents, boldTitleFont)); document.add(titleTable);
+		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + title);
+		titleTable.addCell(new Phrase(teacher.getFullName() + "(" + school.getName() + ") - "  + allEvents, boldTitleFont)); document.add(titleTable);
 		
 		for(int i=0; i < events.size(); i++){ 
 			
@@ -228,8 +248,8 @@ public class PDFGenerator {
 			    }
 			}
 			
-			int headerWidths[] = new int[]{10, 15, 52, 13, 10};
-			PdfPTable eventTable = new PdfPTable(titleHeaderwidths, 100);
+			float headerWidths[] = new float[]{10, 15, 52, 13, 10};
+			PdfPTable eventTable = createTable(headerWidths, 100f);
 			
 			if(eventId == -1 || eventId == event.getId()){
 				
@@ -241,16 +261,33 @@ public class PDFGenerator {
 		
 	}
 	
-	public Font getPdfFont(int font){
+	public Font getPdfFont(int font_type){
 		
-		switch(font){
-			case FONT_08:				font = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL, new Color(0, 0, 0)); break;
-			case FONT_08_BOLD:			font = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD, new Color(0, 0, 0)); break; 
-			case FONT_09_BOLD:			font = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.BOLD, new Color(0, 0, 0)); break;
+		Font font = new Font();
+		
+		switch(font_type){
+			case FONT_08:				font = FontFactory.getFont(FontFactory.HELVETICA, 8f, Font.NORMAL, BaseColor.BLACK); break;
+			case FONT_08_BOLD:			font = FontFactory.getFont(FontFactory.HELVETICA, 8f, Font.BOLD, BaseColor.BLACK); break; 
+			case FONT_09_BOLD:			font = FontFactory.getFont(FontFactory.HELVETICA, 9f, Font.BOLD, BaseColor.BLACK); break;
 		}
 		
 		return font;
 		
 	}
-	*/
+	
+	public PdfPTable createTable(float[] widths, float percentage){
+		
+		PdfPTable table = new PdfPTable(widths);
+		table.setWidthPercentage(percentage);
+		
+		return table;
+		
+	}
+	
+	public void createDivider(PdfPTable table, Document document, int colspan){
+		
+		
+		
+	}
+
 }
