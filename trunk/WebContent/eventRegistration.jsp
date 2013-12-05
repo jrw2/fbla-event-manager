@@ -193,7 +193,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 <%-- 		<%if(user.isAdmin()){ %> --%>
 <!-- 				<a href="Administration">Admin</a>&nbsp;&nbsp;|&nbsp;&nbsp; -->
 <%-- 		<%} %> --%>
-			<a href="exportEvent?eventId=-1"><img src="<%=pdf %>"/> Export All Events</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="/PDF?eventId=-1&exportType=teacher&eventName=all"><img src="<%=pdf %>"/> Export All Events</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 			<a href="Logout">LOGOUT</a>
 		</div>
 		<%if(!validation.equals("")){ %>		
@@ -234,7 +234,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<div id="header" style="border-bottom: 2px solid;">
 					<div id="title">
 
-						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="/PDF?eventId=<%=eventInstance.getId() %>&exportType=teacher&eventName=<%=event.getName()%>" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
 						
 					</div>
 					
