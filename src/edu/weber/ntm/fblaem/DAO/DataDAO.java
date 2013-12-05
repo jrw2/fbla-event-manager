@@ -2,12 +2,15 @@ package edu.weber.ntm.fblaem.DAO;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Query;
+
 import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
+import edu.weber.ntm.fblaem.databaseio.Login;
 import edu.weber.ntm.fblaem.databaseio.School;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 import edu.weber.ntm.fblaem.exports.PDFGenerator;
@@ -41,14 +44,7 @@ public class DataDAO extends MasterDAO{
 					getEventRegistration(); // pdf uses same data, /PDF?EventId=-1&ViewType
 					break;	
 				case(TYPE_PDF):
-					if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_ADMIN)){
-						getAdministration()(); // pdf uses same data
-					} else if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_TEACHER)){
-						getEventRegistration(); // pdf uses same data
-					}
-					
-					PDFGenerator.createDocument(request, response);
-				
+					getPDF();
 					break;	
 			}
 			
@@ -104,6 +100,26 @@ public class DataDAO extends MasterDAO{
 		request.setAttribute("schools", getSchools());			
 		request.setAttribute("events", getAllEvents());
 		request.setAttribute("teacherLogins", getAllTeachers());
+		
+	}
+	
+	private void getPDF(){
+		
+		if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_ADMIN)){
+			getAdministration(); // pdf uses same data
+		} else if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_TEACHER)){
+			getEventRegistration(); // pdf uses same data
+		}
+		
+		PDFGenerator pdfGen = new PDFGenerator();
+		pdfGen.createDocument(request, response);
+		
+		String eventTitle = "all";
+		
+		if(!request.getParameter("eventId").equals("all")){
+			Event event = (Event) sf.load(Event.class, Integer.parseInt(request.getParameter("eventId")));
+			request.setAttribute("singleEventTitle", event.getName());
+		}
 		
 	}
 	

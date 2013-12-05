@@ -187,7 +187,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 
 <div id="pageHeader" class="titleDiv" style="display: block; border-bottom: 3px solid; margin-bottom: 4px;">
 		<div>
-			Event Registration - <span style="font-size: 20px;"> <%=teacher.getFirstName() + " " + teacher.getLastName()%> | <%=school.getName()%></span>
+			Event Registration - <span style="font-size: 20px;"><%=teacher.getFullName()%> | <%=school.getName()%></span>
 		</div>
 		<div id="navigation" style="font-size: 13px; margin-bottom: 10px;">
 <%-- 		<%if(user.isAdmin()){ %> --%>
@@ -338,8 +338,8 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 								
 								<div id="teamMem">
 									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);"><img src="<%=remove%>"/></a>									
-									<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName()%>
-<%-- 									<a href ="javascript:void(0)" onclick="removeStudentFromTeam(<%=studentTeam.getId().getStudentId()%>, <%=team.getId()%>, <%=eventInstance.getId()%>);" style="font-size: 12px; color: red;">&nbsp;remove</a> --%>
+									<%=studentTeam.getStudent().getFullName()%>
+									
 								</div>
 				
 							</div>

@@ -345,7 +345,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<optgroup label="-------------------------"></optgroup>
 				<%
 				for(Teacher teacher : teacherLogins){%>
-					<option value="<%=teacher.getId()%>"><%=teacher.getFirstName() + " " + teacher.getLastName() + " - " + teacher.getSchool().getName()%></option>
+					<option value="<%=teacher.getId()%>"><%=teacher.getFullName() + " - " + teacher.getSchool().getName()%></option>
 				<%} %>
 			</select>
 		
@@ -420,7 +420,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 									
 									<div id="teamMem">
 									
-										<%=studentTeam.getStudent().getFirstName() + " " + studentTeam.getStudent().getLastName()%>
+										<%=studentTeam.getStudent().getFullName()%>
 										
 									</div>
 					

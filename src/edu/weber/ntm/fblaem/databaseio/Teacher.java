@@ -128,5 +128,8 @@ public class Teacher implements java.io.Serializable {
 	public void setstudentTeams(Set studentTeams) {
 		this.studentTeams = studentTeams;
 	}
-
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 }
