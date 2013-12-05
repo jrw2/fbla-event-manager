@@ -73,7 +73,6 @@ public class ViewController extends HttpServlet{
 			String viewType = getServletConfig().getInitParameter("viewType");
 			HttpSession session = request.getSession(false);//false means don't create one if it doesn't exist
 			
-			// need to move this somewhere else.
 			if(session != null && !session.isNew()) {
 				
 				Session sf = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -81,14 +80,16 @@ public class ViewController extends HttpServlet{
 				
 				Login login = (Login) sf.createQuery("from Login as login where login.username='" + request.getRemoteUser() + "'").uniqueResult();
 				
-				if(login.getRole().getId() == MasterDAO.ROLE_TYPE_ADMIN){
-					
-					viewType = "admin";
-					
-				} else {
-					
-					viewType = "eventRegistration";
-					
+				if(!viewType.equals("PDF")){
+					if(login.getRole().getId() == MasterDAO.ROLE_TYPE_ADMIN){
+						
+						viewType = "admin";
+						
+					} else {
+						
+						viewType = "eventRegistration";
+						
+					}
 				}
 				
 			    

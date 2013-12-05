@@ -32,6 +32,7 @@ public class PDFGenerator {
 	private static final int FONT_08 = 0;
 	private static final int FONT_08_BOLD = 1;
 	private static final int FONT_09_BOLD = 2;
+	private static final int FONT_13_BOLD = 3;
 	
 	private int eventId;
 	private String type, eventName;
@@ -83,12 +84,10 @@ public class PDFGenerator {
 	private void generateAdminExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
-		List<School> schools = (List<School>)request.getAttribute("schools");
-		List<Teacher> teacherLogins = (List<Teacher>)request.getAttribute("teacherLogins");
 		
 		Font defaultFont = getPdfFont(FONT_08);
 		Font boldSmallFont = getPdfFont(FONT_08_BOLD);
-		Font boldTitleFont = getPdfFont(FONT_09_BOLD);
+		Font boldTitleFont = getPdfFont(FONT_13_BOLD);
 		
 		float headerWidths[] = new float[]{30, 30, 40}; // percentages
 		float titleHeaderwidths[] = {100}; 
@@ -97,11 +96,13 @@ public class PDFGenerator {
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
 		titleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		titleTable.getDefaultCell().setPaddingBottom(10);
 		
 		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + eventName);
-		titleTable.addCell(new Phrase("Administrator - "  + allEvents, boldTitleFont)); document.add(titleTable);
+		titleTable.addCell(new Phrase("Administrator - "  + allEvents, boldTitleFont));
 		createDivider(titleTable, 1);
-		
+		document.add(titleTable);
+		 
 		for(int i=0; i < events.size(); i++){ 
 			
 			Event event = events.get(i);
@@ -118,6 +119,7 @@ public class PDFGenerator {
 			    	
 			    	PdfPTable eventTable = createTable(headerWidths, 100);
 					eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+					eventTable.getDefaultCell().setBorderWidth(0);
 			    	
 			    	EventInstance eventInstance = (EventInstance)itr.next();
 			    	List<Team> studentInstanceTeams = new ArrayList<Team>();
@@ -127,28 +129,36 @@ public class PDFGenerator {
 						maxTeamsPerSchool = "href";
 					}
 					
+					eventTable.getDefaultCell().setBorderWidthTop(1);
 					eventTable.addCell(new Phrase(event.getName(), boldSmallFont));
 					
 					eventTable.getDefaultCell().setColspan(2);
-					eventTable.addCell(new Phrase(event.getEventType().getTypeName(), boldSmallFont));
+					eventTable.addCell(new Phrase("Type: " + event.getEventType().getTypeName(), boldSmallFont));
+					eventTable.getDefaultCell().setBorderWidthTop(0);
 					
 					eventTable.getDefaultCell().setColspan(3);
 					eventTable.addCell(new Phrase(event.getDetails() != null ? event.getDetails() : "No Description", defaultFont));
-
+					
+					
 					for(Team team : teams){
 					
+						eventTable.getDefaultCell().setColspan(3);
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
+						
 						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();
 						String enrolledStudents = Integer.toString(team.getstudentTeams().size());
 						String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-						
-						eventTable.getDefaultCell().setColspan(3);
+						eventTable.getDefaultCell().setColspan(1);
+
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
 						eventTable.addCell(new Phrase(team.getName() + "(" + enrolledStudents + "/" + maxIndividuals + ")", boldSmallFont));
+						eventTable.addCell(new Phrase("Enrolled Students", boldSmallFont));
 						
 						for(StudentTeam studentTeam : studentTeams){
 							
-							eventTable.getDefaultCell().setColspan(1);
-							eventTable.addCell(new Phrase("", boldSmallFont));
 							eventTable.getDefaultCell().setColspan(2);
+							eventTable.addCell(new Phrase("   ", boldSmallFont));
+							eventTable.getDefaultCell().setColspan(1);
 							eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
 							
 							if(eventId == -1 || eventId == event.getId()){
@@ -160,12 +170,14 @@ public class PDFGenerator {
 					
 					if(eventId == -1 || eventId == eventInstance.getId()){
 						
-						createDivider(eventTable, 3);
+//						createDivider(eventTable, 3);
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
 						eventTable.getDefaultCell().setColspan(2);
 						eventTable.addCell(new Phrase("", boldSmallFont));
 						eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						eventTable.getDefaultCell().setColspan(3);
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
 						eventTable.getDefaultCell().setColspan(1);
 						document.add(eventTable);
 						
@@ -187,7 +199,7 @@ public class PDFGenerator {
 		
 		Font defaultFont = getPdfFont(FONT_08);
 		Font boldSmallFont = getPdfFont(FONT_08_BOLD);
-		Font boldTitleFont = getPdfFont(FONT_09_BOLD);
+		Font boldHeaderFont = getPdfFont(FONT_13_BOLD);
 		
 		float headerWidths[] = new float[]{30, 30, 40}; // percentages
 		float titleHeaderwidths[] = {100}; 
@@ -196,12 +208,15 @@ public class PDFGenerator {
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
 		titleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		titleTable.getDefaultCell().setPaddingBottom(10);
+		
 		String title = (String)request.getAttribute("eventName");
 		
-		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + title);
-		titleTable.addCell(new Phrase(teacher.getFullName() + "(" + school.getName() + ") - "  + allEvents, boldTitleFont)); document.add(titleTable);
+		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + eventName);
+		titleTable.addCell(new Phrase(teacher.getFullName() + "(" + school.getName() + ") - "  + allEvents, boldHeaderFont));
 		createDivider(titleTable, 1);
-		
+		document.add(titleTable);
+		 
 		for(int i=0; i < events.size(); i++){ 
 			
 			Event event = events.get(i);
@@ -215,70 +230,79 @@ public class PDFGenerator {
 				Iterator<EventInstance> itr = (Iterator<EventInstance>)event.getEventInstances().iterator();
 			
 			    while(itr.hasNext()){
-
-					PdfPTable eventTable = createTable(headerWidths, 100);
+			    	
+			    	PdfPTable eventTable = createTable(headerWidths, 100);
 					eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+					eventTable.getDefaultCell().setBorderWidth(0);
 			    	
 			    	EventInstance eventInstance = (EventInstance)itr.next();
 			    	List<Team> studentInstanceTeams = new ArrayList<Team>();
-			    	Set<Student> students = (Set<Student>)school.getStudents();
 			    	Set<Team> teams = (Set<Team>)eventInstance.getTeams();
 					
 					if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
 						maxTeamsPerSchool = "href";
 					}
 					
+					eventTable.getDefaultCell().setBorderWidthTop(1);
 					eventTable.addCell(new Phrase(event.getName(), boldSmallFont));
 					
 					eventTable.getDefaultCell().setColspan(2);
-					eventTable.addCell(new Phrase(event.getEventType().getTypeName(), boldSmallFont));
+					eventTable.addCell(new Phrase("Type: " + event.getEventType().getTypeName(), boldSmallFont));
+					eventTable.getDefaultCell().setBorderWidthTop(0);
 					
 					eventTable.getDefaultCell().setColspan(3);
 					eventTable.addCell(new Phrase(event.getDetails() != null ? event.getDetails() : "No Description", defaultFont));
-
+					
+					
 					for(Team team : teams){
 					
+						eventTable.getDefaultCell().setColspan(3);
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
+						
 						Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();
 						String enrolledStudents = Integer.toString(team.getstudentTeams().size());
 						String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-						
-						eventTable.getDefaultCell().setColspan(3);
+						eventTable.getDefaultCell().setColspan(1);
+
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
 						eventTable.addCell(new Phrase(team.getName() + "(" + enrolledStudents + "/" + maxIndividuals + ")", boldSmallFont));
+						eventTable.addCell(new Phrase("Enrolled Students", boldSmallFont));
 						
 						for(StudentTeam studentTeam : studentTeams){
 							
-							eventTable.getDefaultCell().setColspan(1);
-							eventTable.addCell(new Phrase("", boldSmallFont));
 							eventTable.getDefaultCell().setColspan(2);
+							eventTable.addCell(new Phrase("   ", boldSmallFont));
+							eventTable.getDefaultCell().setColspan(1);
 							eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
 							
 							if(eventId == -1 || eventId == event.getId()){
-								
-								studentEnrollements++; // in case she wants teachers to have the number enrolled
-								
-							} 
+								studentEnrollements++;
+							}
 							
 						} 
-					} 
+					}
 					
 					if(eventId == -1 || eventId == eventInstance.getId()){
 						
-						createDivider(eventTable, 3);
+//						createDivider(eventTable, 3);
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
 						eventTable.getDefaultCell().setColspan(2);
 						eventTable.addCell(new Phrase("", boldSmallFont));
 						eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+						eventTable.getDefaultCell().setColspan(3);
+						eventTable.addCell(new Phrase("   ", boldSmallFont));
 						eventTable.getDefaultCell().setColspan(1);
 						document.add(eventTable);
 						
-					} 					
+					} 
 					
 			    }
+			    
 			}
 			
-		} 
-		
+		}
+			
 	}
 	
 	public Font getPdfFont(int font_type){
@@ -289,6 +313,7 @@ public class PDFGenerator {
 			case FONT_08:			font = FontFactory.getFont(FontFactory.HELVETICA, 8f, Font.NORMAL, BaseColor.BLACK); break;
 			case FONT_08_BOLD:		font = FontFactory.getFont(FontFactory.HELVETICA, 8f, Font.BOLD, BaseColor.BLACK); break; 
 			case FONT_09_BOLD:		font = FontFactory.getFont(FontFactory.HELVETICA, 9f, Font.BOLD, BaseColor.BLACK); break;
+			case FONT_13_BOLD:		font = FontFactory.getFont(FontFactory.HELVETICA, 13f, Font.BOLD, BaseColor.BLACK); break;
 		}
 		
 		return font;

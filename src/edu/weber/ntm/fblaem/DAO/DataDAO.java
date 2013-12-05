@@ -41,7 +41,7 @@ public class DataDAO extends MasterDAO{
 					getEventRegistration();
 					break;
 				case(TYPE_ADMINISTRATION):
-					getEventRegistration(); // pdf uses same data, /PDF?EventId=-1&ViewType
+					getAdministration(); // pdf uses same data, /PDF?EventId=-1&ViewType
 					break;	
 				case(TYPE_PDF):
 					getPDF();
