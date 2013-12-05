@@ -214,7 +214,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 
 	if(event.getEventInstances() != null){
 		
-		String maxTeamsPerSchool = Integer.toString(event.getMaxEntriesPerSchool());
+		Boolean maxTeamsPerSchool = true;
 		
 		Iterator<EventInstance> itr = (Iterator<EventInstance>)event.getEventInstances().iterator();
 	
@@ -222,13 +222,11 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 	    	
 	    	EventInstance eventInstance = (EventInstance)itr.next();
 	    	// if statement here to determine if instance is for this school.
-	    	List<Team> studentInstanceTeams = new ArrayList<Team>();
 	    	Set<Student> students = (Set<Student>)school.getStudents();
 	    	Set<Team> teams = (Set<Team>)eventInstance.getTeams();
 			
-			
-			if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){ 
-				maxTeamsPerSchool = "href";
+			if(teams.size() < event.getMaxEntriesPerSchool()){ 
+				maxTeamsPerSchool = false;
 			}
 			// REMOVE THE ID ADDITION TO FIELDS, BUT LEAVE IT ON FORM NAME AND JUST SUBMIT THE FORM WITH GENERIC FIELD NAMES.
 			%>
@@ -242,9 +240,11 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 					</div>
 					
 					<div id="link" style="width: 90px;">
-					
-						<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="showDiv('addTeam<%=eventInstance.getId()%>');">Add Team</a>
-						
+						<%if(!maxTeamsPerSchool){ %>
+							<a href="javascript:void(0)" onclick="showDiv('addTeam<%=eventInstance.getId()%>');">Add Team</a>
+						<%} else { %>
+							Add Team
+						<%} %>
 					</div>
 					
 					<div id="link">
@@ -275,12 +275,15 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 							<optgroup label="-------------------------"></optgroup>
 							<%
 							for(Team team : teams){
-								// need to create a way to insert a single student team
-								// Just allow them to create a team that has a single student.
-								Boolean maxStudentsForEvent = (teams.size() < event.getMaxEntriesPerSchool()) ? false : true;
+
+								Boolean maxStudentsForTeam = false;
+								
+								if(team.getMaxIndividuals() != null){
+									maxStudentsForTeam = (team.getstudentTeams().size() < Integer.parseInt(team.getMaxIndividuals())) ? false : true; // why string?
+								}
 								
 								// if max # of teams reached do not allow this to create new team.
-								if(!maxStudentsForEvent){%> 
+								if(!maxStudentsForTeam){%> 
 									<option value="<%=team.getId()%>"><%=team.getName()%></option>
 								<%}
 							} 
@@ -302,7 +305,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 					<%					
 					String disableSubmit = "disable";
 					// move the code from admin here for creating teams.
-					if(studentInstanceTeams.size() < event.getMaxEntriesPerSchool()){
+					if(teams.size() < event.getMaxEntriesPerSchool()){
 						
 						disableSubmit = "";
 						
@@ -330,7 +333,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 			
 							<div id="link">
 							
-								<a <%=maxTeamsPerSchool%>="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);"><img src="<%=remove%>"/>&nbsp;Remove Team</a>
+								<a href="javascript:void(0)" onclick="removeTeam(<%=eventInstance.getId()%>, <%=team.getId()%>);"><img src="<%=remove%>"/>&nbsp;Remove Team</a>
 								
 							</div>
 							
