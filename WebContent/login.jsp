@@ -39,13 +39,12 @@
 
 <%
 
-// String loginError = "";
+Boolean loginError = false;
 
-// if(request.getParameter("Error") != null){
+if(request.getParameter("failed") != null){
 	
-// 	loginError = request.getParameter("Error");
-// 	System.out.println("--------------------------------- error -----------------------------------");
-// }
+	loginError = true;
+}
 
 %>
 
@@ -64,9 +63,11 @@
 		<div class="centerPage" style="margin-top: 10px;">
 			<input type="submit" value="Sign in"/>
 		</div>	
-<!-- 		<div class="centerPage" style="margin-top: 10px;"> -->
-<%-- 			<span style="color: red;"><%=loginError%></span> --%>
-<!-- 		</div>			 -->
+		<%if(loginError){ %>
+			<div class="centerPage" style="margin-top: 10px;">
+				<span style="color: red;">Incorrect Username and/or Password</span>
+			</div>
+		<%} %>			
 			
 	</div>
 	
