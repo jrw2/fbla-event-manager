@@ -116,11 +116,6 @@ public class DataDAO extends MasterDAO{
 		
 		String eventTitle = "all";
 		
-		if(!request.getParameter("eventId").equals("all")){
-			Event event = (Event) sf.load(Event.class, Integer.parseInt(request.getParameter("eventId")));
-			request.setAttribute("singleEventTitle", event.getName());
-		}
-		
 	}
 	
 	// General Data Retrieval

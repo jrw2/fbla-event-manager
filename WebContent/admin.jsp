@@ -235,7 +235,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		<a href="javascript:void(0)" onclick="showDiv('createLogin');">Add Login</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="javascript:void(0)" onclick="showDiv('deleteLogin');">Delete Login</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="javascript:void(0)" onclick="submitData('reset');">Reset System</a>&nbsp;&nbsp;|&nbsp;&nbsp;			
-		<a href="exportEvent?eventId=-1">Export All Events&nbsp;<img src="<%=pdf%>"/></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+		<a href="/PDF?eventId=-1&exportType=admin&eventName=all">Export All Events&nbsp;<img src="<%=pdf%>"/></a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="Logout">LOGOUT</a>
 	</div>
 </div>
@@ -383,7 +383,7 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 				<div id="header" style="border-bottom: 2px solid;">
 					<div id="title">
 
-						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="exportEvent?eventId=" style="font-weight: normal;"><img src="<%=pdf%>"/> Export Event</a>
+						<%=event.getName() %> | <%=event.getEventType().getTypeName() %> | <a href="/PDF?eventId=<%=eventInstance.getId() %>&exportType=admin&eventName=<%=event.getName()%>"/> Export Event</a>
 						
 					</div>
 					

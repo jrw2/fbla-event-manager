@@ -97,9 +97,8 @@ public class PDFGenerator {
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
 		titleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-		String title = (String)request.getAttribute("singleEventTitle");
 		
-		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + title);
+		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + eventName);
 		titleTable.addCell(new Phrase("Administrator - "  + allEvents, boldTitleFont)); document.add(titleTable);
 		createDivider(titleTable, 1);
 		
@@ -159,7 +158,7 @@ public class PDFGenerator {
 						} 
 					}
 					
-					if(eventId == -1 || eventId == event.getId()){
+					if(eventId == -1 || eventId == eventInstance.getId()){
 						
 						createDivider(eventTable, 3);
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
@@ -197,7 +196,7 @@ public class PDFGenerator {
 		titleTable.getDefaultCell().setPadding(0);
 		titleTable.getDefaultCell().setBorderWidth(0);
 		titleTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-		String title = (String)request.getAttribute("singleEventTitle");
+		String title = (String)request.getAttribute("eventName");
 		
 		String allEvents = (eventId == -1 ? "All Events" : "Event Name: " + title);
 		titleTable.addCell(new Phrase(teacher.getFullName() + "(" + school.getName() + ") - "  + allEvents, boldTitleFont)); document.add(titleTable);
@@ -262,7 +261,7 @@ public class PDFGenerator {
 						} 
 					} 
 					
-					if(eventId == -1 || eventId == event.getId()){
+					if(eventId == -1 || eventId == eventInstance.getId()){
 						
 						createDivider(eventTable, 3);
 						eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
