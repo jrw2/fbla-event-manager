@@ -208,9 +208,10 @@ public class PDFGenerator {
 						if(teamsBySchool.get(Integer.toString(school.getId())) != null){
 							
 							eventTable.getDefaultCell().setColspan(3);
+							eventTable.addCell(new Phrase("", boldSmallFont));
 							eventTable.addCell(new Phrase(school.getName(), boldSmallFont));
 							
-							List<Team> schoolTeams = teamsBySchool.get(school.getId());
+							List<Team> schoolTeams = teamsBySchool.get(Integer.toString(school.getId()));
 							
 							for(Team team : schoolTeams){
 								
