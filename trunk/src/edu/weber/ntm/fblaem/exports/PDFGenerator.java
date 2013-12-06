@@ -150,10 +150,6 @@ public class PDFGenerator {
 						Set<StudentTeam> studentTeams = null; // garbage collection to avoid maxing out the available heap.
 						studentTeams = (Set<StudentTeam>)team.getstudentTeams();
 
-//						while(studentTeams.iterator().hasNext()){
-//							StudentTeam studentTeam = studentTeams.iterator().next();
-//							String schoolId = Integer.toString(studentTeam.getStudent().getSchool().getId()); // bad way, but no time!
-						
 							String schoolId = Integer.toString(team.getSchoolId());
 							if(!teamsBySchool.containsKey(schoolId)){
 								
@@ -166,42 +162,8 @@ public class PDFGenerator {
 								teamsBySchool.get(schoolId).add(team);
 								
 							}
-//						}
-						
+
 					}
-					
-// TODO FOR TOTALS AT BOTTOM OF SHEET (future)	
-// TODO Turn this mess into a query.  Would do it now if I had time to learn hibernate QL better.	
-					
-//					//Create Billing Data (move to method later)
-//					HashMap<String, Integer> billingTotals = new HashMap<String, Integer>();
-//					Set<String> schools = teamsBySchool.keySet();
-//					for(String schoolId : schools){
-//						
-//						ArrayList<Team> schoolTeams = teamsBySchool.get(schoolId);
-//						
-//						for(Team team : schoolTeams){
-//							
-//							Set<StudentTeam> studentTeams = team.getstudentTeams();
-//							
-//							for(StudentTeam studentTeam : studentTeams){
-//								
-//								if(!billingTotals.containsKey(schoolId)){
-//									
-//									billingTotals.put(schoolId, new Integer(1));
-//									
-//								} else {
-//									
-//									int total = billingTotals.get(schoolId);
-//									billingTotals.put(schoolId, new Integer(total++));									
-//									
-//								}
-//								
-//							}
-//							
-//						}
-//						
-//					}
 					
 					for(School school : completeSchoolList){
 						
