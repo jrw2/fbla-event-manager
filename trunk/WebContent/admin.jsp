@@ -239,7 +239,10 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 		<a href="javascript:void(0)" onclick="showDiv('deleteLogin');">Delete Login</a>&nbsp;&nbsp;|&nbsp;&nbsp;
 		<a href="javascript:void(0)" onclick="submitData('reset');">Reset System</a>&nbsp;&nbsp;|&nbsp;&nbsp;			
 		<a href="PDF?eventId=-1&exportType=admin&eventName=all"><img src="<%=pdf%>">Export All Events&nbsp;</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-		<a href="Logout">LOGOUT</a>
+		<a href="Logout">LOGOUT</a><br />
+		<%if(!validation.equals("")){%>
+			<%=validation%>
+		<%}%>
 	</div>
 </div>
 	

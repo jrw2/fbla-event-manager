@@ -1,19 +1,11 @@
 package edu.weber.ntm.fblaem.DAO;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
-
-import edu.weber.ntm.fblaem.DAO.MasterDAO;
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.EventInstance;
 import edu.weber.ntm.fblaem.databaseio.EventType;
@@ -54,7 +46,7 @@ public class SubmissionDAO extends MasterDAO {
 					break;	
 			}
 			
-			request.setAttribute("errorValue", request.getAttribute("errorMessage"));
+			request.setAttribute("errorValue", errorMessage);
 			
 		} catch (Exception e){
 			
@@ -217,10 +209,6 @@ public class SubmissionDAO extends MasterDAO {
 		Event newEvent = new Event(newEventType, name, minTeamSize, maxTeamSize, maxEntries, new Date(), description);
 		sf.save(newEvent);
 		
-//		List<School> schools = getAllSchools();
-		
-//		for(School school: schools){
-			
 		// Create event instances for all schools.
 		EventInstance eI = new EventInstance(newEvent, new Date(), new Date(), new Date(), "WSU"/*, new Integer(school.getId())*/); // future team will implement scheduling.
 		eI.setEventId(newEvent.getId());
@@ -228,8 +216,6 @@ public class SubmissionDAO extends MasterDAO {
 		
 		newEvent.getEventInstances().add(eI);
 			
-//		}
-		
 		sf.saveOrUpdate(newEvent);
 	}
 	
@@ -283,13 +269,24 @@ public class SubmissionDAO extends MasterDAO {
 		String userName = request.getParameter("userName");
 		String password = LoginManagement.hash(request.getParameter("password"));
 		
-		School school = (School) sf.load(School.class, Integer.parseInt(request.getParameter("loginSchool")));
-		Role role = (Role) sf.load(Role.class, 15); // static for teacher until additional functionality added by future teams.
-		Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
-		Login newLogin = new Login(teacher, role, userName, password);
+		// Verify
+		Login existingLogin = (Login) sf.createQuery("from Login as login where login.username='" + userName + "'").uniqueResult();
 		
-		sf.save(teacher);
-		sf.save(newLogin);
+		if(existingLogin == null){
+			
+			School school = (School) sf.load(School.class, Integer.parseInt(request.getParameter("loginSchool")));
+			Role role = (Role) sf.load(Role.class, 15); // static for teacher until additional functionality added by future teams.
+			Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
+			Login newLogin = new Login(teacher, role, userName, password);
+			
+			sf.save(teacher);
+			sf.save(newLogin);
+			
+		} else {
+			
+			errorMessage = "Username already exists";
+			
+		}
 		
 	}
 	
@@ -297,14 +294,12 @@ public class SubmissionDAO extends MasterDAO {
 		
 		System.out.println("Deleting Logins");
 		
+		String userId = request.getParameter("deleteUserLogin");
 		Teacher existingTeacher = (Teacher) sf.load(Teacher.class, new Integer(request.getParameter("deleteUserLogin")));
-		Set<Login> existingAccounts = (Set<Login>)existingTeacher.getLogins();
+		Login existingLogin = (Login) sf.createQuery("from Login as login where login.teacherId=" + existingTeacher.getId()).uniqueResult();
 		
-		for(Login existingLogin : existingAccounts){
-			
-			sf.delete(existingLogin);
-			
-		}
+		sf.delete(existingTeacher);
+		sf.delete(existingLogin);
 		
 	}
 
@@ -321,43 +316,6 @@ public class SubmissionDAO extends MasterDAO {
 			e.printStackTrace();
 		}
 		
-		/*
-		List<Teacher> teachers = (List<Teacher>) sf.createQuery("from teacher").list();
-		List<EventInstance> eventInstances = (List<EventInstance>) sf.createQuery("from EventInstance").list();	
-		List<Team> teams = (List<Team>) sf.createQuery("from Team").list();
-		List<Login> logins = (List<Login>) sf.createQuery("from Login").list();
-		List<School> schools = (List<School>) sf.createQuery("from School").list();
-		List<Student> students = (List<Student>) sf.createQuery("from Student").list();
-		List<StudentTeam> studentTeams = (List<StudentTeam>) sf.createQuery("from StudentTeam").list();
-
-		for(Teacher teacher : teachers){
-			sf.delete(teacher);
-		}
-		
-		for(EventInstance eventInstance : eventInstances){
-			sf.delete(eventInstance);
-		}
-		
-		for(Team team : teams){
-			sf.delete(team);
-		}
-		
-		for(Login login : logins){
-			sf.delete(login);
-		}
-		
-		for(School school : schools){
-			sf.delete(school);
-		}
-		
-		for(Student student : students){
-			sf.delete(student);
-		}
-		
-		for(StudentTeam studentTeam : studentTeams){
-			sf.delete(studentTeam);
-		}
-		*/
 	}
 	
 	private List<School> getAllSchools(){
