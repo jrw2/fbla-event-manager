@@ -398,24 +398,53 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 					
 				</div>				
 				
-				<%if(teams != null && teams.size() > 0) { %>
-					<div style="border-top: 2px solid;">
-						<%
-					   for(Team team : teams){
-						
-							Set<StudentTeam> studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
-						
-							<div style="border-color:#848369">
-								<div id="title" style="width: 780px;">
-									<%
-										String enrolledStudents = Integer.toString(team.getstudentTeams().size());
-										String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
-									%>
-									&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
-									
-								</div>
+				<%
+				HashMap<String, ArrayList<Team>> teamsBySchool = new HashMap<String, ArrayList<Team>>();
 				
-							</div>
+				// Organize Teams by school (move this all to DAO)
+				for(Team team : teams){
+					Set<StudentTeam> studentTeams = null; // garbage collection to avoid maxing out the available heap.
+					studentTeams = (Set<StudentTeam>)team.getstudentTeams();
+
+						String schoolId = Integer.toString(team.getSchoolId());
+						if(!teamsBySchool.containsKey(schoolId)){
+						
+							ArrayList<Team> schoolTeams = new ArrayList<Team>();
+							schoolTeams.add(team);
+							teamsBySchool.put(schoolId, schoolTeams);
+							
+						} else {
+							teamsBySchool.get(schoolId).add(team);
+						}
+				}
+				
+				for(School school : schools){
+					if(teamsBySchool.get(Integer.toString(school.getId())) != null){%>	
+						
+						<div id="schoolName" style="width: 780px; font-weight:bold; margin-left: 17px;">
+
+							<%=school.getName().toUpperCase()%>
+					
+						</div>	<% 
+						
+						List<Team> schoolTeams = teamsBySchool.get(Integer.toString(school.getId()));%>
+						
+						<div style="border-top: 2px solid; margin-bottom: 10px;"><%
+							for(Team team : schoolTeams){
+								Set<StudentTeam> studentTeams = null;
+								studentTeams = (Set<StudentTeam>)team.getstudentTeams();%>
+						
+								<div style="border-color:#848369">
+									<div id="title" style="width: 780px;">
+										<%
+											String enrolledStudents = Integer.toString(team.getstudentTeams().size());
+											String maxIndividuals = (team.getMaxIndividuals() == null) ? "No Max" : team.getMaxIndividuals();
+										%>
+										&nbsp;&nbsp;<%=team.getName()%> ( <%=enrolledStudents + " / " + maxIndividuals%> )
+										
+									</div>
+					
+								</div>
 							
 							<%
 							for(StudentTeam studentTeam : studentTeams){%>
@@ -431,7 +460,8 @@ String validation = (String)request.getAttribute("errorValue") != null ? (String
 							<%} 
 						} %>
 					</div>
-				<%} %>
+				<%} 
+				}%>
 			</div>			
 		<%}
 	}
