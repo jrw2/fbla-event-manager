@@ -27,6 +27,7 @@ public abstract class MasterDAO {
 	protected Transaction tx;
 	protected Login login;
 	protected Teacher teacher;
+	protected String errorMessage = "";
 	
 	public MasterDAO() {
 	}

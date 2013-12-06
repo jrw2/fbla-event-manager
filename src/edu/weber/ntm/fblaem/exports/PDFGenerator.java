@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.util.Set;
-
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -19,16 +17,12 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-
 import edu.weber.ntm.fblaem.databaseio.Event;
 import edu.weber.ntm.fblaem.databaseio.EventInstance;
 import edu.weber.ntm.fblaem.databaseio.School;
-import edu.weber.ntm.fblaem.databaseio.Student;
 import edu.weber.ntm.fblaem.databaseio.StudentTeam;
 import edu.weber.ntm.fblaem.databaseio.Teacher;
 import edu.weber.ntm.fblaem.databaseio.Team;
-
-import com.itextpdf.text.BaseColor;
 
 public class PDFGenerator {
 

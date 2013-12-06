@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import edu.weber.ntm.fblaem.DAO.DataDAO;
@@ -72,7 +71,6 @@ public class ViewController extends HttpServlet{
 			
 			String viewType = getServletConfig().getInitParameter("viewType");
 			HttpSession session = request.getSession(false);//false means don't create one if it doesn't exist
-			
 			if(session != null && !session.isNew()) {
 				
 				Session sf = HibernateUtil.getSessionFactory().getCurrentSession();
