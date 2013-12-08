@@ -74,6 +74,7 @@ public class ViewController extends HttpServlet{
 			if(session != null && !session.isNew()) {
 				
 				Session sf = HibernateUtil.getSessionFactory().getCurrentSession();
+				@SuppressWarnings("unused")
 				Transaction tx = sf.beginTransaction();
 				
 				Login login = (Login) sf.createQuery("from Login as login where login.username='" + request.getRemoteUser() + "'").uniqueResult();
