@@ -105,6 +105,7 @@ public class SubmissionDAO extends MasterDAO {
 		newTeam.setName(request.getParameter("teamName"));
 		newTeam.setCreatedDate(new Date());
 		newTeam.setEventInstanceID(Integer.parseInt(request.getParameter("eventInstanceId")));
+		newTeam.setSchoolId(teacher.getSchool().getId());
 		EventInstance newEventInstance = (EventInstance) sf.load(EventInstance.class, new Integer(request.getParameter("eventInstanceId")));
 		newEventInstance.getTeams().add(newTeam);
 		
