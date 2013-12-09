@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 1, 2013 7:05:48 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="edu.weber.ntm.fblaem.databaseio.Teacher" table="Teacher" catalog="fblaem">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="school" class="edu.weber.ntm.fblaem.databaseio.School" fetch="join">
+            <column name="SchoolID" not-null="true" />
+        </many-to-one>
+        <property name="email" type="string">
+            <column name="Email" not-null="true" />
+        </property>
+        <property name="firstName" type="string">
+            <column name="FirstName" not-null="true" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LastName" not-null="true" />
+        </property>
+        <property name="phone" type="string">
+            <column name="Phone" length="20" not-null="true" />
+        </property>
+        <property name="altPhone" type="string">
+            <column name="AltPhone" length="20"/>
+        </property>
+        <property name="createDate" type="timestamp">
+            <column name="CreateDate" length="0" />
+        </property>
+        <set name="logins" table="Login" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TeacherID" not-null="true" />
+            </key>
+            <one-to-many class="edu.weber.ntm.fblaem.databaseio.Login" />
+        </set>
+    </class>
+</hibernate-mapping>
