@@ -8,6 +8,9 @@
             <column name="id" />
             <generator class="identity" />
         </id>
+        <many-to-one name="teacher" class="edu.weber.ntm.fblaem.databaseio.Teacher" lazy="false" fetch="join">
+            <column name="TeacherID" not-null="true" />
+        </many-to-one>
         <many-to-one name="role" class="edu.weber.ntm.fblaem.databaseio.Role" lazy="false" fetch="join">
             <column name="RoleID" not-null="true" />
         </many-to-one>
@@ -20,8 +23,5 @@
         <property name="lastLoginDate" type="timestamp">
             <column name="LastLoginDate" length="0" />
         </property>
-        <property name="teacherId" type="java.lang.Integer">
-            <column name="TeacherID" />
-        </property>        
     </class>
 </hibernate-mapping>
