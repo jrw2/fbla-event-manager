@@ -64,7 +64,13 @@ public class ViewController extends HttpServlet{
 		return;
 		
 	}
-	
+	/** Description of processRequest()
+	 * 
+	 * 	
+	 *  			
+	 * 			-Prepares the page request to be sent to DataDAO to be processed for the resubmission 
+	 * 			of altered data.
+	 */
 	private void processRequest(){
 		
 		try {
@@ -127,7 +133,12 @@ public class ViewController extends HttpServlet{
 			e.printStackTrace();
 		}		
 	}
-	
+	/** Description of processSubmission(request, response)
+	 * 
+	 *	 	
+	 * 			
+	 * @return			 processes data changes to be submitted to JSP.
+	 */
 	private void processSubmission(){
 		
 		// Initialize Submission 

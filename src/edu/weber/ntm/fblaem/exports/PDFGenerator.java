@@ -38,7 +38,12 @@ public class PDFGenerator {
 	private int eventId;
 	private String type, eventName;
 	private Document document;
-	
+	/** Description of createDocument(HttpServletRequest, HttpServletResponse)
+	 * 
+	 * @param request	Servlet request		
+	 * @param response	Servlet response
+	 * @return			Grabs either the admin or the teacher PDF to be exported.
+	 */
 	public void createDocument(HttpServletRequest request, HttpServletResponse response){
 		
 		this.eventId = Integer.parseInt(request.getParameter("eventId"));
@@ -81,7 +86,12 @@ public class PDFGenerator {
 		}
 		
 	}
-	
+	/** Description of generateAdminExport(HttpServletRequest, HttpServletResponse)
+	 * 
+	 * @param request	Servlet request		
+	 * @param response	Servlet response
+	 * @return			Generates the PDF for an Admin.
+	 */
 	private void generateAdminExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
@@ -233,7 +243,12 @@ public class PDFGenerator {
 			}
 		} 
 	}
-	
+	/** Description of generateTeacherExport(HttpServletRequest, HttpServletResponse)
+	 * 
+	 * @param request	Servlet request		
+	 * @param response	Servlet response
+	 * @return			Generates the PDF for a Teacher.
+	 */
 	private void generateTeacherExport(HttpServletRequest request, HttpServletResponse response) throws DocumentException{
 		
 		List<Event> events = (List<Event>)request.getAttribute("events");
@@ -345,7 +360,12 @@ public class PDFGenerator {
 		}
 			
 	}
-	
+	/** Description of getPdfFont(int font_type)
+	 * 
+	 * @param font_type	font type to be used(type int)		
+	 * 
+	 * @return			returns font type.
+	 */
 	public Font getPdfFont(int font_type){
 		
 		Font font = new Font();
@@ -360,7 +380,12 @@ public class PDFGenerator {
 		return font;
 		
 	}
-	
+	/** Description of createTable(float[] widths, float percentage)
+	 * 
+	 * @param widths	 array of widths	
+	 * @param percentage width percentage			
+	 * @return			 returns a PdfTable object with specified widths and percentage of width.
+	 */
 	public PdfPTable createTable(float[] widths, float percentage){
 		
 		PdfPTable table = new PdfPTable(widths);
@@ -369,7 +394,12 @@ public class PDFGenerator {
 		return table;
 		
 	}
-	
+	/** Description of createDivider(PdfTable table, int colspan)
+	 * 
+	 * @param table	     A PdfTable Object	
+	 * @param colspan    size of column span			
+	 * @return			 Changes the size of the gap between columns in PDF table .
+	 */
 	public void createDivider(PdfPTable table, int colspan){
 		
 		table.getDefaultCell().setColspan(colspan);
