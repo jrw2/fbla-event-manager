@@ -16,7 +16,12 @@ public class LoginManagement  extends HttpServlet{
 		super();
 	}
 	
-	
+	/** Description of hash(String password)
+	 * 
+	 * @param password	 password to be hashed 	
+	 *		
+	 * @return			 hashes the password for secure login.
+	 */
 	public static String hash(String password){
 		 try {
 	            MessageDigest md = MessageDigest.getInstance("SHA-256");

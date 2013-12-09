@@ -29,7 +29,12 @@ public class SubmissionDAO extends MasterDAO {
 		this.submissionType = submissionType;
 		this.pageAction = request.getParameter("pageAction");
 	}
-	
+	/** Description of process()
+	 * 
+	 *  	
+	 *			
+	 * 		 -processes the page to be prepared for submission.
+	 */
 	public void process(){
 		
 		try {
@@ -60,7 +65,12 @@ public class SubmissionDAO extends MasterDAO {
 		
 		
 	}
-	
+	/** Description of eventDataSubmission()
+	 * 
+	 * 	 	
+	 *  			
+	 *			 -Handles the page action type to be performed. 
+	 */
 	private void eventDataSubmission(){
 		
 		switch (pageAction) {
@@ -76,7 +86,12 @@ public class SubmissionDAO extends MasterDAO {
 		}
 		
 	}
-	
+	/** Description of adminDataSubmission()
+	 * 
+	 *  	
+	 *		
+	 * 			-Handles the admin page action to be performed. 
+	 */
 	private void adminDataSubmission(){
 		
 		switch (pageAction) {
@@ -95,7 +110,12 @@ public class SubmissionDAO extends MasterDAO {
 		}
 		
 	}
-
+	/** Description of addTeam()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Submits the addTeam registration submission.
+	 */
 	// Event Registration Submission --------------------------------------------------------------------------------
 	private void addTeam(){
 		
@@ -112,7 +132,12 @@ public class SubmissionDAO extends MasterDAO {
 		sf.saveOrUpdate(newTeam);	
 		
 	}
-	
+	/** Description of removeTeam()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Submits the removeTeam registration submission.
+	 */
 	private void removeTeam(){
 		
 		System.out.println("Removing Team");
@@ -125,7 +150,12 @@ public class SubmissionDAO extends MasterDAO {
 		sf.delete(removeTeam);
 
 	}
-	
+	/** Description of removeStudentFromTeam()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Submits the removeStudentFromTeam registration submission.
+	 */
 	private void removeStudentFromTeam(){
 		
 		System.out.println("Removing Student");
@@ -155,7 +185,12 @@ public class SubmissionDAO extends MasterDAO {
 //		}
 		
 	}
-	
+	/** Description of registerStudent()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Submits the registerStudent registration submission.
+	 */
 	private void registerStudent(){
 		
 		System.out.println("Registering Student");
@@ -194,7 +229,12 @@ public class SubmissionDAO extends MasterDAO {
 		return teachers;
 		
 	}
-	
+	/** Description of createEvent()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin event creation tool.
+	 */
 	// Administration Submission --------------------------------------------------------------------------------
 	private void createEvent(){
 		
@@ -219,7 +259,12 @@ public class SubmissionDAO extends MasterDAO {
 			
 		sf.saveOrUpdate(newEvent);
 	}
-	
+	/** Description of removeEvent()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin event removal tool.
+	 */
 	private void removeEvent(){
 		
 		System.out.println("Removing Event");
@@ -229,7 +274,12 @@ public class SubmissionDAO extends MasterDAO {
 		sf.delete(event);
 		
 	}	
-	
+	/** Description of addSchool()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin school addition tool.
+	 */
 	private void addSchool(){
 		
 		System.out.println("Adding School");
@@ -248,7 +298,12 @@ public class SubmissionDAO extends MasterDAO {
 		sf.save(newSchool);
 		
 	}
-	
+	/** Description of deleteSchool()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin school deletion tool.
+	 */
 	private void deleteSchool(){
 		
 		System.out.println("Adding School");
@@ -257,7 +312,12 @@ public class SubmissionDAO extends MasterDAO {
 		sf.delete(school);
 		
 	}	
-	
+	/** Description of createLogin()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin create login tool.
+	 */
 	private void createLogin(){
 		
 		System.out.println("Creating Login");
@@ -290,7 +350,12 @@ public class SubmissionDAO extends MasterDAO {
 		}
 		
 	}
-	
+	/** Description of deleteLogin()
+	 * 
+	 * 	 	
+	 * 		
+	 *		 -Admin delete login tool.
+	 */
 	private void deleteLogin(){
 		
 		System.out.println("Deleting Logins");

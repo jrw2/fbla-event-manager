@@ -18,7 +18,12 @@ public class DataDAO extends MasterDAO{
 		super(request, response);
 		this.requestType = requestType;
 	}
-	
+	/** Description of process()
+	 * 
+	 * 	
+	 *    			
+	 * @return			Gets page type to process.
+	 */
 	@Override
 	public void process(){
 		
@@ -56,7 +61,12 @@ public class DataDAO extends MasterDAO{
 		}
 		
 	}
-	
+	/** Description of getLoginRedirect()
+	 * 
+	 *	 	
+	 *  			
+	 * @return			Gets the role of the initial login. 
+	 */
 	// Initial load
 	private void getLoginRedirect(){
 		
@@ -81,7 +91,12 @@ public class DataDAO extends MasterDAO{
 		}
 		
 	}
-	
+	/** Description of getEventRegistration()
+	 * 
+	 * 	
+	 *    			
+	 * @return			 Changes the view according to getLoginRedirect helper method.
+	 */
 	// Views
 	private void getEventRegistration(){
 		request.setAttribute("teacher", teacher);
@@ -89,6 +104,12 @@ public class DataDAO extends MasterDAO{
 		request.setAttribute("events", getAllEvents());
 		
 	}
+	/** Description of getAdmin()
+	 * 
+	 * 	
+	 *    			
+	 * @return			 Changes the view according to getLoginRedirect helper method.
+	 */
 	private void getAdministration(){
 		
 		request.setAttribute("admin", teacher);
@@ -97,7 +118,12 @@ public class DataDAO extends MasterDAO{
 		request.setAttribute("teacherLogins", getAllTeachers());
 		
 	}
-	
+	/** Description of getPDF()
+	 * 
+	 * 	
+	 *    			
+	 * 		 -Changes the view according to getLoginRedirect helper method.
+	 */
 	private void getPDF(){
 		
 		if(request.getParameter("exportType").equals(PDFGenerator.EXPORT_ADMIN)){
@@ -112,7 +138,12 @@ public class DataDAO extends MasterDAO{
 		String eventTitle = "all";
 		
 	}
-	
+	/** Description of getAllEvents()
+	 * 
+	 * 	
+	 *    			
+	 * @return			returns a list of all events.
+	 */
 	// General Data Retrieval
 	protected List<Event> getAllEvents(){
 		
@@ -120,7 +151,12 @@ public class DataDAO extends MasterDAO{
 		return query.list();
 		
 	}
-	
+	/** Description of getSchoolWithStudents()
+	 * 
+	 * 	
+	 *    			
+	 * @return			returns a list of schools with the students.
+	 */
 	protected List<School> getSchoolsWithStudents(){
 		
 		@SuppressWarnings("unchecked")
@@ -128,7 +164,12 @@ public class DataDAO extends MasterDAO{
 		return schools;
 		
 	}
-	
+	/** Description of getAllTeachers()
+	 * 
+	 * 	
+	 *    			
+	 * @return			returns a list of all teachers
+	 */
 	protected List<Teacher> getAllTeachers(){
 		
 		@SuppressWarnings("unchecked")
@@ -136,7 +177,12 @@ public class DataDAO extends MasterDAO{
 		return teachers;
 		
 	}
-	
+	/** Description of getAllEvents()
+	 * 
+	 * 	
+	 *    			
+	 * @return			returns a list of all schools.
+	 */
 	protected List<School> getSchools(){
 		
 		@SuppressWarnings("unchecked")
@@ -144,7 +190,12 @@ public class DataDAO extends MasterDAO{
 		return schools;
 		
 	}
-	
+	/** Description of verifyActiveUser()
+	 * 
+	 * 	
+	 *    			
+	 * 		-verifies the current logged in user.
+	 */
 	private void verifyActiveUser(){
 		if(request.getUserPrincipal() == null)
 		{		
