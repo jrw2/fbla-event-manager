@@ -163,6 +163,8 @@ public class PDFGenerator {
 						
 						for(School school : completeSchoolList){
 							
+							boolean teamsInSchool = false;
+							
 							eventTable = createTable(headerWidths, 100);
 							eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 							eventTable.getDefaultCell().setBorderWidth(0);
@@ -178,6 +180,8 @@ public class PDFGenerator {
 								List<Team> schoolTeams = teamsBySchool.get(Integer.toString(school.getId()));
 								
 								for(Team team : schoolTeams){
+									
+									teamsInSchool = true;
 									
 									eventTable.getDefaultCell().setColspan(3);
 									eventTable.addCell(new Phrase("   ", boldSmallFont));
@@ -209,19 +213,20 @@ public class PDFGenerator {
 								
 							}
 							
-							eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-							eventTable.getDefaultCell().setColspan(2);
-							eventTable.addCell(new Phrase("", boldSmallFont));
-							eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
-							eventTable.addCell(new Phrase("", boldSmallFont));
-							eventTable.getDefaultCell().setColspan(1);						
-							eventTable.addCell(new Phrase("Billing: $" + (studentEnrollements * COST_PER_STUDENT) + ".00", boldSmallFont));
-							eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-							eventTable.getDefaultCell().setColspan(3);
-							eventTable.addCell(new Phrase("   ", boldSmallFont));
-							eventTable.getDefaultCell().setColspan(1);
-							document.add(eventTable);
-							
+							if(teamsInSchool){
+								eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
+								eventTable.getDefaultCell().setColspan(2);
+								eventTable.addCell(new Phrase("", boldSmallFont));
+								eventTable.addCell(new Phrase("Total Enrollments: " + studentEnrollements, boldSmallFont));
+								eventTable.addCell(new Phrase("", boldSmallFont));
+								eventTable.getDefaultCell().setColspan(1);						
+								eventTable.addCell(new Phrase("Billing: $" + (studentEnrollements * COST_PER_STUDENT) + ".00", boldSmallFont));
+								eventTable.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+								eventTable.getDefaultCell().setColspan(3);
+								eventTable.addCell(new Phrase("   ", boldSmallFont));
+								eventTable.getDefaultCell().setColspan(1);
+								document.add(eventTable);
+							}
 						}
 			    	}
 			    }
