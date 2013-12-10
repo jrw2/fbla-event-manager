@@ -240,7 +240,7 @@ public class SubmissionDAO extends MasterDAO {
 		
 		System.out.println("Creating Event");
 		
-		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(6));
+		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(3));
 		String description = request.getParameter("eventDescription");
 		String name = request.getParameter("eventName");
 		int minTeamSize = Integer.parseInt(request.getParameter("minTeamSize"));
