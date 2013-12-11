@@ -240,7 +240,7 @@ public class SubmissionDAO extends MasterDAO {
 		
 		System.out.println("Creating Event");
 		
-		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(3));
+		EventType newEventType = (EventType) sf.load(EventType.class, new Integer(6));
 		String description = request.getParameter("eventDescription");
 		String name = request.getParameter("eventName");
 		int minTeamSize = Integer.parseInt(request.getParameter("minTeamSize"));
@@ -336,11 +336,11 @@ public class SubmissionDAO extends MasterDAO {
 		if(existingLogin == null){
 			
 			School school = (School) sf.load(School.class, Integer.parseInt(request.getParameter("loginSchool")));
-			Role role = (Role) sf.load(Role.class, ROLE_TYPE_ADMIN); // static for teacher until additional functionality added by future teams.
+			Role role = (Role) sf.load(Role.class, ROLE_TYPE_TEACHER); // static for teacher until additional functionality added by future teams.
 			Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
-			Login newLogin = new Login(teacher, role, userName, password);
 			
 			sf.save(teacher);
+			Login newLogin = new Login(teacher, role, userName, password);
 			sf.save(newLogin);
 			
 		} else {
