@@ -12,7 +12,6 @@ public class Role implements java.io.Serializable {
 
 	private Integer id;
 	private String roleName;
-	private Set logins = new HashSet(0);
 
 	public Role() {
 	}
@@ -23,7 +22,6 @@ public class Role implements java.io.Serializable {
 
 	public Role(String roleName, Set logins) {
 		this.roleName = roleName;
-		this.logins = logins;
 	}
 
 	public Integer getId() {
@@ -40,14 +38,6 @@ public class Role implements java.io.Serializable {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
-	}
-
-	public Set getLogins() {
-		return this.logins;
-	}
-
-	public void setLogins(Set logins) {
-		this.logins = logins;
 	}
 
 }

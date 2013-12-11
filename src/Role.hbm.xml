@@ -11,11 +11,5 @@
         <property name="roleName" type="string">
             <column name="RoleName" not-null="true" />
         </property>
-        <set name="logins" table="Login" inverse="true" lazy="false" fetch="join">
-            <key>
-                <column name="RoleID" not-null="true" />
-            </key>
-            <one-to-many class="edu.weber.ntm.fblaem.databaseio.Login" />
-        </set>
     </class>
 </hibernate-mapping>
