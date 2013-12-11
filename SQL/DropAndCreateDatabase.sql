@@ -57,19 +57,19 @@ CREATE TABLE Teacher
 	FOREIGN KEY (SchoolID)
 		REFERENCES School(id) ON DELETE CASCADE ON UPDATE CASCADE
 	);
-CREATE TABLE Login
-	(id mediumint NOT NULL auto_increment,
-	TeacherID mediumint NOT NULL,
-	RoleID mediumint NOT NULL,
-	Username nvarchar(255) NOT NULL,
-	Password nvarchar(1000) NOT NULL,
-	LastLoginDate datetime,
-	PRIMARY KEY (id),
-	FOREIGN KEY (TeacherID)
-		REFERENCES Teacher(id) ON DELETE CASCADE ON UPDATE CASCADE,
-	FOREIGN KEY (RoleID)
-		REFERENCES Role(id)
-	);
+CREATE TABLE `Login` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `TeacherID` mediumint(9) NOT NULL,
+  `RoleID` mediumint(9) NOT NULL,
+  `Username` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `Password` varchar(1000) CHARACTER SET utf8 NOT NULL,
+  `LastLoginDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `Username_UNIQUE` (`Username`),
+  KEY `TeacherID` (`TeacherID`),
+  KEY `RoleID` (`RoleID`),
+  CONSTRAINT `Login_ibfk_2` FOREIGN KEY (`RoleID`) REFERENCES `Role` (`id`)
+);
 CREATE TABLE Event
 	(id mediumint NOT NULL auto_increment,
 	Name nvarchar(255),
