@@ -361,11 +361,12 @@ public class SubmissionDAO extends MasterDAO {
 		System.out.println("Deleting Logins");
 		
 		String userId = request.getParameter("deleteUserLogin");
+//		String username = request.getParameter("deleteUsername");
 		Teacher existingTeacher = (Teacher) sf.load(Teacher.class, new Integer(userId));
-		Login existingLogin = (Login) sf.createQuery("from Login as login where login.teacherId=" + existingTeacher.getId()).uniqueResult();
+//		Login existingLogin = (Login) sf.createQuery("from Login as login where login.username=" + username).uniqueResult();
 		
 		sf.delete(existingTeacher);
-		sf.delete(existingLogin);
+//		sf.delete(existingLogin);
 		
 	}
 
