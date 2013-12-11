@@ -336,7 +336,7 @@ public class SubmissionDAO extends MasterDAO {
 		if(existingLogin == null){
 			
 			School school = (School) sf.load(School.class, Integer.parseInt(request.getParameter("loginSchool")));
-			Role role = (Role) sf.load(Role.class, 15); // static for teacher until additional functionality added by future teams.
+			Role role = (Role) sf.load(Role.class, ROLE_TYPE_ADMIN); // static for teacher until additional functionality added by future teams.
 			Teacher teacher = new Teacher(school, email, firstName, lastName, phone, altPhone);
 			Login newLogin = new Login(teacher, role, userName, password);
 			
