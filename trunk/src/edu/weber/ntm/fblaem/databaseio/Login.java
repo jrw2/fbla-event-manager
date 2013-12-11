@@ -14,7 +14,6 @@ public class Login implements java.io.Serializable {
 	private Role role;
 	private String username;
 	private String password;
-	private String salt;
 	private Date lastLoginDate;
 	private Integer teacherId;
 
@@ -34,7 +33,6 @@ public class Login implements java.io.Serializable {
 		this.role = role;
 		this.username = username;
 		this.password = password;
-		this.salt = salt;
 		this.lastLoginDate = lastLoginDate;
 	}
 
@@ -76,14 +74,6 @@ public class Login implements java.io.Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getSalt() {
-		return this.salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 
 	public Date getLastLoginDate() {
