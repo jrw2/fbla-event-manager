@@ -213,7 +213,7 @@ public class PDFGenerator {
 										eventTable.getDefaultCell().setColspan(1);
 										eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
 										
-										if(eventId == -1 || eventId == event.getId()){
+										if(eventId == -1 || eventId == eventInstance.getId()){
 											studentEnrollements++;
 										}
 										
@@ -330,7 +330,7 @@ public class PDFGenerator {
 								eventTable.getDefaultCell().setColspan(1);
 								eventTable.addCell(new Phrase(studentTeam.getStudent().getFullName(), defaultFont));
 								
-								if(eventId == -1 || eventId == event.getId()){
+								if(eventId == -1 || eventId == eventInstance.getId()){
 									studentEnrollements++;
 								}
 								
